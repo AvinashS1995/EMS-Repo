@@ -4,6 +4,7 @@ import { API_ENDPOINTS, REGEX } from '../../../shared/constant';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/api/auth.service';
 import { Router } from '@angular/router';
+import { CommonService } from '../../../shared/services/common/common.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private AuthService: AuthService,
     private router: Router,
+    private commonService: CommonService,
   ){}
   
   ngOnInit(){
@@ -43,9 +45,11 @@ export class LoginComponent {
     if(this.loginForm.valid){
       this.AuthService.authApiCall(API_ENDPOINTS.serviceName_login, this.loginForm.value).subscribe((resp: any) => {
         console.log(`${API_ENDPOINTS.serviceName_login} Response : `, resp);
-        
+        this.commonService.openSnackbar(resp.message, 'success');
           // this.router.navigateByUrl('/dashboard')
         
+      }, (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
       })
     }else{
 
