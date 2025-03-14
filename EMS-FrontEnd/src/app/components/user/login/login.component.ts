@@ -46,7 +46,7 @@ export class LoginComponent {
       this.AuthService.authApiCall(API_ENDPOINTS.serviceName_login, this.loginForm.value).subscribe((resp: any) => {
         console.log(`${API_ENDPOINTS.serviceName_login} Response : `, resp);
         this.commonService.openSnackbar(resp.message, 'success');
-          // this.router.navigateByUrl('/dashboard')
+          this.router.navigateByUrl('/admin-dashboard')
         
       }, (error) => {
         this.commonService.openSnackbar(error.error.message, 'error');
