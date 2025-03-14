@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import authRouter from './Routes/authRoute.js';
 import sidenavRouter from './Routes/sidenavRoute.js'
 import ConnectToDatabase from './db/db.js';
-import verifyToken from './Middlewares/verifyTokenMiddleware.js';
+// import verifyToken from './Middlewares/verifyTokenMiddleware.js';
 
 dotenv.config({path:'./.env'});
 
@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter);
-app.use(verifyToken);
+// app.use(verifyToken);
 app.use('/api/roleMenu',sidenavRouter);
 
 app.listen(process.env.PORT, () => {

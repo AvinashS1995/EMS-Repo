@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/api/auth.service';
 import { CommonModule } from '@angular/common';
 import { Route } from '@angular/router';
+import { API_ENDPOINTS } from '../../../shared/constant';
 
 @Component({
   selector: 'app-forgot-password',
@@ -34,14 +35,39 @@ export class ForgotPasswordComponent implements OnInit{
     this.forgotPasswordForm = this.fb.group({
           email: ['', Validators.required],
           // oldPassword: ['', [Validators.required, Validators.pattern(REGEX.PASSWORD_REGEX)]]
-          oldPassword: ['', [Validators.required]],
-          newPassword: ['', [Validators.required]],
-          confirmPassword: ['', [Validators.required]],
+          oldPassword: ['',],
+          newPassword: ['', ],
+          confirmPassword: ['',],
         });
   }
 
   onForgotPasswordSubmit () {
 
+  console.log(this.forgotPasswordForm.getRawValue())
+
+  const {email} = this.forgotPasswordForm.getRawValue();
+
+  const payload = {
+    email : email
+  }
+
+  if (this.forgotPasswordForm.valid) {
+    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_VerifyEmail, payload).subscribe((res:any) => {
+      this.isValidEmail = true;
+      console.log(`${API_ENDPOINTS.serviceNaame_VerifyEmail} Response : `, res);
+      if (this.isValidEmail) {
+        this.forgotPasswordForm.controls['email'].disable();
+        this.forgotPasswordForm.controls['oldPassword'].addValidators([Validators.required])
+        this.forgotPasswordForm.controls['newPassword'].addValidators([Validators.required])
+        this.forgotPasswordForm.controls['confirmPassword'].addValidators([Validators.required])
+      
+      }
+
+      this.commonService.openSnackbar(res.message, 'success')
+    }, (error) => {
+      this.commonService.openSnackbar(error.error.message, "error")
+    })
+  }
   }
 
   onCancel () {

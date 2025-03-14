@@ -46,4 +46,38 @@ const Login = async (req, res) => {
     }
 }
 
-export { Login }
+const VerifyEmail = async (req, res) => {
+
+    try {
+
+        const {email} = req.body;
+        const user = await User.findOne({email});
+        // console.log("Email--", user)
+
+        if (!user) {
+            return res.status(404).json({
+                status: "fail",
+                message: "Email Not Found..!"
+            })
+        }
+
+        return res.status(200).json({
+            status: "success",
+            message: "Valid Email Fetched Successfully!",
+            user: {
+                _id: user._id,
+                name: user.name,
+                role: user.role
+            }
+        });
+
+        
+    } catch (error) {
+        return res.status(500).json({
+            status: "fail",
+            message: error.message
+        })
+    }
+}
+
+export { Login , VerifyEmail}
