@@ -17,8 +17,14 @@
                 <mat-label>Password</mat-label>
                 <input matInput type="password" placeholder="Password" formControlName="password"/>
             </mat-form-field>
+
+            <div class="resetpassword">
+                <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
     
-            <div style="height: 86px;"></div>
+                <!-- <div style="height: 86px;"></div> -->
+                <a (click)="onForgotPassword()" mat-button>Forgot Password?</a>
+            </div>
+           
             <button mat-flat-button class="example-full-width btn">Login</button>
         </form>
         

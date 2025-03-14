@@ -33,7 +33,8 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       // password: ['', [Validators.required, Validators.pattern(REGEX.PASSWORD_REGEX)]]
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      rememberMe: [false]
     });
     
   }
@@ -42,12 +43,19 @@ export class LoginComponent {
 
   onLoginSubmit(){
     console.log(this.loginForm);
+    let { rememberMe } = this.loginForm.getRawValue();
     if(this.loginForm.valid){
       this.AuthService.authApiCall(API_ENDPOINTS.serviceName_login, this.loginForm.value).subscribe((resp: any) => {
         console.log(`${API_ENDPOINTS.serviceName_login} Response : `, resp);
-        this.commonService.openSnackbar(resp.message, 'success');
+        if (resp.token) {
+          if (rememberMe) {
+            localStorage.setItem('token', resp.token);
+          } else {
+            sessionStorage.setItem('token', resp.token);
+          }
+          this.commonService.openSnackbar(resp.message, 'success');
           this.router.navigateByUrl('/admin-dashboard')
-        
+        }  
       }, (error) => {
         this.commonService.openSnackbar(error.error.message, 'error');
       })
@@ -55,6 +63,10 @@ export class LoginComponent {
 
     }
     
+  }
+
+  onForgotPassword () {
+      this.router.navigateByUrl('/forgot-password')
   }
   
   
