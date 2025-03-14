@@ -1,5 +1,5 @@
 const API_ENDPOINTS = {
-    serviceName_login: 'api/auth/Login',
+    serviceName_login: 'auth/Login',
 }
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)
