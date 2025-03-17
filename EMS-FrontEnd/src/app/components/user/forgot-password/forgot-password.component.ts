@@ -6,14 +6,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/api/auth.service';
 import { CommonModule } from '@angular/common';
 import { Route } from '@angular/router';
-import { API_ENDPOINTS } from '../../../shared/constant';
-
-enum ForgotPasswordStep {
-  VERIFY_EMAIL,
-  SEND_OTP,
-  VERIFY_OTP,
-  RESET_PASSWORD
-}
+import { API_ENDPOINTS, ForgotPasswordStep } from '../../../shared/constant';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -27,6 +21,9 @@ export class ForgotPasswordComponent implements OnInit{
   forgotPasswordForm!: FormGroup
   currentStep: ForgotPasswordStep = ForgotPasswordStep.VERIFY_EMAIL; // Initial step
   ForgotPasswordStep = ForgotPasswordStep; // Expose Enum to HTML
+  resendOtpDisabled = false;
+  countdown = 60; // Initial countdown value
+  countdownSubscription!: Subscription;
 
   constructor(
       private fb: FormBuilder,
@@ -112,6 +109,9 @@ export class ForgotPasswordComponent implements OnInit{
       this.commonService.openSnackbar(res.message, 'success')
       this.currentStep = ForgotPasswordStep.VERIFY_OTP;
       this.forgotPasswordForm.controls['otp'].enable();
+
+      // Start countdown after sending OTP
+      this.startResendOtpCountdown();
       
     }, (error) => {
       this.commonService.openSnackbar(error.error.message, 'error');
@@ -138,6 +138,26 @@ export class ForgotPasswordComponent implements OnInit{
     })
   }
 
+  onResendOtp () {
+    
+    const {email} = this.forgotPasswordForm.getRawValue();
+
+    let payload = {
+      email : email
+    }
+    
+    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_resendOtp, payload).subscribe((res: any) => {
+
+      console.log(res)
+      this.commonService.openSnackbar(res.message, 'success');
+      // Restart the countdown
+      this.startResendOtpCountdown();
+      
+    }, (error) => {
+      this.commonService.openSnackbar(error.error.message, 'error');
+    })
+  }
+
   onResetpassword () {
 
     const { email, newPassword, confirmPassword} = this.forgotPasswordForm.getRawValue();
@@ -157,6 +177,26 @@ export class ForgotPasswordComponent implements OnInit{
       this.commonService.openSnackbar(error.error.message, 'error');
     })
   }
+
+  startResendOtpCountdown() {
+    this.resendOtpDisabled = true;
+    this.countdown = 60;
+
+    if (this.countdownSubscription) {
+      this.countdownSubscription.unsubscribe();
+    }
+
+    this.countdownSubscription = interval(1000).subscribe(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        this.resendOtpDisabled = false;
+        this.countdownSubscription.unsubscribe();
+      }
+    });
+  }
+  
+
 
   onCancel () {
     this.router.navigateByUrl("/")

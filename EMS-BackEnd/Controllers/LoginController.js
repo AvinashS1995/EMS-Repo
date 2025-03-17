@@ -2,10 +2,11 @@ import User from "./../Models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import OTP from "../Models/otpModel.js";
-import nodemailer from "nodemailer";
+import transporter from "../mail/transporter.js";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
+
 
 // Login API Method
 const Login = async (req, res) => {
@@ -81,14 +82,6 @@ const VerifyEmail = async (req, res) => {
   }
 };
 
-// Nodemailer Transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 // Send OTP API Method
 const sendOtp = async (req, res) => {
@@ -167,7 +160,7 @@ const resendOtp = async (req, res) => {
     const hashedOtp = await bcrypt.hash(otpCode, salt);
 
     // Update OTP in DB
-    await Otp.findOneAndUpdate(
+    await OTP.findOneAndUpdate(
       { email },
       { otp: hashedOtp, expiresAt: new Date(Date.now() + 5 * 60 * 1000) },
       { upsert: true }
@@ -198,9 +191,10 @@ const resendOtp = async (req, res) => {
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
+        console.log(err)
         return res.status(500).json({
           status: "fail",
-          message: "Error resending OTP",
+          message: err.message,
         });
       }
 
@@ -212,7 +206,7 @@ const resendOtp = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       status: "fail",
-      message: "Internal Server Error",
+      message: error.message,
     });
   }
 };
