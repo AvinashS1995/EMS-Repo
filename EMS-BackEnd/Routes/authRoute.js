@@ -5,13 +5,13 @@ import CreateUser from '../Controllers/UserController.js';
 
 const router = express.Router();
 
-router.post('/registerUser', CreateUser)
-router.post('/Login', Login);
-router.post('/VerifyEmail', VerifyEmail);
-router.post('/sendOtp', sendOtp);
-router.post('/resendOtp', resendOtp)
-router.post('/verifyOtp', verifyOtp)
-router.post('/resetPassword', resetPassword)
+router.post('/register-user', CreateUser)
+router.post('/login', Login);
+router.post('/verify-email', VerifyEmail);
+router.post('/send-otp', sendOtp);
+router.post('/resend-otp', resendOtp)
+router.post('/verify-otp', verifyOtp)
+router.post('/reset-password', resetPassword)
 
 
 export default router;

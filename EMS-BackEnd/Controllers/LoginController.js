@@ -15,7 +15,7 @@ const Login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(404).json({
+     return res.status(404).json({
         status: "fail",
         message: "User Not Found..!",
       });
@@ -24,7 +24,7 @@ const Login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      res.status(404).json({
+     return res.status(404).json({
         status: "fail",
         message: "Wrong Password..!",
       });
@@ -36,7 +36,7 @@ const Login = async (req, res) => {
       { expiresIn: "10d" }
     );
 
-    res.status(200).json({
+   return res.status(200).json({
       status: "success",
       message: "Login Successfully..!",
       token,
@@ -47,7 +47,10 @@ const Login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
+    return res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
   }
 };
 
@@ -134,12 +137,11 @@ const sendOtp = async (req, res) => {
 
       return res.status(200).json({
         status: "success",
-        message: "OTP sent successfully",
+        message: "OTP Successfully send on your Registered Email.",
       });
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
+   return res.status(500).json({
       status: "fail",
       message: error.message,
     });
@@ -200,11 +202,11 @@ const resendOtp = async (req, res) => {
 
       return res.status(200).json({
         status: "success",
-        message: "OTP resent successfully",
+        message: "OTP Successfully Resend on your Registered Email.",
       });
     });
   } catch (error) {
-    res.status(500).json({
+   return res.status(500).json({
       status: "fail",
       message: error.message,
     });
@@ -291,7 +293,7 @@ const resetPassword = async (req, res) => {
 
       return res.status(200).json({
         status: "sucess", 
-        message: "Password reset successful" 
+        message: "Password reset successfully" 
       });
 
   } catch (error) {

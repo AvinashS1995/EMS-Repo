@@ -1,10 +1,10 @@
 const API_ENDPOINTS = {
-  serviceName_login: 'auth/Login',
-  serviceNaame_VerifyEmail: 'auth/VerifyEmail',
-  serviceNaame_sendOtp: 'auth/sendOtp',
-  serviceNaame_resendOtp: 'auth/resendOtp',
-  serviceNaame_verifyOtp: 'auth/verifyOtp',
-  serviceNaame_resetPassword: 'auth/resetPassword',
+  serviceName_login: 'auth/login',
+  serviceNaame_VerifyEmail: 'auth/verify-email',
+  serviceNaame_sendOtp: 'auth/send-otp',
+  serviceNaame_resendOtp: 'auth/resend-otp',
+  serviceNaame_verifyOtp: 'auth/verify-otp',
+  serviceNaame_resetPassword: 'auth/reset-password',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)
