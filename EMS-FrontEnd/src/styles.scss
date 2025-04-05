@@ -46,3 +46,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface{
   padding: 0px !important;
 }
+
+.mat-sidenav {
+  border-radius: 0 !important;
+}
+
+.mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: 0 !important;
+  
+}

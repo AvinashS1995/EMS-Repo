@@ -1,0 +1,70 @@
+.sidenav-container {
+    height: calc(100vh - 64px);
+}
+
+.sidenav-header {
+    padding: 24px 0px;
+    text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #aaaaaa;
+  
+    > img {
+      border-radius: 100%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+  
+    .header-text {
+      > h2 {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+  
+      > p {
+        margin: 0;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+.expand {
+    width: 300px;
+
+    .sidenav-header {
+        >img {
+            width: 100px;
+            height: 100px;
+        }
+    }
+}
+
+.colaps{
+  width: 70px;
+  .sidenav-header{
+    > img {
+      width: 45px;
+      height: 45px;
+    }
+    .header-text{
+      display: none;
+    }
+  }
+}
+
+mat-sidenav {
+    background-color: aquamarine;
+}
+
+mat-nav-list {
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+}
+
+// .logout-item {
+//   margin-top: 50px;
+// }
+
+
+

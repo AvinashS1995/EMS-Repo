@@ -1,0 +1,26 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened [ngClass]="commonService.expandSidenav() ? 'expand' : 'colaps'">
+        <div class="sidenav-header">
+            <img src="assets/profile-img.png" alt="">
+            <div class="header-text">
+                <h2>Avinash Suryawanshi</h2>
+                <p>Admin</p>
+            </div>
+        </div>
+        <mat-nav-list>
+            @for(item of menuItems(); track item.title) {
+            <a mat-list-item [ngClass]="item.title === 'Logout' ? 'logout-item' : ''" (click)="navigateTO(item.route)">
+                <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
+                @if (commonService.expandSidenav()) {
+                <span matListItemTitle>{{item.title}}</span>
+                }
+            </a>
+            }
+
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
