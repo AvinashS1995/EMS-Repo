@@ -54,7 +54,7 @@ export class LoginComponent {
             sessionStorage.setItem('token', resp.token);
           }
           this.commonService.openSnackbar(resp.message, 'success');
-          this.router.navigateByUrl('/admin-dashboard')
+          this.router.navigateByUrl('/dashboard')
         }  
       }, (error) => {
         this.commonService.openSnackbar(error.error.message, 'error');

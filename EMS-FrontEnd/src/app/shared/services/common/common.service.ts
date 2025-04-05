@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SnackBarComponent } from '../../widget/snack-bar/snack-bar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialogData } from '../../interfaces/widget';
@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
   providedIn: 'root'
 })
 export class CommonService {
+
+  expandSidenav = signal<boolean>(true);
 
   constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {}
 
