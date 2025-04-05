@@ -53,6 +53,14 @@ const AssignRoleMenus = async (req, res) => {
   try {
     const { role, menus } = req.body;
 
+    // Check if menus is missing or not an array
+    if (!menus || !Array.isArray(menus)) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid request: 'menus' must be an array.",
+      });
+    }
+
     // Ensure all menu IDs exist in the Menu collection
     const validMenus = await Menu.find({ _id: { $in: menus.map(m => m.menuId) } });
 
@@ -72,13 +80,14 @@ const AssignRoleMenus = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: "Role menus updated successfully",
-      data: updateRoleMenu, // Simplified response structure
+      data: updateRoleMenu,
     });
-    
+
   } catch (error) {
-   return res.status(500).json({
-      status: "fail", // Fixed spelling
-      message: error.message, // Unified key name
+    console.error(error);
+    return res.status(500).json({
+      status: "fail",
+      message: error.message,
     });
   }
 };

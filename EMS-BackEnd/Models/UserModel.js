@@ -32,4 +32,21 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-export default User;
+const roleSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Role Name is required field'],
+        unique: true
+    },
+    description: {
+        type: String,
+        required: [true, 'Description is required field']
+    }
+}, 
+{
+    timestamps: true
+})
+
+const Role = mongoose.model("Role", roleSchema)
+
+export  { User, Role };
