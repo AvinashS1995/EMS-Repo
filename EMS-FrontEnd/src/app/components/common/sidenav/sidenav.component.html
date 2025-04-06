@@ -3,8 +3,8 @@
         <div class="sidenav-header">
             <img src="assets/profile-img.png" alt="">
             <div class="header-text">
-                <h2>Avinash Suryawanshi</h2>
-                <p>Admin</p>
+                <h2>{{ UserName }}</h2>
+                <p>{{ RoleName }}</p>
             </div>
         </div>
         <mat-nav-list>
@@ -16,6 +16,12 @@
                 }
             </a>
             }
+            <a mat-list-item (click)="confirmLogout()">
+                <mat-icon matListItemIcon>logout</mat-icon>
+                @if (commonService.expandSidenav()) {
+                <span matListItemTitle>Logout</span>
+                }
+            </a>
 
         </mat-nav-list>
     </mat-sidenav>

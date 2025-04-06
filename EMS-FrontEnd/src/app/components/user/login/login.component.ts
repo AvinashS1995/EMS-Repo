@@ -45,8 +45,8 @@ export class LoginComponent {
     console.log(this.loginForm);
     let { rememberMe } = this.loginForm.getRawValue();
     if(this.loginForm.valid){
-      this.AuthService.authApiCall(API_ENDPOINTS.serviceName_login, this.loginForm.value).subscribe((resp: any) => {
-        console.log(`${API_ENDPOINTS.serviceName_login} Response : `, resp);
+      this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_LOGIN, this.loginForm.value).subscribe((resp: any) => {
+        console.log(`${API_ENDPOINTS.SERVICE_LOGIN} Response : `, resp);
         if (resp.token) {
           if (rememberMe) {
             localStorage.setItem('token', resp.token);
@@ -54,6 +54,7 @@ export class LoginComponent {
             sessionStorage.setItem('token', resp.token);
           }
           this.commonService.openSnackbar(resp.message, 'success');
+          // this.commonService.setUserDetails(resp.user.name, resp.user.role);
           this.router.navigateByUrl('/dashboard')
         }  
       }, (error) => {

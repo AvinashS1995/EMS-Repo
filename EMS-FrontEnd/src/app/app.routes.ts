@@ -14,5 +14,8 @@ export const routes: Routes = [
         {path: 'payroll-management', loadComponent: () => import('../app/components/pages/payroll-management/payroll-management.component').then((c)=> c.PayrollManagementComponent)},
         {path: 'reports', loadComponent: () => import('../app/components/pages/reports/reports.component').then((c)=> c.ReportsComponent)},
 
-    ]}
+    ]},
+
+
+
 ];

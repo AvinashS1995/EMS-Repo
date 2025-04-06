@@ -13,7 +13,23 @@ export class CommonService {
 
   expandSidenav = signal<boolean>(true);
 
+  private _userName = '';
+  private _roleName = '';
+
   constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {}
+
+  setUserDetails(name: string, role: string) {
+    this._userName = name;
+    this._roleName = role;
+  }
+
+  getUserName(): string {
+    return this._userName;
+  }
+
+  getRoleName(): string {
+    return this._roleName;
+  }
 
   openSnackbar(message: string, type: 'success' | 'error') {
     this.snackBar.openFromComponent(SnackBarComponent, {

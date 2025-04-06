@@ -75,9 +75,9 @@ export class ForgotPasswordComponent implements OnInit{
   }
 
   if (this.forgotPasswordForm.valid) {
-    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_VerifyEmail, payload).subscribe((res:any) => {
+    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_VERIFYEMAIL, payload).subscribe((res:any) => {
       
-      console.log(`${API_ENDPOINTS.serviceNaame_VerifyEmail} Response : `, res);
+      console.log(`${API_ENDPOINTS.SERVICE_VERIFYEMAIL} Response : `, res);
       
         this.forgotPasswordForm.controls['email'].disable();
         this.forgotPasswordForm.controls['otp'].disable();
@@ -103,7 +103,7 @@ export class ForgotPasswordComponent implements OnInit{
       email : email
     }
     
-    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_sendOtp, payload).subscribe((res: any) => {
+    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_SENDOTP, payload).subscribe((res: any) => {
 
       console.log(res)
       this.commonService.openSnackbar(res.message, 'success')
@@ -126,7 +126,7 @@ export class ForgotPasswordComponent implements OnInit{
       email : email,
       otp: otp
     }
-    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_verifyOtp, payload).subscribe((res: any) => {
+    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_VERIFYOTP, payload).subscribe((res: any) => {
       console.log(res)
 
     this.commonService.openSnackbar(res.message, 'success');
@@ -146,7 +146,7 @@ export class ForgotPasswordComponent implements OnInit{
       email : email
     }
     
-    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_resendOtp, payload).subscribe((res: any) => {
+    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_RESENDOTP, payload).subscribe((res: any) => {
 
       console.log(res)
       this.commonService.openSnackbar(res.message, 'success');
@@ -167,7 +167,7 @@ export class ForgotPasswordComponent implements OnInit{
       newPassword: newPassword,
       confirmPassword:confirmPassword
     }
-    this.AuthService.authApiCall(API_ENDPOINTS.serviceNaame_resetPassword, payload).subscribe((res: any) => {
+    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_RESETPASSWORD, payload).subscribe((res: any) => {
       console.log(res)
 
     this.commonService.openSnackbar(res.message, 'success');
