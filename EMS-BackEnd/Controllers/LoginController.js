@@ -304,5 +304,22 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const LogOut = async (req, res) => {
 
-export { Login, VerifyEmail, sendOtp, resendOtp, verifyOtp, resetPassword };
+  try {
+
+    return res.status(200).json({
+      status: "success",
+      message: "Logged out successfully.",
+    });
+  
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+}
+
+
+export { Login, VerifyEmail, sendOtp, resendOtp, verifyOtp, resetPassword, LogOut };

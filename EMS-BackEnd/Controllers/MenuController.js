@@ -53,7 +53,7 @@ const AssignRoleMenus = async (req, res) => {
   try {
     const { role, menus } = req.body;
 
-    // Check if menus is missing or not an array
+    // Validate request
     if (!menus || !Array.isArray(menus)) {
       return res.status(400).json({
         status: "fail",
@@ -61,7 +61,17 @@ const AssignRoleMenus = async (req, res) => {
       });
     }
 
-    // Ensure all menu IDs exist in the Menu collection
+    // Check if role already exists
+    const existingRoleMenu = await RoleMenu.findOne({ role });
+
+    if (existingRoleMenu) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Menus already assigned to this role.",
+      });
+    }
+
+    // Check all menu IDs exist
     const validMenus = await Menu.find({ _id: { $in: menus.map(m => m.menuId) } });
 
     if (validMenus.length !== menus.length) {
@@ -71,16 +81,13 @@ const AssignRoleMenus = async (req, res) => {
       });
     }
 
-    const updateRoleMenu = await RoleMenu.findOneAndUpdate(
-      { role },
-      { $set: { menus } },
-      { upsert: true, new: true }
-    );
+    // Assign new role menus
+    const newRoleMenu = await RoleMenu.create({ role, menus });
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: "success",
-      message: "Role menus updated successfully",
-      data: updateRoleMenu,
+      message: "Menus assigned to role successfully.",
+      data: newRoleMenu,
     });
 
   } catch (error) {
@@ -92,6 +99,7 @@ const AssignRoleMenus = async (req, res) => {
   }
 };
 
+
 // Get menus assigned to a role
 const GetRoleMenus = async (req, res) => {
   try {
@@ -100,7 +108,8 @@ const GetRoleMenus = async (req, res) => {
     const roleMenu = await RoleMenu.findOne({ role }).populate("menus.menuId");
 
     res.status(200).json({ 
-      status: "success", 
+      status: "success",
+      records: roleMenu.length, 
       roleMenus: roleMenu || { role, menus: [] } 
     });
 
