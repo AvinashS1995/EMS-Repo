@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import OTP from "../Models/otpModel.js";
 import transporter from "../mail/transporter.js";
 import dotenv from "dotenv";
+import { generateRandomKey, encrypt } from '../common/common.js';
 
 dotenv.config({ path: "./.env" });
 
@@ -13,7 +14,8 @@ const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-
+    const secretKey = generateRandomKey();
+    const encryptedSecretKey = encrypt(secretKey);
     if (!user) {
      return res.status(404).json({
         status: "fail",
@@ -40,6 +42,7 @@ const Login = async (req, res) => {
       status: "success",
       message: "Login Successfully..!",
       token,
+      secretKey: encryptedSecretKey,
       user: {
         _id: user._id,
         name: user.name,

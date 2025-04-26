@@ -12,13 +12,12 @@ import { interval, Subscription } from 'rxjs';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule,SharedModule],
+  imports: [CommonModule, SharedModule],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.scss'
+  styleUrl: './forgot-password.component.scss',
 })
-export class ForgotPasswordComponent implements OnInit{
-
-  forgotPasswordForm!: FormGroup
+export class ForgotPasswordComponent implements OnInit {
+  forgotPasswordForm!: FormGroup;
   currentStep: ForgotPasswordStep = ForgotPasswordStep.VERIFY_EMAIL; // Initial step
   ForgotPasswordStep = ForgotPasswordStep; // Expose Enum to HTML
   resendOtpDisabled = false;
@@ -26,27 +25,27 @@ export class ForgotPasswordComponent implements OnInit{
   countdownSubscription!: Subscription;
 
   constructor(
-      private fb: FormBuilder,
-      private AuthService: AuthService,
-      private router: Router,
-      private commonService: CommonService,
-    ){}
+    private fb: FormBuilder,
+    private AuthService: AuthService,
+    private router: Router,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
     this.prepareForgotPasswordForm();
   }
 
-  prepareForgotPasswordForm () {
+  prepareForgotPasswordForm() {
     this.forgotPasswordForm = this.fb.group({
-          email: ['', Validators.required],
-          otp: ['',],
-          oldPassword: ['',],
-          newPassword: ['', ],
-          confirmPassword: ['',],
-        });
+      email: ['', Validators.required],
+      otp: [''],
+      oldPassword: [''],
+      newPassword: [''],
+      confirmPassword: [''],
+    });
   }
 
-  onForgotPasswordSubmit () {
+  onForgotPasswordSubmit() {
     switch (this.currentStep) {
       case ForgotPasswordStep.VERIFY_EMAIL:
         this.onVerifyEmail();
@@ -61,121 +60,144 @@ export class ForgotPasswordComponent implements OnInit{
         this.onResetpassword();
         break;
     }
-  
   }
 
-  onVerifyEmail () {
+  onVerifyEmail() {
+    console.log(this.forgotPasswordForm.getRawValue());
 
-    console.log(this.forgotPasswordForm.getRawValue())
+    const { email } = this.forgotPasswordForm.getRawValue();
 
-  const {email} = this.forgotPasswordForm.getRawValue();
+    const payload = {
+      email: email,
+    };
 
-  const payload = {
-    email : email
+    if (this.forgotPasswordForm.valid) {
+      this.AuthService.authApiCall(
+        API_ENDPOINTS.SERVICE_VERIFYEMAIL,
+        payload
+      ).subscribe({
+        next: (res: any) => {
+          console.log(`${API_ENDPOINTS.SERVICE_VERIFYEMAIL} Response : `, res);
+
+          this.forgotPasswordForm.controls['email'].disable();
+          this.forgotPasswordForm.controls['otp'].disable();
+          this.forgotPasswordForm.controls['oldPassword'].addValidators([
+            Validators.required,
+          ]);
+          this.forgotPasswordForm.controls['newPassword'].addValidators([
+            Validators.required,
+          ]);
+          this.forgotPasswordForm.controls['confirmPassword'].addValidators([
+            Validators.required,
+          ]);
+
+          this.currentStep = ForgotPasswordStep.SEND_OTP;
+
+          this.commonService.openSnackbar(res.message, 'success');
+        },
+        error: (error) => {
+          this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+    }
   }
 
-  if (this.forgotPasswordForm.valid) {
-    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_VERIFYEMAIL, payload).subscribe((res:any) => {
-      
-      console.log(`${API_ENDPOINTS.SERVICE_VERIFYEMAIL} Response : `, res);
-      
-        this.forgotPasswordForm.controls['email'].disable();
+  onSendOtp() {
+    const { email } = this.forgotPasswordForm.getRawValue();
+
+    let payload = {
+      email: email,
+    };
+
+    this.AuthService.authApiCall(
+      API_ENDPOINTS.SERVICE_SENDOTP,
+      payload
+    ).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.commonService.openSnackbar(res.message, 'success');
+        this.currentStep = ForgotPasswordStep.VERIFY_OTP;
+        this.forgotPasswordForm.controls['otp'].enable();
+
+        // Start countdown after sending OTP
+        this.startResendOtpCountdown();
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
+  }
+
+  onVerifyOtp() {
+    const { email, otp } = this.forgotPasswordForm.getRawValue();
+
+    const payload = {
+      email: email,
+      otp: otp,
+    };
+    this.AuthService.authApiCall(
+      API_ENDPOINTS.SERVICE_VERIFYOTP,
+      payload
+    ).subscribe({
+      next: (res: any) => {
+        console.log(res);
+
+        this.commonService.openSnackbar(res.message, 'success');
+        this.currentStep = ForgotPasswordStep.RESET_PASSWORD;
         this.forgotPasswordForm.controls['otp'].disable();
-        this.forgotPasswordForm.controls['oldPassword'].addValidators([Validators.required])
-        this.forgotPasswordForm.controls['newPassword'].addValidators([Validators.required])
-        this.forgotPasswordForm.controls['confirmPassword'].addValidators([Validators.required])
-      
-      
-      this.currentStep = ForgotPasswordStep.SEND_OTP;
-
-      this.commonService.openSnackbar(res.message, 'success')
-    }, (error) => {
-      this.commonService.openSnackbar(error.error.message, "error")
-    })
-  }
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
   }
 
-  onSendOtp () {
-
-  const {email} = this.forgotPasswordForm.getRawValue();
+  onResendOtp() {
+    const { email } = this.forgotPasswordForm.getRawValue();
 
     let payload = {
-      email : email
-    }
-    
-    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_SENDOTP, payload).subscribe((res: any) => {
+      email: email,
+    };
 
-      console.log(res)
-      this.commonService.openSnackbar(res.message, 'success')
-      this.currentStep = ForgotPasswordStep.VERIFY_OTP;
-      this.forgotPasswordForm.controls['otp'].enable();
-
-      // Start countdown after sending OTP
-      this.startResendOtpCountdown();
-      
-    }, (error) => {
-      this.commonService.openSnackbar(error.error.message, 'error');
-    })
+    this.AuthService.authApiCall(
+      API_ENDPOINTS.SERVICE_RESENDOTP,
+      payload
+    ).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.commonService.openSnackbar(res.message, 'success');
+        // Restart the countdown
+        this.startResendOtpCountdown();
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
   }
 
-  onVerifyOtp () {
-
-    const { email, otp} = this.forgotPasswordForm.getRawValue();
+  onResetpassword() {
+    const { email, newPassword, confirmPassword } =
+      this.forgotPasswordForm.getRawValue();
 
     const payload = {
-      email : email,
-      otp: otp
-    }
-    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_VERIFYOTP, payload).subscribe((res: any) => {
-      console.log(res)
-
-    this.commonService.openSnackbar(res.message, 'success');
-    this.currentStep = ForgotPasswordStep.RESET_PASSWORD;
-    this.forgotPasswordForm.controls['otp'].disable();
-
-    }, (error) => {
-      this.commonService.openSnackbar(error.error.message, 'error');
-    })
-  }
-
-  onResendOtp () {
-    
-    const {email} = this.forgotPasswordForm.getRawValue();
-
-    let payload = {
-      email : email
-    }
-    
-    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_RESENDOTP, payload).subscribe((res: any) => {
-
-      console.log(res)
-      this.commonService.openSnackbar(res.message, 'success');
-      // Restart the countdown
-      this.startResendOtpCountdown();
-      
-    }, (error) => {
-      this.commonService.openSnackbar(error.error.message, 'error');
-    })
-  }
-
-  onResetpassword () {
-
-    const { email, newPassword, confirmPassword} = this.forgotPasswordForm.getRawValue();
-
-    const payload = {
-      email : email,
+      email: email,
       newPassword: newPassword,
-      confirmPassword:confirmPassword
-    }
-    this.AuthService.authApiCall(API_ENDPOINTS.SERVICE_RESETPASSWORD, payload).subscribe((res: any) => {
-      console.log(res)
+      confirmPassword: confirmPassword,
+    };
+    this.AuthService.authApiCall(
+      API_ENDPOINTS.SERVICE_RESETPASSWORD,
+      payload
+    ).subscribe({
+      next: (res: any) => {
+        console.log(res);
 
-    this.commonService.openSnackbar(res.message, 'success');
-    this.router.navigateByUrl('/login')
-
-    }, (error) => {
-      this.commonService.openSnackbar(error.error.message, 'error');
-    })
+        this.commonService.openSnackbar(res.message, 'success');
+        this.router.navigateByUrl('/login');
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
   }
 
   startResendOtpCountdown() {
@@ -195,11 +217,8 @@ export class ForgotPasswordComponent implements OnInit{
       }
     });
   }
-  
 
-
-  onCancel () {
-    this.router.navigateByUrl("/")
+  onCancel() {
+    this.router.navigateByUrl('/');
   }
-
 }
