@@ -65,9 +65,24 @@ const AssignRoleMenus = async (req, res) => {
     const existingRoleMenu = await RoleMenu.findOne({ role });
 
     if (existingRoleMenu) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Menus already assigned to this role.",
+
+      const existingMenuIds = existingRoleMenu.menus.map(m => m.menuId.toString());
+      const newMenusToAdd = menus.filter(m => !existingMenuIds.includes(m.menuId));
+
+      if (newMenusToAdd.length === 0) {
+        return res.status(200).json({
+          status: "success",
+          message: "No new menus to add. Menus already assigned.",
+        });
+      }
+
+      existingRoleMenu.menus.push(...newMenusToAdd);
+      await existingRoleMenu.save();
+
+      return res.status(200).json({
+        status: "success",
+        message: "New menus assigned to role successfully.",
+        data: existingRoleMenu,
       });
     }
 

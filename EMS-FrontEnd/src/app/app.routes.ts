@@ -8,7 +8,9 @@ export const routes: Routes = [
     
     {path: '', component: LayoutComponent, children: [
         {path: 'dashboard', loadComponent: () => import('../app/components/pages/dashboard/dashboard.component').then((c)=> c.DashboardComponent)},
-        {path: 'employee-management', loadComponent: () => import('../app/components/pages/employee-management/employee-management.component').then((c)=> c.EmployeeManagementComponent)},
+        {path: 'employee-management', loadComponent: () => import('../app/components/pages/employee/employee-management/employee-management.component').then((c)=> c.EmployeeManagementComponent)},
+        {path: 'add-employee', loadComponent: () => import('../app/components/pages/employee/add-employee/add-employee.component').then((c)=> c.AddEmployeeComponent)},
+        {path: 'attendence-management', loadComponent: () => import('../app/components/pages/attendence-management/attendence-management.component').then((c)=> c.AttendenceManagementComponent)},
         {path: 'leave-management', loadComponent: () => import('../app/components/pages/leave-management/leave-management.component').then((c)=> c.LeaveManagementComponent)},
         {path: 'sales-management', loadComponent: () => import('../app/components/pages/sales-management/sales-management.component').then((c)=> c.SalesManagementComponent)},
         {path: 'payroll-management', loadComponent: () => import('../app/components/pages/payroll-management/payroll-management.component').then((c)=> c.PayrollManagementComponent)},

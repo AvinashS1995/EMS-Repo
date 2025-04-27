@@ -1,0 +1,113 @@
+.attendance-container {
+    padding: 20px;
+  }
+  
+  .summary-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .summary-card {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .summary-card h3 {
+    margin: 5px 0;
+    font-size: 18px;
+  }
+  
+  .summary-card p {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .positive {
+    color: green;
+  }
+  
+  .negative {
+    color: red;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  mat-expansion-panel {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border-radius: 5px;
+  }
+
+  .filter-field {
+    flex: 1 1 200px;
+    min-width: 200px;
+  }
+  
+  .filter-button, .export-button {
+    height: 56px;
+    border-radius: 5px;
+  }
+  
+  .attendance-table {
+    overflow-x: auto;
+  }
+  
+  .employee-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .Full-Time {
+    background: #d9eafd;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #007BFF;
+  }
+  
+  .Part-Time {
+    background: #fce7e7;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #d32f2f;
+  }
+  
+  .Present {
+    background: #e5f9e7;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: #388e3c;
+    font-weight: 500;
+  }
+  
+  .Absent {
+    background: #fde2e2;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: #d32f2f;
+    font-weight: 500;
+  }
+  
+  .Late {
+    background: #fff8e1;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: #fbc02d;
+    font-weight: 500;
+  }
+  

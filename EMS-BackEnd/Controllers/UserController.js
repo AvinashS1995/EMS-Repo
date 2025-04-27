@@ -1,4 +1,5 @@
-import ConnectToDatabase from "../db/db.js";
+
+import { ConnectToDatabase } from "../db/db.js";
 import { User,  Role } from "../Models/UserModel.js";
 import bcrypt from "bcrypt";
 
