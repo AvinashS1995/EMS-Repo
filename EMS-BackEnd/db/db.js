@@ -1,28 +1,28 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import grid from 'gridfs-stream';
+import { GridFSBucket } from 'mongodb';
 
 
 dotenv.config({path:'./.env'});
-
+const mongoURI = process.env.MONGO_DB_LOCAL_URL;
 // console.log(`Process dotenv ${process.env}`);
 
 let gfs;
-let conn;
 
 const ConnectToDatabase = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_DB_LOCAL_URL);
+        await mongoose.connect(mongoURI);
         console.log(`Database is Connected and Running Url ${process.env.MONGO_DB_LOCAL_URL}`)
 
-        conn = mongoose.createConnection(process.env.MONGO_DB_LOCAL_URL);
-        // conn = mongoose.connection;
-        conn.once('open', () => {
-            gfs = grid(conn.db, mongoose.mongo);
-            gfs.collection('uploads');
-            console.log(`GridFS Initilized ${conn}`);
-            
-        })
+        const db = mongoose.connection.db;
+        console.log("DB---->", db)
+        gfs = new GridFSBucket(db, {
+          bucketName: 'uploads',
+        });
+    
+        return { db, gfs };
+        
     } catch (error) {
         console.log("Mongo Errorrr",error);
         console.log(`Process dotenv ${process.env.MONGO_DB_LOCAL_URL}`);

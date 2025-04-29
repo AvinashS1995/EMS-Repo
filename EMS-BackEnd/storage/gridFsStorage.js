@@ -4,34 +4,17 @@ import UploadFileToken from "../Models/uploadFileModel.js";
 import multer from "multer";
 dotenv.config({ path: "./.env" });
 
+const mongoURI = process.env.MONGO_DB_LOCAL_URL;
+
+// GridFS Storage instance
 const storage = new GridFsStorage({
-  url: process.env.MONGO_DB_LOCAL_URL,
+  db: mongoURI,
   file: (req, file) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const token = req.query;
-        const tokenDoc = await UploadFileToken.findOne({ uploadToken: token });
-
-        if (!tokenDoc || tokenDoc.uploaded ||new Date() > tokenDoc.tokenExpiry) {
-
-          return reject(new Error("Invalid or Expired Token"));
-
-        }
-
-        const filename = `${Date.now()}-${file.originalname}`;
-        const fileInfo = {
-          filename: filename,
-          bucketName: "uploads",
-        };
-
-        resolve(fileInfo);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    return {
+      filename: `${Date.now()}-${file.originalname}`,
+      bucketName: 'uploads', // Should match GridFSBucket name and Default: uploads.files, uploads.chunks
+    };
   },
 });
 
-const upload = multer({ storage });
-
-export default upload;
+export { storage };

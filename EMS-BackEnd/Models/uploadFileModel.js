@@ -12,6 +12,8 @@ const UploadFileTokenSchema = new mongoose.Schema({
   },
 });
 
+UploadFileTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
 const UploadFileToken = mongoose.model("UploadFileToken", UploadFileTokenSchema);
 
 export default UploadFileToken;

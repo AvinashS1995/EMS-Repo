@@ -1,70 +1,96 @@
 import crypto from "crypto";
 import UploadFileToken from "../Models/uploadFileModel.js";
 import { gfs } from "../db/db.js";
+import { storage } from "../storage/gridFsStorage.js";
+import multer from "multer";
+
+
+const upload = multer({ storage }).single("file");
 
 export const generateUploadUrl = async (req, res) => {
   const { filename, filetype, size } = req.body;
 
-  const token = crypto.randomBytes(16).toString("hex");
-  const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 min expiry
+  const token = crypto.randomBytes(20).toString('hex');
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
 
   await UploadFileToken.create({
     filename,
     filetype,
     size,
     uploadToken: token,
-    tokenExpiry: expiry,
+    tokenExpiry: expiresAt,
   });
 
+  const uploadUrlWithPreSignUrl = `http://${req.headers.host}/upload/${token}`;
+
   res.json({
-    uploadUrl: `${process.env.MONGO_DB_LOCAL_URL}/upload?token=${token}`,
-    expiresAt: expiry,
+    uploadUrl: uploadUrlWithPreSignUrl,
+    expiresAt: expiresAt,
   });
 };
 
 export const uploadFile = async (req, res) => {
 
-  const { token } = req.body;
+  const { uploadToken ,  fileName} = req.body;
 
-  console.log(token)
+  const tokenDoc = await UploadFileToken.findOne({ uploadToken });
 
-  if (!token) {
+  console.log(uploadToken)
+
+  if (!tokenDoc) {
+    return res.status(403).json({ 
+        status: "fail", 
+        message: 'Invalid Token' 
+    });
+  }
+
+  if (!tokenDoc || tokenDoc.expiresAt < new Date()) {
+    return res.status(403).json({
+      status: "fail", 
+      message: 'Token invalid or expired' 
+    });
+  }
+
+  if (!uploadToken) {
     return res.status(400).json({
       status: "fail",
       message: "Missing token",
     });
   }
 
-  const fileToken = await UploadFileToken.findOne({ uploadToken: token });
-
-  if (!fileToken) {
-    return res.status(400).json({
-      status: "fail",
-      message: "Invalid Token",
-    });
-  }
-
-  if (fileToken.uploaded) {
+  if (tokenDoc.uploaded) {
     return res.status(400).json({
       status: "fail",
       message: "Already uploaded",
     });
   }
 
-  if (new Date() > fileToken.tokenExpiry) {
+  if (new Date() > tokenDoc.tokenExpiry) {
     return res.status(400).json({
       status: "fail",
       message: "Token Expired",
     });
   }
 
-  fileToken.uploaded = true;
+  // Upload file using multer
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ message: "File upload failed" });
+    }
 
-  await fileToken.save();
+    // if (!req.fileName) {
+    //   return res.status(400).json({ message: "No file provided" });
+    // }
 
-  return res.status(400).json({
-    status: "success",
-    message: "File uploaded successfully to GridFS",
+    // Mark token as uploaded
+    tokenDoc.uploaded = true;
+    await tokenDoc.save();
+
+    res.status(200).json({
+      message: "File uploaded successfully",
+      fileName: req.filename,
+    });
   });
 
 };
