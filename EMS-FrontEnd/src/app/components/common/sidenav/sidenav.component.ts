@@ -62,7 +62,7 @@ export class SidenavComponent implements OnInit {
   }
 
   navigateTO(url: string) {
-    debugger
+    // debugger
     this.navigateEvent.emit(url);
   }
 

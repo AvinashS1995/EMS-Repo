@@ -50,41 +50,9 @@
     min-width: 200px;
   }
 
-  /* Image container styles */
-.image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  // margin-bottom: 20px;
-  position: relative;
-}
-
-img {
-  height: 100px;
-  width: 100px;
-  border: 5px solid #000;
-  border-radius: 50%;
-}
-
-/* Style for the file input (invisible) */
-.select-profile-picture {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
 
 /* Button styles */
 button {
   margin-top: 10px;
 }
 
-/* Cropper preview style */
-.mat-dialog-content img {
-  width: 100%;
-  height: auto;
-}

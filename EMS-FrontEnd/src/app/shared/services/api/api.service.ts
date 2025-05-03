@@ -13,4 +13,13 @@ export class ApiService {
     return this.http.post(`${endPoint}`, request);
     
   }
+
+  getApiCall(endPoint: string) {
+    return this.http.get<any>(`${endPoint}`);
+  }
+
+  postApiCall(endPoint: string, request: any) {
+    return this.http.post<any>(`${endPoint}`, request);
+  }
+
 }

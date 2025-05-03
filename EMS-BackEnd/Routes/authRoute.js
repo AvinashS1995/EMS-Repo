@@ -1,6 +1,6 @@
 import express from 'express';
 import { Login, LogOut, resendOtp, resetPassword, sendOtp, VerifyEmail, verifyOtp } from '../Controllers/LoginController.js';
-import { CreateUser, CreateRole, GetAllRoles } from '../Controllers/UserController.js';
+import { CreateUser, CreateTypeList, GetTypeList, UpdateTypeList, DeleteTypeList } from '../Controllers/UserController.js';
 
 
 const router = express.Router();
@@ -13,8 +13,10 @@ router.post('/resend-otp', resendOtp)
 router.post('/verify-otp', verifyOtp)
 router.post('/reset-password', resetPassword)
 router.post('/log-out', LogOut)
-router.post('/create-role', CreateRole)
-router.get('/getall-roles', GetAllRoles)
+router.post('/save-type-list', CreateTypeList)
+router.post('/get-type-list', GetTypeList)
+router.post('/update-type-list', UpdateTypeList)
+router.post('/delete-type-list', DeleteTypeList)
 
 
 export default router;

@@ -1,1 +1,95 @@
-<p>add-employee works!</p>
+<div class="container">
+    <h1 mat-dialog-title>Add New Employee</h1>
+    <mat-dialog-content>
+        <form [formGroup]="employeeForm">
+
+            <div class="image-container">
+                <label class="hoverable" for="fileInput" >
+                    <span matTooltip="Tap here to select your picture" matTooltipPosition="above"></span>
+                    <img [src]="previewUrl ? previewUrl : 'https://www.w3schools.com/howto/img_avatar.png'" />
+                    <!-- <div class="hover-text">Choose file</div> -->
+                    <div class="background"></div>
+                </label>
+                <br />
+                <input id="fileInput" type="file" (change)="onSelectFile($event)" class="select-profile-picture" />
+                <!-- <span class="message">Tap here to select your picture</span> -->
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" (selectionChange)="filterStatus($event.value)">
+                    <mat-option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type" (selectionChange)="filterByType()">
+                    <mat-option *ngFor="let type of typeList" [value]="type.value">{{ type.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Team Leader</mat-label>
+                <input matInput formControlName="teamLeader">
+            </mat-form-field>
+
+            <!-- <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Role</mat-label>
+                <input matInput formControlName="role">
+            </mat-form-field> -->
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role" [(ngModel)]="selectedRole" (selectionChange)="filterByRole()">
+                    <mat-option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Designation</mat-label>
+                <mat-select formControlName="designation" (selectionChange)="filterByRole()">
+                    <mat-option *ngFor="let designation of designationList" [value]="designation.value">{{
+                        designation.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Joining Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="joiningDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Salary</mat-label>
+                <input matInput type="number" formControlName="salary">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Work Type</mat-label>
+                <mat-select formControlName="workType" (selectionChange)="filterByRole()">
+                    <mat-option *ngFor="let workType of workTypeList" [value]="workType.value">{{ workType.label
+                        }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </form>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <div class="actions">
+            <button mat-flat-button color="primary" type="submit" class="example-full-width"
+                >Save</button>
+            <button mat-flat-button color="warn" type="button" class="example-full-width"
+                (click)="cancel()">Cancel</button>
+        </div>
+    </mat-dialog-actions>
+
+</div>

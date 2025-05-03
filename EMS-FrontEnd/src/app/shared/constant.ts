@@ -6,9 +6,12 @@ const API_ENDPOINTS = {
   SERVICE_VERIFYOTP: 'auth/verify-otp',
   SERVICE_RESETPASSWORD: 'auth/reset-password',
   SERVICE_LOG_OUT: 'auth/log-out',
-  SERVICE_CREATEROLE: 'auth/create-role',
-  SERVICE_GETALLROLES: 'auth/getall-roles',
+  SERVICE_SAVEROLETYPE: 'auth/save-type-list',
+  SERVICE_GETROLETYPE: 'auth/get-type-list',
+  SERVICE_UPDATEROLETYPE: 'auth/update-type-list',
+  SERVICE_DELETEROLETYPE: 'auth/delete-type-list',
   SERVICE_ROLEWISEMENUS: 'menu/getrole-wise-menu',
+  SERVICE_GETALLSTATUS: 'auth/getall-status',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)

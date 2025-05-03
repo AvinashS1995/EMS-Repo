@@ -17,23 +17,20 @@
         <div class="filter-container">
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Search</mat-label>
-                <input matInput (input)="onSearchInput($event)" placeholder="Search by Id, Name, Email">
+                <input matInput (input)="onSearchInput($event)" placeholder="Search by Name">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Status</mat-label>
                 <mat-select (selectionChange)="filterStatus($event.value)">
-                    <mat-option value="">All</mat-option>
-                    <mat-option value="Active">Active</mat-option>
-                    <mat-option value="Inactive">Inactive</mat-option>
+                    <mat-option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Role</mat-label>
                 <mat-select [(ngModel)]="selectedRole" (selectionChange)="filterByRole()">
-                    <mat-option value="">All</mat-option>
-                    <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+                    <mat-option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -114,7 +111,7 @@
             </ng-container>
 
             <!-- Productive -->
-            <ng-container matColumnDef="productive">
+            <!-- <ng-container matColumnDef="productive">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Productive </th>
                 <td mat-cell *matCellDef="let employee">
                     <div class="productive-bar">
@@ -122,7 +119,7 @@
                         <span>{{employee.productive}}%</span>
                     </div>
                 </td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Joining Date -->
             <ng-container matColumnDef="joiningDate">

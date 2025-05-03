@@ -16,7 +16,7 @@ const ConnectToDatabase = async () => {
         console.log(`Database is Connected and Running Url ${process.env.MONGO_DB_LOCAL_URL}`)
 
         const db = mongoose.connection.db;
-        console.log("DB---->", db)
+        // console.log("DB---->", db)
         gfs = new GridFSBucket(db, {
           bucketName: 'uploads',
         });
