@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { CommonService } from '../../../../shared/services/common/common.service';
+import { ApiService } from '../../../../shared/services/api/api.service';
+import { API_ENDPOINTS } from '../../../../shared/constant';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -40,19 +43,23 @@ export class AddEmployeeComponent {
   roles: Array<any> = [];
   statuses: Array<any> = [];
   selectedRole: string = '';
-  typeList: Array<any> = [];
+  experienceTypeList: Array<any> = [];
   designationList: Array<any> = [];
   workTypeList: Array<any> = [];
 
-  url: string | ArrayBuffer = '';
-  previewUrl: string | ArrayBuffer | null = null;  // Store the image URL or base64 data
+  isEditMode: Boolean = false;
+
+  previewUrl: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null; // Store the image URL or base64 data
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<AddEmployeeComponent>,
-  @Inject(MAT_DIALOG_DATA) public data: any
+        private router: Router,
+        private apiService: ApiService,
+        private commonService: CommonService,
+        private dialog: MatDialog,
+        private dialogRef: MatDialogRef<AddEmployeeComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
 
   ) {
 
@@ -66,31 +73,20 @@ export class AddEmployeeComponent {
     
     this.statuses = this.data.Status.filter((role:any) => role.value !== 'All') || []
 
-    this.typeList = this.typeList.concat(
-      {value: "Fresher", label: "Fresher"},
-      {value: "Experience", label: "Experience"}
-    );
+    this.experienceTypeList = this.data.experienceLevel || [];
 
-    this.designationList = this.designationList.concat(
-      {value: "1", label: "UX/UI Designer"},
-      {value: "2", label: "Finance Analyst"},
-      {value: "3", label: "Systems Analyst"},
-      {value: "4", label: "Product Manager"},
-      {value: "5", label: "Data Scientist"},
-      {value: "6", label: "Technical Support"},
-      {value: "7", label: "Marketing"},
-      {value: "8", label: "Marketing"},
-      {value: "9", label: "Front End Developer"},
-      {value: "10", label: "Back End Developer"},
-      {value: "11", label: "Full Stack Developer"},
-      {value: "12", label: "Dev Ops Engineer"},
-      {value: "13", label: "Tester"},
-    );
+    console.log("Experience Level", this.experienceTypeList);
 
-    this.workTypeList = this.workTypeList.concat(
-      {value: "1", label: "WFO"},
-      {value: "2", label: "WFH"},
-    )
+    this.designationList = this.data.designations || [];
+
+    console.log("Designations", this.designationList);
+    
+
+    this.workTypeList = this.data.workType || [];
+
+    console.log("Designations", this.designationList);
+
+    
     
   }
 
@@ -98,7 +94,8 @@ export class AddEmployeeComponent {
     this.employeeForm = this.fb.group({
       profileImage: [''],
       name: ['', Validators.required],
-      status: ['Active', Validators.required],
+      email: ['', Validators.required],
+      status: ['', Validators.required],
       type: [''],
       teamLeader: [''],
       role: [''],
@@ -107,56 +104,87 @@ export class AddEmployeeComponent {
       salary: [0],
       workType: [''],
     });
-  }
 
-  filterStatus(status: string) {
-    // you can customize filter here
-  }
-
-  filterByRole() {
-  }
-
-  filterByType() {
-
-  }
-
-  saveEmployee() {
-    if (this.employeeForm.valid) {
-      const newEmployee = this.employeeForm.value;
-
-      // Now save newEmployee into backend (API call) or local array if dummy
-      // After saving, redirect back to employees page
-
-      console.log('New employee data:', newEmployee);
-
-      this.router.navigate(['/employees-management']); // Redirect back to Manage Employees
-    }
-  }
-
-  onSelectFile(event: Event) {
-    debugger
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-    reader.onload = () => {
-      this.previewUrl = reader.result;
-
-      // Assign base64 or file based on your need
+    if (this.data.editData) {
+      this.isEditMode = true;
+      // debugger
       this.employeeForm.patchValue({
-        profileImage: reader.result // or use 'file' if you want the raw file
+        name: this.data.editData.name,
+        email: this.data.editData.email,
+        status: this.data.editData.status,
+        type: this.data.editData.type,
+        teamLeader: this.data.editData.teamLeader,
+        role: this.data.editData.role,
+        designation: this.data.editData.designation,
+        joiningDate: this.data.editData.joiningDate,
+        salary: this.data.editData.salary,
+        workType: this.data.editData.workType
+
       });
 
-      // These must be inside the onload to ensure the file is read
-      console.log('Form Value:', this.employeeForm.getRawValue());
-      console.log('Preview URL:', this.previewUrl);
-    };
-      reader.readAsDataURL(file);
+      console.log("Form---->", this.employeeForm.getRawValue());
+      
     }
-    
-    console.log('Form Value:', this.employeeForm.getRawValue());
-    
   }
+
+
+  saveEmployee() {
+    debugger
+    if (this.employeeForm.valid) {
+      const newEmployee = this.employeeForm.getRawValue();
+
+      console.log(newEmployee)
+
+      const paylaod = {
+        id: this.isEditMode ? this.data.editData?._id : 0,
+        name: newEmployee.name ? newEmployee.name : '',
+        email: newEmployee.email ? newEmployee.email : '',
+        role: newEmployee.role ? newEmployee.role : '',
+        status: newEmployee.status ? newEmployee.status : '',
+        type: newEmployee.type ? newEmployee.type : '',
+        teamLeader: newEmployee.teamLeader ? newEmployee.teamLeader : '',
+        designation: newEmployee.designation ? newEmployee.designation : '',
+        joiningDate: newEmployee.joiningDate ? newEmployee.joiningDate : '',
+        salary: newEmployee.salary ? newEmployee.salary : 0,
+        workType: newEmployee.workType ? newEmployee.workType : '',
+        profileImage: newEmployee.profileImage ? newEmployee.profileImage : '',
+      };
+      
+      console.log('New employee data:', paylaod);
+
+      const ENDPOINT = this.data.editData
+        ? API_ENDPOINTS.SERVICE_UPDATE_EMPLOYEE_LIST
+        : API_ENDPOINTS.SERVICE_SAVE_NEW_USER;
+
+      this.apiService.postApiCall(ENDPOINT, paylaod).subscribe({
+        next: (res: any) => {
+          console.log(`${ENDPOINT} Response : `, res);
+
+          this.commonService.openSnackbar(res.message, 'success');
+          this.dialogRef.close(this.data.editData ? 'updated' : 'saved');
+        },
+        error: (error) => {
+          this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+
+      // this.router.navigate(['/employees-management']); // Redirect back to Manage Employees
+    }
+  }
+
+  onSelectFile(event: Event): void {
+    // debugger
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file && ['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
+      // this.fileName = file.name;
+      const formData = new FormData()
+      
+      formData.append('file', file);
+
+      
+  }
+}
 
 
   cancel() {

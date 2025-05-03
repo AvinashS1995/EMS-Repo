@@ -3,12 +3,33 @@ import { Type, User } from "../Models/UserModel.js";
 import bcrypt from "bcrypt";
 
 const CreateUser = async (req, res) => {
-  ConnectToDatabase();
 
   try {
-    const { name, email, password, role } = req.body;
+    const {
+      name,
+      email,
+      role,
+      status,
+      type,
+      teamLeader,
+      designation,
+      joiningDate,
+      salary,
+      workType,
+      profileImage,
+    } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (
+      !name ||
+      !email ||
+      !role ||
+      !status ||
+      !type ||
+      !designation ||
+      !joiningDate ||
+      !salary ||
+      !workType
+    ) {
       return res.status(400).json({
         status: "fail",
         message: "All fields are required",
@@ -23,19 +44,61 @@ const CreateUser = async (req, res) => {
       });
     }
 
+    // if (!req.file) {
+    //   return res.status(400).json({
+    //     status: "fail",
+    //     message: "Profile image is required"
+    //   });
+    // }
+
+    // // ✅ Auto-generate employee number
+    // const lastEmployee = await User.findOne().sort({ _id: -1 }); // get latest
+    // let employeeNo = "EMP001";
+    // if (lastEmployee && lastEmployee.employeeNo) {
+    //   const lastNo = parseInt(lastEmployee.employeeNo.replace("EMP", ""), 10);
+    //   const nextNo = lastNo + 1;
+    //   employeeNo = "EMP" + nextNo.toString().padStart(3, "0");
+    // }
+
+     // Find the last inserted employee sorted by empNo
+     const lastEmp = await User.findOne()
+     .sort({ empNo: -1 })
+     .collation({ locale: "en_US", numericOrdering: true });
+
+   let empNo = 'EMP001'; // default for first record
+
+   if (lastEmp && lastEmp.empNo) {
+     const lastNumber = parseInt(lastEmp.empNo.replace('EMP', ''));
+     const newNumber = lastNumber + 1;
+     empNo = `EMP${String(newNumber).padStart(3, '0')}`;
+   }
+
+    const password = "Admin@1234";
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
+      empNo,
       name,
       email,
       password: hashPassword,
       role,
+      status,
+      type,
+      teamLeader,
+      designation,
+      joiningDate,
+      salary,
+      workType,
     });
 
     await newUser.save();
     res.status(201).json({
       status: "success",
       message: "User created successfully",
+      data: {
+        empNo: empNo,
+        employeeId: newUser._id,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -45,6 +108,144 @@ const CreateUser = async (req, res) => {
     });
   }
 };
+
+const GetUserList = async (req, res) => {
+  try {
+    const { name, role , status, type} = req.body;
+
+    // const query = entityValue ? { entityValue } : {};
+    
+    const query = {};
+
+    if (role) {
+      query.role = role;
+    }
+
+    if (status) {
+      query.status = status;
+    }
+
+    if (type) {
+      query.type = type;
+    }
+
+    if (name) {
+      query.name = { $regex: '^' + name, $options: 'i' };
+    }
+
+    const page = parseInt(req.body.page) || 1;
+    const limit = parseInt(req.body.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await User.countDocuments();
+    // const data = await User.find().skip(skip).limit(limit);
+
+    
+      const users = await User.find(query).skip(skip).limit(limit);
+
+    res.status(200).json({
+      status: "success",
+      message: "Record(s) Fetched Successfully..!",
+      data: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalRecords: total,
+        users
+        
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      error: err.message,
+    });
+  }
+};
+
+const UpdateEmployeeList = async (req, res) => {
+  try {
+    const {
+      id,
+      name,
+      email,
+      role,
+      status,
+      type,
+      teamLeader,
+      designation,
+      joiningDate,
+      salary,
+      workType,
+      profileImage,
+    } = req.body;
+
+    const existingType = await User.findById(id);
+    // console.log(existingType);
+    
+
+    if (!existingType) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Employee not found",
+      });
+    }
+
+    existingType.name = name;
+    existingType.email = email;
+    existingType.role = role;
+    existingType.status = status;
+    existingType.teamLeader = teamLeader;
+    existingType.designation = designation;
+    existingType.joiningDate = joiningDate;
+    existingType.salary = salary;
+    existingType.workType = workType;
+    existingType.profileImage = profileImage;
+
+    await existingType.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Record(s) Updated Successfully!",
+      data: {
+        existingType
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+const DeleteEmployeeList = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const deleted = await User.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Employee not found!",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Record(s) Deleted Successfully..!",
+      data: {
+        deleted
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      error: err.message,
+    });
+  }
+};
+
 
 const CreateTypeList = async (req, res) => {
   try {
@@ -132,6 +333,8 @@ const UpdateTypeList = async (req, res) => {
     const { id, entityValue, typeLabel, description } = req.body;
 
     const existingType = await Type.findById(id);
+    // console.log(existingType);
+    
 
     if (!existingType) {
       return res.status(404).json({
@@ -147,7 +350,7 @@ const UpdateTypeList = async (req, res) => {
 
     await existingType.save();
 
-    res.status(204).json({
+    res.status(200).json({
       status: "success",
       message: "Record(s) Updated Successfully!",
       data: {
@@ -196,4 +399,4 @@ const DeleteTypeList = async (req, res) => {
   }
 };
 
-export { CreateUser, CreateTypeList, GetTypeList, UpdateTypeList, DeleteTypeList };
+export { CreateUser, GetUserList, UpdateEmployeeList, DeleteEmployeeList, CreateTypeList, GetTypeList, UpdateTypeList, DeleteTypeList };

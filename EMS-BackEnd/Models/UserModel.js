@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    empNo: {
+        type: String,
+    },
     name: {
         type: String,
         required: [true, 'Name is required field']
@@ -16,12 +19,40 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "employee"],
         required: [true, 'Role is requied field']
     },
-    profileImage: {
-        type: String
+    type: {
+        type: String,
+        required: [true, 'Type is requied field']
     },
+    status: {
+        type: String,
+        required: [true, 'Status is requied field']
+    },
+    teamLeader: {
+        type: String,
+        required: [true, 'Team Leader is requied field']
+    },
+    designation: {
+        type: String,
+        required: [true, 'Designation is requied field']
+    },
+    joiningDate: {
+        type: String,
+        required: [true, 'Joining Date is requied field']
+    },
+    salary: {
+        type: Number,
+        required: [true, 'Salary is requied field']
+    },
+    workType: {
+        type: String,
+        required: [true, 'Work Type is requied field']
+    },
+    profileImage: {
+        data: Buffer,
+        contentType: String,
+      },
     createAt: {
         type: Date, default: Date.now
     },
@@ -61,22 +92,5 @@ const typeSchema = new mongoose.Schema({
 
 const Type = mongoose.model("Type", typeSchema)
 
-const statusSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Status is required field'],
-        unique: true
-    },
-    description: {
-        type: String,
-        required: [true, 'Status Description is required field']
-    }
-}, 
-{
-    timestamps: true
-})
 
-const Status = mongoose.model("Status", statusSchema)
-
-
-export  { User, Type, Status };
+export  { User, Type };

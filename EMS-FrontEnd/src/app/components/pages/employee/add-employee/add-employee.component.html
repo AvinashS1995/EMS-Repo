@@ -1,5 +1,5 @@
 <div class="container">
-    <h1 mat-dialog-title>Add New Employee</h1>
+    <h1 mat-dialog-title>{{isEditMode ? 'Update Employee' : 'Add New Employee'}}</h1>
     <mat-dialog-content>
         <form [formGroup]="employeeForm">
 
@@ -17,20 +17,26 @@
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name" required>
+                <input matInput formControlName="name">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Status</mat-label>
-                <mat-select formControlName="status" (selectionChange)="filterStatus($event.value)">
-                    <mat-option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</mat-option>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role">
+                    <mat-option *ngFor="let role of roles" [value]="role.label">{{ role.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Type</mat-label>
-                <mat-select formControlName="type" (selectionChange)="filterByType()">
-                    <mat-option *ngFor="let type of typeList" [value]="type.value">{{ type.label }}</mat-option>
+                <mat-label>Designation</mat-label>
+                <mat-select formControlName="designation">
+                    <mat-option *ngFor="let designation of designationList" [value]="designation.label">{{
+                        designation.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -39,23 +45,10 @@
                 <input matInput formControlName="teamLeader">
             </mat-form-field>
 
-            <!-- <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Role</mat-label>
-                <input matInput formControlName="role">
-            </mat-form-field> -->
-
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Role</mat-label>
-                <mat-select formControlName="role" [(ngModel)]="selectedRole" (selectionChange)="filterByRole()">
-                    <mat-option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Designation</mat-label>
-                <mat-select formControlName="designation" (selectionChange)="filterByRole()">
-                    <mat-option *ngFor="let designation of designationList" [value]="designation.value">{{
-                        designation.label }}</mat-option>
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type" >
+                    <mat-option *ngFor="let type of experienceTypeList" [value]="type.label">{{ type.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -67,17 +60,29 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" >
+                    <mat-option *ngFor="let status of statuses" [value]="status.label">{{ status.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Salary</mat-label>
                 <input matInput type="number" formControlName="salary">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Work Type</mat-label>
-                <mat-select formControlName="workType" (selectionChange)="filterByRole()">
-                    <mat-option *ngFor="let workType of workTypeList" [value]="workType.value">{{ workType.label
+                <mat-select formControlName="workType">
+                    <mat-option *ngFor="let workType of workTypeList" [value]="workType.label">{{ workType.label
                         }}</mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <!-- <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Role</mat-label>
+                <input matInput formControlName="role">
+            </mat-form-field> -->
 
         </form>
 
@@ -86,7 +91,7 @@
     <mat-dialog-actions align="end">
         <div class="actions">
             <button mat-flat-button color="primary" type="submit" class="example-full-width"
-                >Save</button>
+              (click)="saveEmployee()"  >{{isEditMode ? 'Update' : 'Save'}}</button>
             <button mat-flat-button color="warn" type="button" class="example-full-width"
                 (click)="cancel()">Cancel</button>
         </div>

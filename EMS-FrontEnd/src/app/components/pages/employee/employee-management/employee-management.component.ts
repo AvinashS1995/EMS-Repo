@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -19,33 +19,8 @@ import { takeUntil } from 'rxjs';
 import { ApiService } from '../../../../shared/services/api/api.service';
 import { API_ENDPOINTS } from '../../../../shared/constant';
 import { HttpClient } from '@angular/common/http';
-
-const EMPLOYEE_DATA = [
-  {
-    id: 1256,
-    name: 'Ronald Richards',
-    status: 'Active',
-    type: 'Experience',
-    teamLeader: 'Philip P.',
-    role: 'UI/UX Designer',
-    productive: 90,
-    joiningDate: new Date('2024-03-20'),
-    salary: 4256,
-    workType: 'WFO',
-  },
-  {
-    id: 1258,
-    name: 'Theresa Webb',
-    status: 'Inactive',
-    type: 'Fresher',
-    teamLeader: 'Colleen S.',
-    role: 'Developer',
-    productive: 64,
-    joiningDate: new Date('2015-03-20'),
-    salary: 1458,
-    workType: 'WFH',
-  },
-];
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonService } from '../../../../shared/services/common/common.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -75,134 +50,211 @@ export const MY_DATE_FORMATS = {
   ],
 })
 export class EmployeeManagementComponent {
+
   displayedColumns: string[] = [
-    'id',
+    'empno',
     'name',
     'role',
+    'designation',
     'type',
     'teamLeader',
     'joiningDate',
     'salary',
     'workType',
     'status',
-    'view',
+    'action'
   ];
-  dataSource = new MatTableDataSource<any>(EMPLOYEE_DATA);
+  dataSource: Array<any> = [];
+
+
+  employeeFilterForm!: FormGroup;
 
   searchText: string = '';
   selectedRole: string = '';
   selectedDate: Date | null = null;
   roles: Array<any> = [];
   statuses: Array<any> = [];
+  designationList: Array<any> = [];
+  experienceTypeList: Array<any> = [];
+  workTypeList: Array<any> = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  totalRecords = 0;
+  pageSize = 5;
+  currentPage: number = 1;
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private activateRoute: ActivatedRoute,
     private apiService: ApiService,
-    private http : HttpClient
+    private fb: FormBuilder,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.prepareEmployeeFilterForm();
     this.getparam();
-    // this.getEmployees();
+    this.getEmployees();
   }
 
   getparam() {
     this.activateRoute.data.subscribe((params) => {
       console.log('Title ---->', params);
 
-      this.roles = params['data'].roles?.data?.types || [];
-      this.roles = this.roles.map((item) => {
-        return {
-          value: item.typeValue,
-          label: item.typeLabel,
-        };
-      });
+      if (params['data']) {
+        this.roles = params['data'].roles?.data?.types || [];
+        this.roles = this.roles.map((item) => {
+          return {
+            value: item.typeValue,
+            label: item.typeLabel,
+          };
+        });
 
-      console.log('Roles--->', this.roles);
+        console.log('Roles--->', this.roles);
 
-      this.statuses = params['data'].status?.data?.types || [];
-    this.statuses = this.statuses.map((status) => {
-      return {
-        value: status.typeValue,
-        label: status.typeLabel,
-      };
+        this.statuses = params['data'].status?.data?.types || [];
+        this.statuses = this.statuses.map((status) => {
+          return {
+            value: status.typeValue,
+            label: status.typeLabel,
+          };
+        });
+
+        console.log('Status ---->', this.statuses);
+
+        this.designationList = params['data'].designations?.data?.types || [];
+        this.designationList = this.designationList.map((description) => {
+          return {
+            value: description.typeValue,
+            label: description.typeLabel,
+          };
+        });
+
+        this.experienceTypeList = params['data'].experienceLevel?.data?.types || [];
+        this.experienceTypeList = this.experienceTypeList.map((experienceLevel) => {
+          return {
+            value: experienceLevel.typeValue,
+            label: experienceLevel.typeLabel,
+          };
+        });
+
+        this.workTypeList = params['data'].workType?.data?.types || [];
+        this.workTypeList = this.workTypeList.map((workType) => {
+          return {
+            value: workType.typeValue,
+            label: workType.typeLabel,
+          };
+        });
+      }
     });
-
-    console.log("Status ---->", this.statuses)
-    });
-
-    
   }
 
-  applySearch(searchTerm: string) {
-    console.log('Searching for:', searchTerm);
-    // Your actual filter/search logic here
+  prepareEmployeeFilterForm() {
+     this.employeeFilterForm = this.fb.group({
+          name: ['',],
+          role: [''],
+          status: [''],
+          type: [''],
+        });
   }
+  
 
-  filterStatus(status: string) {
-    // you can customize filter here
-  }
-
-  filterType(type: string) {
-    // you can customize filter here
-  }
-
-  filterDate(date: any) {
-    // you can customize filter here
-  }
-
-  addEmployee() {
-    this.getEmployees();
+  addEmployee(employeeTypeData?: any) {
+    // debugger
     const dialogRef = this.dialog.open(AddEmployeeComponent, {
       width: '600px',
       disableClose: true,
       data: {
+        editData: employeeTypeData || null,
         Roles: this.roles,
-        Status: this.statuses
+        Status: this.statuses,
+        designations: this.designationList,
+        experienceLevel: this.experienceTypeList,
+        workType: this.workTypeList
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result === 'saved') {
+      if (result === 'saved' || result === 'updated') {
         this.getEmployees();
       }
     });
   }
 
   getEmployees() {
-    
+
+    const { name, role, status, type} = this.employeeFilterForm.getRawValue()
+
+    const paylaod = {
+      name: name ? name : '',
+      role: role ? role : '',
+      status: status ? status : '',
+      type: type ? type : '',
+      page: this.currentPage,
+      limit: this.pageSize
+    }
+
+    this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GET_USER_LIST, paylaod).subscribe({
+      next: (res: any) => {
+        console.log(`${API_ENDPOINTS.SERVICE_SAVE_NEW_USER} Response : `, res);
+
+        this.dataSource = res?.data?.users || [];
+        this.totalRecords = res.data.totalRecords || 0;
+        
+        this.commonService.openSnackbar(res.message, 'success');
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
   }
 
-  onSearchInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchText = value;
-    this.applyFilters();
-  }
-
-  filterByRole() {
-    this.applyFilters();
-  }
-
-  filterByDate() {
-    this.applyFilters();
-    console.log(this.selectedDate);
-  }
 
   clearFilters() {
-    this.searchText = '';
-    this.selectedRole = '';
-    this.selectedDate = null;
-    this.applyFilters();
+   this.employeeFilterForm.reset();
   }
 
   applyFilters() {
-    // Logic to apply searchText, selectedRole, selectedDate
+    this.getEmployees();
   }
+
+  editEmployee(employee: any) {
+    // debugger
+    this.addEmployee(employee)
+  }
+
+  deleteEmployee(employee: any) {
+debugger
+    const paylaod = {
+      id: employee ? employee._id : 0,
+    };
+
+    console.log(paylaod);
+
+    this.apiService
+      .postApiCall(API_ENDPOINTS.SERVICE_DELETE_EMPLOYEE_LIST, paylaod)
+      .subscribe({
+        next: (res: any) => {
+          console.log(
+            `${API_ENDPOINTS.SERVICE_DELETE_EMPLOYEE_LIST} Response : `,
+            res
+          );
+          this.getEmployees();
+
+          this.commonService.openSnackbar(res.message, 'success');
+        },
+        error: (error) => {
+          this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+    console.log('Delete clicked:', employee);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.getEmployees();
+  }
+
+  
 }

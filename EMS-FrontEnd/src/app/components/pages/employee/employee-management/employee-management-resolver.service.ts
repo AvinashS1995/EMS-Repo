@@ -16,6 +16,9 @@ export class EmployeeManagementResolverService {
 
     let roles = of({});
     let status = of({})
+    let designations = of({})
+    let experienceLevel = of({})
+    let workType = of({})
 
     let rolePayload = {
       
@@ -23,11 +26,17 @@ export class EmployeeManagementResolverService {
     
     roles = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Role" });
     status = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Status" });
+    designations = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Designation" });
+    experienceLevel = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "ExperienceType" });
+    workType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "WorkType" });
 
 
    return forkJoin({
     roles,
-    status
+    status,
+    designations,
+    experienceLevel,
+    workType
     });
   }
 }
