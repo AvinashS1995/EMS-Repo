@@ -16,13 +16,19 @@ const API_ENDPOINTS = {
   SERVICE_DELETEROLETYPE: 'auth/delete-type-list',
   SERVICE_ROLEWISEMENUS: 'menu/getrole-wise-menu',
   SERVICE_GETALLSTATUS: 'auth/getall-status',
+  SERVICE_SEND_CHECK_INS_OTP: 'attendence/send-check-ins-otp',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)
 const REGEX = {
-  PASSWORD_REGEX:
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$',
+
+  MOBILE_NUMBER_REGEX: /^\d{10}$/,
+  EMAIL_REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 };
+
+
+
+
 
 enum ForgotPasswordStep {
   VERIFY_EMAIL,
@@ -31,4 +37,9 @@ enum ForgotPasswordStep {
   RESET_PASSWORD,
 }
 
-export { API_ENDPOINTS, REGEX, ForgotPasswordStep };
+enum CheckInsStep {
+  INITIAL,
+  SEND_OTP
+}
+
+export { API_ENDPOINTS, REGEX, ForgotPasswordStep, CheckInsStep };

@@ -53,7 +53,7 @@ export const routes: Routes = [
         path: 'attendence-management',
         loadComponent: () =>
           import(
-            '../app/components/pages/attendence-management/attendence-management.component'
+            '../app/components/pages/attendence/attendence-management/attendence-management.component'
           ).then((c) => c.AttendenceManagementComponent),
       },
       {

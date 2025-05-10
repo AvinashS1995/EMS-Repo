@@ -8,7 +8,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { CommonService } from '../../../../shared/services/common/common.service';
 import { ApiService } from '../../../../shared/services/api/api.service';
-import { API_ENDPOINTS } from '../../../../shared/constant';
+import { API_ENDPOINTS, REGEX } from '../../../../shared/constant';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -94,7 +94,8 @@ export class AddEmployeeComponent {
     this.employeeForm = this.fb.group({
       profileImage: [''],
       name: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(REGEX.EMAIL_REGEX)]],
+      mobile: ['', [Validators.required, Validators.pattern(REGEX.MOBILE_NUMBER_REGEX)]],
       status: ['', Validators.required],
       type: [''],
       teamLeader: [''],
@@ -111,6 +112,7 @@ export class AddEmployeeComponent {
       this.employeeForm.patchValue({
         name: this.data.editData.name,
         email: this.data.editData.email,
+        mobile: this.data.editData.mobile,
         status: this.data.editData.status,
         type: this.data.editData.type,
         teamLeader: this.data.editData.teamLeader,
@@ -121,6 +123,9 @@ export class AddEmployeeComponent {
         workType: this.data.editData.workType
 
       });
+
+      // this.employeeForm.controls['email'].disable();
+      // this.employeeForm.controls['mobile'].disable();
 
       console.log("Form---->", this.employeeForm.getRawValue());
       
@@ -139,6 +144,7 @@ export class AddEmployeeComponent {
         id: this.isEditMode ? this.data.editData?._id : 0,
         name: newEmployee.name ? newEmployee.name : '',
         email: newEmployee.email ? newEmployee.email : '',
+        mobile: newEmployee.mobile ? newEmployee.mobile : '',
         role: newEmployee.role ? newEmployee.role : '',
         status: newEmployee.status ? newEmployee.status : '',
         type: newEmployee.type ? newEmployee.type : '',
@@ -169,6 +175,8 @@ export class AddEmployeeComponent {
       });
 
       // this.router.navigate(['/employees-management']); // Redirect back to Manage Employees
+    } else {
+      this.employeeForm.markAllAsTouched();
     }
   }
 

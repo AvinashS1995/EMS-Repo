@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { SharedModule } from '../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { SharedModule } from '../../../../shared/shared.module';
 
 const ATTENDANCE_DATA: AttendanceRecord[] = [
   { date: '13/01', name: 'Aisha Doe', role: 'UX/UI Designer', employmentType: 'Full-Time', status: 'Present', checkIn: '09:00 AM', checkOut: '05:00 PM', photo: 'assets/images/avatar1.png' },

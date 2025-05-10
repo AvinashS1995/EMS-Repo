@@ -84,4 +84,8 @@ export class CommonService {
 
     return dialogRef.afterClosed();
   }
+
+  getToken(): string | null {
+    return sessionStorage.getItem('token') || localStorage.getItem('token');
+  }
 }

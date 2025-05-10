@@ -22,6 +22,7 @@ export class SidenavComponent implements OnInit {
 
   UserName: string = '';
   RoleName: string = '';
+  token: string | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -31,7 +32,15 @@ export class SidenavComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadRoleBasedMenus();
+    if (typeof window !== 'undefined') {
+      this.token = this.commonService.getToken();
+      // console.log(token);
+    }
+
+    if (this.token) {
+      this.loadRoleBasedMenus();
+    }
+
     this.loadUserDetails();
   }
 
@@ -68,28 +77,37 @@ export class SidenavComponent implements OnInit {
 
   loadUserDetails() {
     if (typeof window !== 'undefined') {
-      const encryptedName = localStorage.getItem('userName') || sessionStorage.getItem('userName');
-      const encryptedRole = localStorage.getItem('roleName') || sessionStorage.getItem('roleName');
-  
-      const encryptedSecretKey = localStorage.getItem('key') || sessionStorage.getItem('key');
+      const encryptedName =
+        localStorage.getItem('userName') || sessionStorage.getItem('userName');
+      const encryptedRole =
+        localStorage.getItem('roleName') || sessionStorage.getItem('roleName');
+
+      const encryptedSecretKey =
+        localStorage.getItem('key') || sessionStorage.getItem('key');
 
       if (encryptedSecretKey) {
         // First decrypt the encrypted secretKey
-        const decryptedMainKey = this.commonService.decryptSecretKey(encryptedSecretKey);
+        const decryptedMainKey =
+          this.commonService.decryptSecretKey(encryptedSecretKey);
         this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
-        console.log("this.commonService.secretKey---->",this.commonService.secretKey );
-
+        console.log(
+          'this.commonService.secretKey---->',
+          this.commonService.secretKey
+        );
       }
       if (encryptedName && encryptedRole && this.commonService.secretKey) {
-        this.UserName = this.commonService.decryptWithKey(encryptedName, this.commonService.secretKey);
-        this.RoleName = this.commonService.decryptWithKey(encryptedRole, this.commonService.secretKey);
+        this.UserName = this.commonService.decryptWithKey(
+          encryptedName,
+          this.commonService.secretKey
+        );
+        this.RoleName = this.commonService.decryptWithKey(
+          encryptedRole,
+          this.commonService.secretKey
+        );
 
         console.log(`User Name ${this.UserName}  Role Name ${this.RoleName}`);
-        
       }
-      
     }
-    
   }
 
   confirmLogout() {
@@ -114,6 +132,8 @@ export class SidenavComponent implements OnInit {
       next: (res: any) => {
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
+        sessionStorage.clear();
+        localStorage.clear();
         this.commonService.openSnackbar(res.message, 'success');
         this.router.navigate(['/login']);
       },

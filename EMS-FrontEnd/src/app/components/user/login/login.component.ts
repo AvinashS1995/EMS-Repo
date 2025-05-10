@@ -16,6 +16,7 @@ import { error } from 'console';
 })
 export class LoginComponent {
   loginForm!: FormGroup;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -66,10 +67,7 @@ export class LoginComponent {
             // You can now use the decrypted key to encrypt other data if needed
             const storage = rememberMe ? localStorage : sessionStorage;
 
-            storage.setItem(
-              'token',
-              this.commonService.encryptWithKey(resp.token, decryptedSecret)
-            );
+            storage.setItem('token', resp.token);
             storage.setItem('key', resp.secretKey);
             storage.setItem(
               'userName',
@@ -79,6 +77,11 @@ export class LoginComponent {
               'roleName',
               this.commonService.encryptWithKey(resp.user.role, decryptedSecret)
             );
+            storage.setItem(
+              'email',
+              this.commonService.encryptWithKey(resp.user.email, decryptedSecret)
+            );
+
 
             this.commonService.openSnackbar(resp.message, 'success');
             // this.commonService.setUserDetails(resp.user.name, resp.user.role);
