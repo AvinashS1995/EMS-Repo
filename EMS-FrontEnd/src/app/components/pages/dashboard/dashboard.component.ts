@@ -33,7 +33,7 @@ export class DashboardComponent {
   openCheckIns() {
       // debugger
       if (typeof window !== 'undefined') {
-      this.hasCheckedIn = sessionStorage.getItem('checkedIn');
+      this.hasCheckedIn = sessionStorage.getItem('checkIns');
       }
 
       

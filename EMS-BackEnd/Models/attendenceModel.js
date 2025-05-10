@@ -5,6 +5,26 @@ const attendanceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: [true, 'Name is required field']
+},
+designation: {
+    type: String,
+    required: true,
+  },
+  employmentType: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
   checkInTime: {
     type: Date,
     required: true,
@@ -13,16 +33,18 @@ const attendanceSchema = new mongoose.Schema({
     type: Date, // Can be updated later (e.g., automatic checkout)
     default: null,
   },
-  deviceInfo: {
-    type: String, // Can be expanded to an object with more info if needed
-    required: true,
+  totalWorkedHours: {
+    type: String, // Can be updated later (e.g., automatic checkout)
+    default: null,
   },
-  location: {
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true },
+  createAt: {
+    type: Date,
+    default: Date.now,
   },
-}, {
-  timestamps: true,
+  updateAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);

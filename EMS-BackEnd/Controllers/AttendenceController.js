@@ -1,12 +1,16 @@
+import { User } from "../Models/UserModel.js";
+import Attendance from "../Models/attendenceModel.js";
 import OTP from "../Models/otpModel.js";
 import transporter from "../mail/transporter.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import moment from "moment";
 
 dotenv.config({ path: "./.env" });
 
-
-
+const OFFICE_START = moment("08:30", "HH:mm");
+const LATE_LIMIT = moment("10:30", "HH:mm");
+const OFFICE_HOURS = 9;
 
 // Send OTP API Method
 const sendCheckInsOtp = async (req, res) => {
@@ -25,7 +29,7 @@ const sendCheckInsOtp = async (req, res) => {
 
     // Store OTP in DB
     await OTP.create({ email, otp: hashedOtp, expiresAt });
-console.log(process.env);
+    // console.log(process.env);
 
     // Send Email
     const mailOptions = {
@@ -52,7 +56,7 @@ console.log(process.env);
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.log(err)
+        console.log(err);
         return res.status(500).json({
           status: "fail",
           message: err.message,
@@ -65,13 +69,217 @@ console.log(process.env);
       });
     });
   } catch (error) {
-    console.log(error)
-   return res.status(500).json({
+    // console.log(error);
+    return res.status(500).json({
       status: "fail",
       message: error.message,
     });
   }
 };
 
+const verifyCheckInsOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
 
-export { sendCheckInsOtp }
+    const existingOtp = await OTP.findOne({ email }).sort({ expiresAt: -1 });
+    if (!existingOtp) {
+      return res.status(400).json({
+        status: 'fail', 
+        message: "OTP not found. Please request a new one." 
+      });
+    }
+
+    const isOtpValid = await bcrypt.compare(otp, existingOtp.otp);
+    if (!isOtpValid) {
+      // console.log(res);
+      
+      return res.status(400).json({
+        status: 'fail', 
+        message: "Invalid OTP."
+      });
+    }
+
+    if (existingOtp.expiresAt < new Date()) {
+      return res.status(400).json({
+        status: 'fail', 
+        message: "OTP has expired." 
+      });
+    }
+
+    // Delete OTP after verification
+    // await OTP.deleteMany({ email });
+
+    // 2. Get user details
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail', 
+        message: "User not found." 
+      });
+    }
+
+    const { name, designation, workType } = user;
+
+    const checkInTime = moment(); // current time
+
+    let status = "Present";
+    if (checkInTime.isAfter(LATE_LIMIT)) {
+      status = "Late";
+    }
+
+    // Check if already checked in
+    const existing = await Attendance.findOne({
+      email,
+      date: checkInTime.format("YYYY-MM-DD"),
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        status: 'fail', 
+        message: "Already checked in today." 
+      });
+    }
+
+    // 4. Save attendance
+    const attendance = new Attendance({
+      email,
+      name,
+      designation,
+      employmentType: workType, // WFH or WFO
+      date: checkInTime.format("YYYY-MM-DD"),
+      checkInTime: checkInTime.toDate(),
+      status,
+    });
+
+    await attendance.save();
+
+    return res.status(200).json({
+      status: 'fail',
+      message: `Check-in successful. Status: ${status}.`,
+      checkInTime: checkInTime.format("HH:mm:ss"),
+      status,
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+        status: 'fail',
+        message: "Something went wrong", 
+        error: err.message 
+      });
+  }
+};
+
+const checkOut = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const today = moment().format("YYYY-MM-DD");
+
+    // Find today's attendance entry
+    const attendance = await Attendance.findOne({ email, date: today });
+
+    if (!attendance) {
+      return res.status(404).json({
+        status: 'fail', 
+        message: "No check-in record found for today." 
+      });
+    }
+
+    if (attendance.checkOutTime) {
+      return res.status(400).json({
+        status: 'fail', 
+        message: "Already checked out." 
+      });
+    }
+
+    // const checkOutTime = moment();
+    // const checkInTime = moment(attendance.checkInTime);
+    // const durationHours = moment
+    //   .duration(checkOutTime.diff(checkInTime))
+    //   .asHours();
+
+    const checkOutTime = moment();
+    const checkInTime = moment(attendance.checkInTime);
+    const duration = moment.duration(checkOutTime.diff(checkInTime));
+    const durationHours = duration.asHours();
+      
+
+    let status = attendance.status; // keep existing if late
+    if (durationHours >= 9) {
+      status = "Present";
+    } else if (durationHours >= 4.5) {
+      status = "Half day";
+    } else {
+      status = "Absent";
+    }
+
+    // Format total worked time as HH:mm:ss
+    const totalWorkedHours = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+
+
+    attendance.checkOutTime = checkOutTime.toDate();
+    attendance.status = status;
+    attendance.totalWorkedHours = totalWorkedHours;
+
+    await attendance.save();
+
+    return res.status(200).json({
+      status: 'fail',
+      message: `Check-out successful. You worked ${totalWorkedHours} hours. Status: ${status}.`,
+      checkOutTime: checkOutTime.format("HH:mm:ss"),
+      totalWorkedHours,
+      status,
+    });
+  } catch (err) {
+    return res.status(500).json({
+        status: 'fail', 
+        message: "Check-out failed", 
+        error: err.message 
+      });
+  }
+};
+
+
+const getAttendance = async (req, res) => {
+  try {
+    const { email, date, startDate, endDate } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Email is required",
+      });
+    }
+
+    let query = { email };
+
+    // Optional: specific date
+    if (date) {
+      query.date = date;
+    }
+
+    // Optional: date range
+    if (startDate && endDate) {
+      query.date = { $gte: startDate, $lte: endDate };
+    }
+
+    const employeeAttendenceList = await Attendance.find(query).sort({ date: -1 });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Attendance fetched successfully.",
+      total: employeeAttendenceList.length,
+      data: {
+        employeeAttendenceList
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: "Error fetching attendance.",
+      error: error.message,
+    });
+  }
+};
+
+
+export { sendCheckInsOtp, verifyCheckInsOtp, checkOut, getAttendance };

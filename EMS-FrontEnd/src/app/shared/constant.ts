@@ -17,6 +17,9 @@ const API_ENDPOINTS = {
   SERVICE_ROLEWISEMENUS: 'menu/getrole-wise-menu',
   SERVICE_GETALLSTATUS: 'auth/getall-status',
   SERVICE_SEND_CHECK_INS_OTP: 'attendence/send-check-ins-otp',
+  SERVICE_VERIFY_CHECK_INS_OTP: 'attendence/verify-check-ins-otp',
+  SERVICE_CHECK_OUT_ATTENDENCE: 'attendence/check-out',
+  SERVICE_GET_USER_ATTENDENCE: 'attendence/get-attendence-list',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)

@@ -77,6 +77,31 @@ export class CheckInsComponent {
 
   onVerifyCheckInsOtp() {
 
+    const { otp } = this.checkInsForm.getRawValue();
+
+    const payload = {
+      email: this.UserEmail ? this.UserEmail : '',
+      otp:  otp ? otp : ''
+    };
+
+    if (this.checkInsForm.valid) {
+      this.apiService.postApiCall(
+        API_ENDPOINTS.SERVICE_VERIFY_CHECK_INS_OTP,
+        payload
+      ).subscribe({
+        next: (res: any) => {
+          console.log(`${API_ENDPOINTS.SERVICE_VERIFY_CHECK_INS_OTP} Response : `, res);
+
+          // this.currentStep = CheckInsStep.SEND_OTP;
+          sessionStorage.setItem('checkIns', 'true');
+          this.dialogRef.close('saved')
+          this.commonService.openSnackbar(res.message, 'success');
+        },
+        error: (error) => {
+          this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+    }
   }
 
   loadUserEmail() {

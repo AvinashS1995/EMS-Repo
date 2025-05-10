@@ -80,7 +80,7 @@
         <!-- Date Column -->
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>Date</th>
-          <td mat-cell *matCellDef="let element">{{element.date}}</td>
+          <td mat-cell *matCellDef="let element">{{element.date | date:'dd/MM/yyyy'}}</td>
         </ng-container>
   
         <!-- Employee Column -->
@@ -88,7 +88,7 @@
           <th mat-header-cell *matHeaderCellDef>Employee</th>
           <td mat-cell *matCellDef="let element">
             <div class="employee-info">
-              <img [src]="element.photo" alt="avatar" class="avatar">
+              <!-- <img [src]="element.photo" alt="avatar" class="avatar"> -->
               <span>{{element.name}}</span>
             </div>
           </td>
@@ -97,7 +97,7 @@
         <!-- Role Column -->
         <ng-container matColumnDef="role">
           <th mat-header-cell *matHeaderCellDef>Role</th>
-          <td mat-cell *matCellDef="let element">{{element.role}}</td>
+          <td mat-cell *matCellDef="let element">{{element.designation}}</td>
         </ng-container>
   
         <!-- Employment Type Column -->
@@ -119,13 +119,13 @@
         <!-- Check In Column -->
         <ng-container matColumnDef="checkIn">
           <th mat-header-cell *matHeaderCellDef>Check In</th>
-          <td mat-cell *matCellDef="let element">{{element.checkIn}}</td>
+          <td mat-cell *matCellDef="let element">{{element.checkInTime | date:'hh:mm a'}}</td>
         </ng-container>
   
         <!-- Check Out Column -->
         <ng-container matColumnDef="checkOut">
           <th mat-header-cell *matHeaderCellDef>Check Out</th>
-          <td mat-cell *matCellDef="let element">{{element.checkOut}}</td>
+          <td mat-cell *matCellDef="let element">{{element.checkOutTime | date:'hh:mm a'}}</td>
         </ng-container>
   
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

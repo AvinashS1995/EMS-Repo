@@ -9,7 +9,7 @@ dotenv.config({path:'./.env'});
 const authenticateToken = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    console.log("Authorization Header:", authHeader);
+    // console.log("Authorization Header:", authHeader);
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(403).json({
@@ -24,7 +24,7 @@ const authenticateToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("JWT verification error:", error.message);
+    // console.error("JWT verification error:", error.message);
     return res.status(401).json({
       status: 'fail',
       message: 'Invalid Token...!'

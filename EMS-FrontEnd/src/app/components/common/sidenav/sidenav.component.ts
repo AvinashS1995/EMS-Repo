@@ -22,6 +22,8 @@ export class SidenavComponent implements OnInit {
 
   UserName: string = '';
   RoleName: string = '';
+  UserEmail: string = '';
+
   token: string | null = null;
 
   constructor(
@@ -82,6 +84,9 @@ export class SidenavComponent implements OnInit {
       const encryptedRole =
         localStorage.getItem('roleName') || sessionStorage.getItem('roleName');
 
+      const encryptedEmail = localStorage.getItem('email') || sessionStorage.getItem('email');
+
+
       const encryptedSecretKey =
         localStorage.getItem('key') || sessionStorage.getItem('key');
 
@@ -95,7 +100,7 @@ export class SidenavComponent implements OnInit {
           this.commonService.secretKey
         );
       }
-      if (encryptedName && encryptedRole && this.commonService.secretKey) {
+      if (encryptedName && encryptedRole &&  encryptedEmail && this.commonService.secretKey) {
         this.UserName = this.commonService.decryptWithKey(
           encryptedName,
           this.commonService.secretKey
@@ -104,6 +109,9 @@ export class SidenavComponent implements OnInit {
           encryptedRole,
           this.commonService.secretKey
         );
+
+        this.UserEmail = this.commonService.decryptWithKey(encryptedEmail, this.commonService.secretKey);
+
 
         console.log(`User Name ${this.UserName}  Role Name ${this.RoleName}`);
       }
@@ -130,12 +138,30 @@ export class SidenavComponent implements OnInit {
   logout() {
     this.authService.authApiCall(API_ENDPOINTS.SERVICE_LOG_OUT, {}).subscribe({
       next: (res: any) => {
+        this.checkOutEmployeeAttendence();
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
         sessionStorage.clear();
         localStorage.clear();
         this.commonService.openSnackbar(res.message, 'success');
         this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
+  }
+
+  checkOutEmployeeAttendence() {
+    const paylaod = {
+      email: this.UserEmail ? this.UserEmail : '',
+    }
+
+    this.apiService.postApiCall(API_ENDPOINTS.SERVICE_CHECK_OUT_ATTENDENCE, paylaod).subscribe({
+      next: (res: any) => {
+        console.log(`${API_ENDPOINTS.SERVICE_SAVE_NEW_USER} Response : `, res);
+        
+        this.commonService.openSnackbar(res.message, 'success');
       },
       error: (error) => {
         this.commonService.openSnackbar(error.error.message, 'error');
