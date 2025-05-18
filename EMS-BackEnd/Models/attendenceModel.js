@@ -37,6 +37,12 @@ designation: {
     type: String, // Can be updated later (e.g., automatic checkout)
     default: null,
   },
+  sessions: [
+    {
+      checkIn: Date,
+      checkOut: Date
+    }
+  ],
   createAt: {
     type: Date,
     default: Date.now,

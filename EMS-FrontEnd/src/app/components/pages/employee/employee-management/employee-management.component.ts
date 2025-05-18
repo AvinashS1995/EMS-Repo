@@ -224,7 +224,7 @@ export class EmployeeManagementComponent {
   }
 
   deleteEmployee(employee: any) {
-debugger
+
     const paylaod = {
       id: employee ? employee._id : 0,
     };

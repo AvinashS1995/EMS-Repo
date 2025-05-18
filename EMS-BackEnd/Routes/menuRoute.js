@@ -43,7 +43,7 @@ router.post('/create-menu', authenticateToken, CreateMenu)
 /**
  * @swagger
  * /api/menu/getmenu:
- *   post:
+ *   get:
  *     summary: Create New Menu
  *     tags:
  *       - Menu

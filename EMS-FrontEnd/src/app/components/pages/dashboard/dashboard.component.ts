@@ -42,11 +42,11 @@ export class DashboardComponent {
         const dialogRef = this.dialog.open(CheckInsComponent, {
           width: '600px',
           disableClose: true,
-          data: {}
+          data: { mode: 'checkins' }
         });
     
         dialogRef.afterClosed().subscribe((result) => {
-          if (result !== 'saved') {
+          if (result === 'checkins') {
             // this.commonService.openSnackbar('Check-in required to continue', 'error');
             
           }

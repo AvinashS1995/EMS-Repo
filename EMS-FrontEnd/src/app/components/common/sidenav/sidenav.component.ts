@@ -138,7 +138,7 @@ export class SidenavComponent implements OnInit {
   logout() {
     this.authService.authApiCall(API_ENDPOINTS.SERVICE_LOG_OUT, {}).subscribe({
       next: (res: any) => {
-        this.checkOutEmployeeAttendence();
+        // this.checkOutEmployeeAttendence();
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
         sessionStorage.clear();
@@ -162,6 +162,9 @@ export class SidenavComponent implements OnInit {
         console.log(`${API_ENDPOINTS.SERVICE_SAVE_NEW_USER} Response : `, res);
         
         this.commonService.openSnackbar(res.message, 'success');
+        setTimeout(() => {
+          this.logout();
+        }, 3000);
       },
       error: (error) => {
         this.commonService.openSnackbar(error.error.message, 'error');

@@ -83,7 +83,7 @@ router.post('/verify-check-ins-otp', verifyCheckInsOtp);
 router.post('/check-out', checkOut);
 /**
  * @swagger
- * /api/attendence/get-attendence:
+ * /api/attendence/get-attendence-list:
  *   post:
  *     summary: Get All Attendence
  *     tags:

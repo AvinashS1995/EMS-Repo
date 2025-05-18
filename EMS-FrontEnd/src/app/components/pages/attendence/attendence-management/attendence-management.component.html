@@ -4,19 +4,19 @@
   
     <div class="summary-cards">
       <mat-card class="summary-card">
-        <h3>Total Workforce</h3>
+        <h3>Total Employee</h3>
         <p>150</p>
         <span class="positive">10% vs last month</span>
       </mat-card>
   
       <mat-card class="summary-card">
-        <h3>Present Workforce</h3>
+        <h3>Present Employee</h3>
         <p>125</p>
         <span class="positive">10% vs last month</span>
       </mat-card>
   
       <mat-card class="summary-card">
-        <h3>Absent Workforce</h3>
+        <h3>Absent Employee</h3>
         <p>15</p>
         <span class="negative">10% vs last month</span>
       </mat-card>
@@ -27,11 +27,17 @@
         <span class="negative">10% vs last month</span>
       </mat-card>
   
-      <mat-card class="summary-card">
-        <h3>On Leave</h3>
-        <p>5</p>
-        <span class="positive">10% vs last month</span>
+      <mat-card class="summary-card start-day-card" (click)="openCheckOutsDialog()">
+        <h3>START YOUR DAY!</h3>
+      
+        <div class="time-inputs">
+          <div class="time-box">{{ hours | number: '2.0' }}</div>
+          <div class="time-box">{{ minutes | number: '2.0' }}</div>
+          <div class="time-box">{{ seconds | number: '2.0' }}</div>
+          <span class="time-label">HRS</span>
+        </div>
       </mat-card>
+      
     </div>
 
     <mat-divider></mat-divider>
@@ -73,7 +79,6 @@
     </mat-expansion-panel>
   
     
-  
     <div class="attendance-table">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   
@@ -132,7 +137,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
   
-      <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+      <mat-paginator [length]="totalRecords" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)">
       </mat-paginator>
     </div>
   </div>
