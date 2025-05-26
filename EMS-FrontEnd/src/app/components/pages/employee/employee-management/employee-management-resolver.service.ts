@@ -19,10 +19,6 @@ export class EmployeeManagementResolverService {
     let designations = of({})
     let experienceLevel = of({})
     let workType = of({})
-
-    let rolePayload = {
-      
-    }
     
     roles = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Role" });
     status = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Status" });

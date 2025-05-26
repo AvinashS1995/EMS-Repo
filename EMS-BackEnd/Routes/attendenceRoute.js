@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkOut, getAttendance, sendCheckInsOtp, verifyCheckInsOtp } from '../Controllers/AttendenceController.js';
+import { checkOut, getAttendance, sendCheckInsOtp, verifyCheckInsOtp, workSummary } from '../Controllers/AttendenceController.js';
 
 
 const router = express.Router();
@@ -81,6 +81,33 @@ router.post('/verify-check-ins-otp', verifyCheckInsOtp);
  *         description: Server error
  */
 router.post('/check-out', checkOut);
+/**
+ * @swagger
+ * /api/attendence/work-summary:
+ *   post:
+ *     summary: Work Summary for Attendence
+ *     tags:
+ *       - Attendence
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully Check Out
+ *       400:
+ *         description: Bad request or missing required fields
+ *       500:
+ *         description: Server error
+ */
+router.post('/work-summary', workSummary);
 /**
  * @swagger
  * /api/attendence/get-attendence-list:

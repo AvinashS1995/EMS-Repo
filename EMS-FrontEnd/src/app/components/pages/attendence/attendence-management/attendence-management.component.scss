@@ -113,45 +113,25 @@ mat-expansion-panel {
   font-weight: 500;
 }
 
-//
+.Half-day {
+  background: #fff8e1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #d3540b;
+  font-weight: 500;
+}
 
-// .start-day-card {
-//   // width: auto;
-//   padding: 24px;
-//   border-radius: 16px;
-//   text-align: center;
-//   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+.example-full-width {
+  margin-top: 10px;
+  border-radius: 5px;
 
-//   .title {
-//     font-size: 20px;
-//     font-weight: bold;
-//     margin-bottom: 24px;
-//   }
+}
 
-//   .time-inputs {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 16px;
-
-//     .time-box {
-//       background-color: #f1f2f6;
-//       font-size: 24px;
-//       padding: 10px 16px;
-//       border-radius: 10px;
-//       min-width: 50px;
-//       text-align: center;
-//       font-weight: 600;
-//     }
-
-//     .time-label {
-//       font-weight: 500;
-//       margin-left: 8px;
-//       font-size: 14px;
-//       color: #444;
-//     }
-//   }
-// }
+.filter-actions {
+  display: flex;
+  gap: 12px; /* Add gap between Apply and Clear button */
+  margin-top: 16px; /* Optional: Space from fields */
+}
 
 .start-day-card {
   cursor: pointer;

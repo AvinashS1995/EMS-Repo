@@ -123,7 +123,7 @@ export class AddEmployeeComponent {
         workType: this.data.editData.workType
 
       });
-
+// debugger
       // this.employeeForm.controls['email'].disable();
       // this.employeeForm.controls['mobile'].disable();
 
@@ -134,7 +134,7 @@ export class AddEmployeeComponent {
 
 
   saveEmployee() {
-    debugger
+    // debugger
     if (this.employeeForm.valid) {
       const newEmployee = this.employeeForm.getRawValue();
 

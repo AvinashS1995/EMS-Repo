@@ -19,6 +19,7 @@ const API_ENDPOINTS = {
   SERVICE_SEND_CHECK_INS_OTP: 'attendence/send-check-ins-otp',
   SERVICE_VERIFY_CHECK_INS_OTP: 'attendence/verify-check-ins-otp',
   SERVICE_CHECK_OUT_ATTENDENCE: 'attendence/check-out',
+  SERVICE_WORK_SUMMARY_ATTENDENCE: 'attendence/work-summary',
   SERVICE_GET_USER_ATTENDENCE: 'attendence/get-attendence-list',
 };
 

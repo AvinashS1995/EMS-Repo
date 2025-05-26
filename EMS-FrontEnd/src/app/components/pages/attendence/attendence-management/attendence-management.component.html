@@ -5,26 +5,26 @@
     <div class="summary-cards">
       <mat-card class="summary-card">
         <h3>Total Employee</h3>
-        <p>150</p>
-        <span class="positive">10% vs last month</span>
+        <p>{{ totalEmployee }}</p>
+        <!-- <span class="positive">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Present Employee</h3>
-        <p>125</p>
-        <span class="positive">10% vs last month</span>
+        <p>{{ presentEmployee }}</p>
+        <!-- <span class="positive">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Absent Employee</h3>
-        <p>15</p>
-        <span class="negative">10% vs last month</span>
+        <p>{{ absentEmployee }}</p>
+        <!-- <span class="negative">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Late Arrivals</h3>
-        <p>5</p>
-        <span class="negative">10% vs last month</span>
+        <p>{{ lateEmployee }}</p>
+        <!-- <span class="negative">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card start-day-card" (click)="openCheckOutsDialog()">
@@ -49,31 +49,55 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div class="filters">
+        <form [formGroup]="employeeAttendenceFilterForm">
+          <div class="filters">
             <mat-form-field appearance="outline" class="filter-field">
               <mat-label>Search</mat-label>
-              <input matInput placeholder="Search by name, role, department">
+              <input matInput placeholder="Search by name, role, department" formControlName="name">
             </mat-form-field>
         
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>Department</mat-label>
-              <mat-select>
-                <mat-option>All Dept</mat-option>
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="attendenceStatus">
+                  <mat-option *ngFor="let status of attendenceStatuse" [value]="status.label">{{ status.label }}</mat-option>
               </mat-select>
-            </mat-form-field>
+          </mat-form-field>
         
             <mat-form-field appearance="outline" class="filter-field">
-              <mat-label>Date</mat-label>
-              <input matInput [matDatepicker]="picker" value="2024-01-13" placeholder="DD/MM/YYYY">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-label>From Date</mat-label>
+              <input matInput [matDatepicker]="fromPicker"  placeholder="DD/MM/YYYY" formControlName="startDate">
+              <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromPicker></mat-datepicker>
             </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>To Date</mat-label>
+              <input matInput [matDatepicker]="toPicker" placeholder="DD/MM/YYYY" formControlName="endDate">
+              <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+              <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+
+            <!-- <mat-form-field appearance="fill">
+              <mat-label>From Date</mat-label>
+              <input matInput [matDatepicker]="fromPicker" formControlName="startDate" />
+              <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+          
+            <mat-form-field appearance="fill">
+              <mat-label>To Date</mat-label>
+              <input matInput [matDatepicker]="toPicker" formControlName="endDate" />
+              <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+              <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field> -->
         
           </div>
-          <div>
-            <button mat-stroked-button class="export-button">Export CSV</button>
-
-          </div>
+        </form>
+        
+        <div class="filter-actions">
+          <button mat-flat-button class="example-full-width" (click)="applyFilters()">Apply</button>
+          <button mat-flat-button class="example-full-width" (click)="clearFilters()">Clear</button>
+      </div>
 
 
     </mat-expansion-panel>
@@ -137,7 +161,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
   
-      <mat-paginator [length]="totalRecords" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)">
+      <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]" (page)="onPageChange($event)">
       </mat-paginator>
     </div>
   </div>

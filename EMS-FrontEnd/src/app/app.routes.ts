@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
 import { EmployeeManagementResolverService } from './components/pages/employee/employee-management/employee-management-resolver.service';
 import { ConfigurationResolverService } from './components/pages/configuration/configuration/configuration-resolver.service';
+import { AttendenceManagementResolverService } from './components/pages/attendence/attendence-management/attendence-management-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -55,6 +56,10 @@ export const routes: Routes = [
           import(
             '../app/components/pages/attendence/attendence-management/attendence-management.component'
           ).then((c) => c.AttendenceManagementComponent),
+          data: {
+            title: "Attendence Management"
+          },
+          resolve: { data: AttendenceManagementResolverService }
       },
       {
         path: 'leave-management',

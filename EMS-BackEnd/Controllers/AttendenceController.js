@@ -218,12 +218,10 @@ const verifyCheckInsOtp = async (req, res) => {
       const lastSession = attendance.sessions[attendance.sessions.length - 1];
 
       if (lastSession && !lastSession.checkOut) {
-        return res
-          .status(400)
-          .json({
-            status: "fail",
-            message: "Already checked in. Please check out first.",
-          });
+        return res.status(400).json({
+          status: "fail",
+          message: "Already checked in. Please check out first.",
+        });
       }
 
       // Append new session
@@ -251,13 +249,11 @@ const verifyCheckInsOtp = async (req, res) => {
       checkInTime: currentTime.format("HH:mm:ss"),
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        status: "fail",
-        message: "Something went wrong",
-        error: err.message,
-      });
+    res.status(500).json({
+      status: "fail",
+      message: "Something went wrong",
+      error: err.message,
+    });
   }
 };
 
@@ -328,6 +324,89 @@ const verifyCheckInsOtp = async (req, res) => {
 //   }
 // };
 
+// const checkOut = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const today = moment().format("YYYY-MM-DD");
+
+//     const attendance = await Attendance.findOne({ email, date: today });
+//     if (!attendance) {
+//       return res.status(404).json({
+//         status: "fail",
+//         message: "No check-in record found for today.",
+//       });
+//     }
+
+//     const sessions = attendance.sessions;
+//     const lastSession = sessions[sessions.length - 1];
+
+//     if (!lastSession || lastSession.checkOut) {
+//       return res
+//         .status(400)
+//         .json({ status: "fail", message: "No active session to check out." });
+//     }
+
+//     const checkOutTime = moment();
+//     lastSession.checkOut = checkOutTime.toDate();
+//     attendance.checkOutTime = checkOutTime.toDate();
+
+//     // Calculate total worked duration
+//     let totalMs = 0;
+//     sessions.forEach((s, i) => {
+//       if (s.checkIn && s.checkOut) {
+//         const duration = moment(s.checkOut).diff(moment(s.checkIn));
+//         totalMs += duration;
+//         console.log(`Session ${i + 1}: ${moment(s.checkIn).format()} - ${moment(s.checkOut).format()} = ${moment.duration(duration).humanize()}`);
+     
+//       }
+//     });
+
+//     // const duration = moment.duration(totalMs);
+//     // const totalWorkedHours = moment
+//     //   .utc(duration.asMilliseconds())
+//     //   .format("HH:mm:ss");
+
+//     const duration = moment.duration(totalMs);
+//     const hours = Math.floor(duration.asHours());
+//     const minutes = Math.floor(duration.minutes());
+//     const seconds = Math.floor(duration.seconds());
+
+//     const totalWorkedHours = `${String(hours).padStart(2, "0")}:${String(
+//       minutes
+//     ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+//     console.log(totalWorkedHours);
+    
+
+//     attendance.totalWorkedHours = totalWorkedHours;
+
+//     // Determine final status
+//     const hoursWorked = duration.asHours();
+//     let status = attendance.status; // default to initial
+//     if (hoursWorked >= 9) status = "Present";
+//     else if (hoursWorked >= 4.5) status = "Half-day";
+//     else status = "Absent";
+
+//     attendance.status = status;
+
+//     await attendance.save();
+
+//     return res.status(200).json({
+//       status: "success",
+//       message: `Check-out successful. You worked ${totalWorkedHours}. Status: ${status}.`,
+//       checkOutTime: checkOutTime.format("HH:mm:ss"),
+//       totalWorkedHours,
+//       status,
+//     });
+//   } catch (err) {
+//     return res.status(500).json({
+//       status: "fail",
+//       message: "Check-out failed",
+//       error: err.message,
+//     });
+//   }
+// };
+
 const checkOut = async (req, res) => {
   try {
     const { email } = req.body;
@@ -335,12 +414,10 @@ const checkOut = async (req, res) => {
 
     const attendance = await Attendance.findOne({ email, date: today });
     if (!attendance) {
-      return res
-        .status(404)
-        .json({
-          status: "fail",
-          message: "No check-in record found for today.",
-        });
+      return res.status(404).json({
+        status: "fail",
+        message: "No check-in record found for today.",
+      });
     }
 
     const sessions = attendance.sessions;
@@ -356,26 +433,31 @@ const checkOut = async (req, res) => {
     lastSession.checkOut = checkOutTime.toDate();
     attendance.checkOutTime = checkOutTime.toDate();
 
-    // Calculate total worked duration
+    // Calculate total worked duration (use updated sessions)
     let totalMs = 0;
-    sessions.forEach((s) => {
+    attendance.sessions.forEach((s, i) => {
       if (s.checkIn && s.checkOut) {
-        totalMs += moment(s.checkOut).diff(moment(s.checkIn));
+        const duration = moment(s.checkOut).diff(moment(s.checkIn));
+        totalMs += duration;
+        console.log(`Session ${i + 1}: ${moment(s.checkIn).format()} - ${moment(s.checkOut).format()} = ${moment.duration(duration).humanize()}`);
       }
     });
 
     const duration = moment.duration(totalMs);
-    const totalWorkedHours = moment
-      .utc(duration.asMilliseconds())
-      .format("HH:mm:ss");
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.minutes());
+    const seconds = Math.floor(duration.seconds());
+    const totalWorkedHours = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    console.log(totalWorkedHours);
 
     attendance.totalWorkedHours = totalWorkedHours;
 
     // Determine final status
     const hoursWorked = duration.asHours();
-    let status = attendance.status; // default to initial
+    let status = attendance.status;
     if (hoursWorked >= 9) status = "Present";
-    else if (hoursWorked >= 4.5) status = "Half day";
+    else if (hoursWorked >= 4.5) status = "Half-day";
     else status = "Absent";
 
     attendance.status = status;
@@ -398,9 +480,56 @@ const checkOut = async (req, res) => {
   }
 };
 
+
+const workSummary = async (req, res) => {
+  try {
+    const { email, date } = req.body;
+
+    if (!email || !date) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Email and date are required.",
+      });
+    }
+
+    const startOfDay = new Date(date);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const records = await Attendance.find({
+      email,
+      checkInTime: { $gte: startOfDay, $lte: endOfDay },
+    }).sort({ checkInTime: 1 });
+
+    if (records.length === 0) {
+      return res.json({ totalWorkSeconds: 0 });
+    }
+
+    const firstCheckIn = records[0].checkInTime;
+    const lastCheckOut = records[records.length - 1].checkOutTime;
+
+    const end = lastCheckOut ? new Date(lastCheckOut) : new Date();
+    const totalWorkSeconds = Math.floor((end - firstCheckIn) / 1000);
+
+    res.status(200).json({
+      status: "successs",
+      message: "Record(s) Fetched Successfully..!",
+      firstCheckIn,
+      lastCheckOut,
+      totalWorkSeconds,
+    });
+  } catch (err) {
+    console.error("Error fetching work summary:", err);
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
 const getAttendance = async (req, res) => {
   try {
-    const { email, role, date, startDate, endDate } = req.body;
+    const { email, name, role, date, startDate, endDate } = req.body;
 
     if (!email) {
       return res.status(400).json({
@@ -410,35 +539,59 @@ const getAttendance = async (req, res) => {
     }
 
     // let query = { email };
-    let query = { };
+    let query = {};
 
-    // Optional: specific date
-    if (date) {
-      query.date = date;
+    if (role === "Employee") {
+      query.email = email;
     }
 
-    // Optional: date range
+    if (name) {
+      query.name = { $regex: "^" + name, $options: "i" };
+    }
+
+    const fromDate = new Date(startDate);
+    const toDate = new Date(endDate);
+
+    // Include the whole end day
+    toDate.setHours(23, 59, 59, 999);
+
     if (startDate && endDate) {
-      query.date = { $gte: startDate, $lte: endDate };
+      query.date = {
+        $gte: fromDate,
+        $lte: toDate,
+      };
     }
 
-   if (role === 'Employee') {
-      query.email = email
-   }
-
+    const user = await User.find();
 
     const page = parseInt(req.body.page) || 1;
-        const limit = parseInt(req.body.limit) || 10;
-        const skip = (page - 1) * limit;
-    
-        const total = await Attendance.countDocuments();
+    const limit = parseInt(req.body.limit) || 10;
+    const skip = (page - 1) * limit;
 
+    const total = await Attendance.countDocuments(query);
 
-    const employeeAttendenceList = await Attendance.find(query).skip(skip).limit(limit).sort({
-      date: -1,
-    });
+    const employeeAttendenceList = await Attendance.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({
+        date: -1,
+      });
 
-    const totals = role === 'Employee' ? employeeAttendenceList.length : total
+    const totals = role === "Employee" ? employeeAttendenceList.length : total;
+
+    // // Count statuses
+    // const presentCount = await Attendance.countDocuments({
+    //   ...query,
+    //   status: "Present",
+    // });
+    // const absentCount = await Attendance.countDocuments({
+    //   ...query,
+    //   status: "Absent",
+    // });
+    // const lateCount = await Attendance.countDocuments({
+    //   ...query,
+    //   status: "Late",
+    // });
 
     return res.status(200).json({
       status: "success",
@@ -459,4 +612,12 @@ const getAttendance = async (req, res) => {
   }
 };
 
-export { sendCheckInsOtp, verifyCheckInsOtp, checkOut, getAttendance };
+
+
+export {
+  sendCheckInsOtp,
+  verifyCheckInsOtp,
+  checkOut,
+  workSummary,
+  getAttendance,
+};
