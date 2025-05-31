@@ -15,12 +15,15 @@ export class AttendenceManagementResolverService {
   resolve(): Observable<any> {
 
     let attendenceStatus = of({});
+    let todayAttendenceSummary = of({});
     
     attendenceStatus = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "AttendenceStatus" });
+    todayAttendenceSummary = this.apiService.getApiCall(API_ENDPOINTS.SERVICE_GET_USER_ATTENDENCE_TODAY_SUMMARY);
 
 
    return forkJoin({
     attendenceStatus,
+    todayAttendenceSummary
     });
   }
 }

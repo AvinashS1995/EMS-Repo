@@ -22,7 +22,8 @@ import { LoaderModule } from './modules/loader/loader.module';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    LoaderModule
+    LoaderModule,
+    CommonModule
 
     
   ]

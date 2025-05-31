@@ -3,6 +3,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { EmployeeManagementResolverService } from './components/pages/employee/employee-management/employee-management-resolver.service';
 import { ConfigurationResolverService } from './components/pages/configuration/configuration/configuration-resolver.service';
 import { AttendenceManagementResolverService } from './components/pages/attendence/attendence-management/attendence-management-resolver.service';
+import { LeaveManagementResolverService } from './components/pages/leave/leave-management/leave-management-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -65,8 +66,12 @@ export const routes: Routes = [
         path: 'leave-management',
         loadComponent: () =>
           import(
-            '../app/components/pages/leave-management/leave-management.component'
+            './components/pages/leave/leave-management/leave-management.component'
           ).then((c) => c.LeaveManagementComponent),
+          data: {
+            title: "Leave Management"
+          },
+          resolve: { data: LeaveManagementResolverService }
       },
       {
         path: 'sales-management',

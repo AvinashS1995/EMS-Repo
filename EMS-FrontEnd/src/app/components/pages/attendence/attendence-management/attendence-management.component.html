@@ -5,25 +5,25 @@
     <div class="summary-cards">
       <mat-card class="summary-card">
         <h3>Total Employee</h3>
-        <p>{{ totalEmployee }}</p>
+        <p>{{ todayAttendenceSummary.totalEmployees }}</p>
         <!-- <span class="positive">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Present Employee</h3>
-        <p>{{ presentEmployee }}</p>
+        <p>{{ todayAttendenceSummary.presentEmployees }}</p>
         <!-- <span class="positive">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Absent Employee</h3>
-        <p>{{ absentEmployee }}</p>
+        <p>{{ todayAttendenceSummary.absentEmployees }}</p>
         <!-- <span class="negative">10% vs last month</span> -->
       </mat-card>
   
       <mat-card class="summary-card">
         <h3>Late Arrivals</h3>
-        <p>{{ lateEmployee }}</p>
+        <p>{{ todayAttendenceSummary.lateArrivals }}</p>
         <!-- <span class="negative">10% vs last month</span> -->
       </mat-card>
   

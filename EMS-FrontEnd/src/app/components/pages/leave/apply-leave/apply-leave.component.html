@@ -1,0 +1,81 @@
+<div class="container">
+
+    <h2 mat-dialog-title>Apply Leave</h2>
+    <mat-dialog-content>
+        <div class="apply-leave-container">
+            <div class="form-section">
+                <form [formGroup]="leaveForm">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Leave Type</mat-label>
+                        <mat-select formControlName="leaveType">
+                            <mat-option *ngFor="let leaveType of leaveTypeList" [value]="leaveType.label">{{
+                                leaveType.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-button-toggle-group class="mat-button-toggle-overrides" name="shift" aria-label="Select Shift"
+                        formControlName="shift">
+                        <mat-button-toggle value="full">Full Day</mat-button-toggle>
+                        <mat-button-toggle value="half">Half Day</mat-button-toggle>
+                    </mat-button-toggle-group>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>From Date</mat-label>
+                        <input matInput [matDatepicker]="fromPicker" placeholder="DD/MM/YYYY"
+                            formControlName="startDate">
+                        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromPicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>To Date</mat-label>
+                        <input matInput [matDatepicker]="toPicker" placeholder="DD/MM/YYYY" formControlName="endDate">
+                        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #toPicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Reason Type</mat-label>
+                        <mat-select formControlName="leaveReasonType">
+                            <mat-option *ngFor="let leaveReasonType of leaveReasonTypeList"
+                                [value]="leaveReasonType.label">{{
+                                leaveReasonType.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Reason Comment</mat-label>
+                        <textarea matInput placeholder="Type Here" formControlName="leaveReasonComment"></textarea>
+                    </mat-form-field>
+                </form>
+
+
+                <div class="action-buttons">
+                    <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()" >Submit</button>
+                    <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+                </div>
+
+
+            </div>
+
+            <div class="calendar-section">
+                <mat-calendar [(selected)]="selectedDate"></mat-calendar>
+
+                <div class="holidays-section">
+                    <h3>Upcoming Holidays</h3>
+                    <mat-list>
+                        <mat-list-item>Holi</mat-list-item>
+                        <mat-list-item>Good Friday</mat-list-item>
+                    </mat-list>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="start">
+        <!-- <div class="action-buttons">
+            <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+            <button mat-flat-button color="primary">Submit</button>
+        </div> -->
+    </mat-dialog-actions>
+</div>

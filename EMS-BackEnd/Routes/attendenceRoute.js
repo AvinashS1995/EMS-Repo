@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkOut, getAttendance, sendCheckInsOtp, verifyCheckInsOtp, workSummary } from '../Controllers/AttendenceController.js';
+import { attendanceSummary, checkOut, getAttendance, sendCheckInsOtp, verifyCheckInsOtp, workSummary } from '../Controllers/AttendenceController.js';
 
 
 const router = express.Router();
@@ -133,6 +133,22 @@ router.post('/work-summary', workSummary);
  *         description: Server error
  */
 router.post('/get-attendence-list', getAttendance);
+/**
+ * @swagger
+ * /api/attendence/get-attendence-summary:
+ *   get:
+ *     summary: Get Attendece Today Summary 
+ *     tags:
+ *       - Menu
+ *     responses:
+ *       200:
+ *         description: Get Records successfully
+ *       400:
+ *         description: Bad request or missing required fields
+ *       500:
+ *         description: Server error
+ */
+router.get('/get-attendence-summary', attendanceSummary)
 
 
 

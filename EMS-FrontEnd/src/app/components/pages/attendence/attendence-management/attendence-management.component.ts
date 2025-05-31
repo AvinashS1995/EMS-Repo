@@ -97,6 +97,7 @@ export class AttendenceManagementComponent {
   lateEmployee: any;
 
   attendenceStatuse: Array<any> = [];
+  todayAttendenceSummary: any;
 
   constructor(
     private commonService: CommonService,
@@ -137,6 +138,10 @@ export class AttendenceManagementComponent {
         });
 
         console.log("Attendence Statuse---->", this.attendenceStatuse);
+
+        this.todayAttendenceSummary = params['data'].todayAttendenceSummary?.summary || {};
+        console.log("todayAttendenceSummary ---->",this.todayAttendenceSummary);
+        
         
       }
       

@@ -357,7 +357,7 @@ const verifyCheckInsOtp = async (req, res) => {
 //         const duration = moment(s.checkOut).diff(moment(s.checkIn));
 //         totalMs += duration;
 //         console.log(`Session ${i + 1}: ${moment(s.checkIn).format()} - ${moment(s.checkOut).format()} = ${moment.duration(duration).humanize()}`);
-     
+
 //       }
 //     });
 
@@ -376,7 +376,6 @@ const verifyCheckInsOtp = async (req, res) => {
 //     ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
 //     console.log(totalWorkedHours);
-    
 
 //     attendance.totalWorkedHours = totalWorkedHours;
 
@@ -439,7 +438,11 @@ const checkOut = async (req, res) => {
       if (s.checkIn && s.checkOut) {
         const duration = moment(s.checkOut).diff(moment(s.checkIn));
         totalMs += duration;
-        console.log(`Session ${i + 1}: ${moment(s.checkIn).format()} - ${moment(s.checkOut).format()} = ${moment.duration(duration).humanize()}`);
+        console.log(
+          `Session ${i + 1}: ${moment(s.checkIn).format()} - ${moment(
+            s.checkOut
+          ).format()} = ${moment.duration(duration).humanize()}`
+        );
       }
     });
 
@@ -447,7 +450,9 @@ const checkOut = async (req, res) => {
     const hours = Math.floor(duration.asHours());
     const minutes = Math.floor(duration.minutes());
     const seconds = Math.floor(duration.seconds());
-    const totalWorkedHours = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    const totalWorkedHours = `${String(hours).padStart(2, "0")}:${String(
+      minutes
+    ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
     console.log(totalWorkedHours);
 
@@ -479,7 +484,6 @@ const checkOut = async (req, res) => {
     });
   }
 };
-
 
 const workSummary = async (req, res) => {
   try {
@@ -612,7 +616,46 @@ const getAttendance = async (req, res) => {
   }
 };
 
+const attendanceSummary = async (req, res) => {
+  try {
+    const today = moment().format("YYYY-MM-DD");
 
+    // Get total employees
+    const totalEmployees = await User.countDocuments();
+
+    // Get today's attendance records
+    const attendancesToday = await Attendance.find({ date: today });
+
+    // Present and Late
+    const presentCount = attendancesToday.filter(
+      (a) => a.status === "Present"
+    ).length;
+    const lateCount = attendancesToday.filter(
+      (a) => a.status === "Late"
+    ).length;
+
+    // Absent = total employees - (present + late)
+    const absentCount = totalEmployees - (presentCount + lateCount);
+
+    return res.status(200).json({
+      status: "success",
+      message: 'Record(s) Fetched Successfully',
+      summary: {
+        totalEmployees,
+        presentEmployees: presentCount,
+        lateArrivals: lateCount,
+        absentEmployees: absentCount,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "fail",
+      message: "Failed to fetch attendance summary",
+      error: err.message,
+    });
+  }
+};
 
 export {
   sendCheckInsOtp,
@@ -620,4 +663,5 @@ export {
   checkOut,
   workSummary,
   getAttendance,
+  attendanceSummary
 };
