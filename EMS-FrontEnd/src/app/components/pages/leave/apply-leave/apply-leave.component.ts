@@ -44,6 +44,10 @@ export class ApplyLeaveComponent {
 
   leaveTypeList: Array<any> = [];
   leaveReasonTypeList: Array<any> = [];
+  upcomingHolidayList: Array<any> = [];
+
+   today = new Date();
+
 
   constructor(
       private fb: FormBuilder,
@@ -51,7 +55,7 @@ export class ApplyLeaveComponent {
           private apiService: ApiService,
           private commonService: CommonService,
           private dialog: MatDialog,
-          private dialogRef: MatDialogRef<ApplyLeaveComponent>,
+          private dialogRef: MatDialogRef<any>,
           @Inject(MAT_DIALOG_DATA) public data: any
   
     ) {
@@ -68,6 +72,13 @@ export class ApplyLeaveComponent {
       this.leaveReasonTypeList = this.data.leaveReasonType || [];
 
       console.log(this.leaveReasonTypeList);
+
+      this.upcomingHolidayList = this.data.upcomingHolidays || [];
+      this.upcomingHolidayList.filter(h => new Date(h.date) >= this.today)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(0, 5); // Show top 5 upcoming holidays
+
+      console.log(this.upcomingHolidayList);
       
     }
 

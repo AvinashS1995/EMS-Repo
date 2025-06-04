@@ -313,7 +313,7 @@ const GetTypeList = async (req, res) => {
     }
 
     
-      const types = await Type.find(query);
+      const types = await Type.find(query).select('_id entityValue typeLabel typeValue description');
 
     res.status(200).json({
       status: "success",

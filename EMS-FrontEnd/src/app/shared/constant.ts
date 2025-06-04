@@ -22,6 +22,7 @@ const API_ENDPOINTS = {
   SERVICE_WORK_SUMMARY_ATTENDENCE: 'attendence/work-summary',
   SERVICE_GET_USER_ATTENDENCE: 'attendence/get-attendence-list',
   SERVICE_GET_USER_ATTENDENCE_TODAY_SUMMARY: 'attendence/get-attendence-summary',
+  SERVICE_GET_UPCOMING_HOLIDAYS: 'leave/get-upcoming-holidays',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)

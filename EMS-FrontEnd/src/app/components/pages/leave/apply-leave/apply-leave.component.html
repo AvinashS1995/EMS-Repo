@@ -59,13 +59,21 @@
             </div>
 
             <div class="calendar-section">
-                <mat-calendar [(selected)]="selectedDate"></mat-calendar>
+                <!-- <mat-calendar [(selected)]="selectedDate"></mat-calendar> -->
 
                 <div class="holidays-section">
                     <h3>Upcoming Holidays</h3>
                     <mat-list>
-                        <mat-list-item>Holi</mat-list-item>
-                        <mat-list-item>Good Friday</mat-list-item>
+                        <mat-list-item *ngFor="let holiday of upcomingHolidayList">
+                            <div>
+                                <strong style="margin-right: 10px;">{{ holiday.name }}</strong> <small>{{ holiday.date | date: 'fullDate' }}</small>
+                                
+                                <!-- <small>{{ holiday.description }}</small> -->
+                            </div>
+                        </mat-list-item>
+                        <mat-list-item *ngIf="upcomingHolidayList.length === 0">
+                            No upcoming holidays.
+                        </mat-list-item>
                     </mat-list>
                 </div>
             </div>
