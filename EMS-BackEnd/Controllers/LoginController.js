@@ -32,8 +32,27 @@ const Login = async (req, res) => {
       });
     }
 
+    // const token = jwt.sign(
+    //   { _id: user._id, role: user.role },
+    //   process.env.JWT_SECRET_KEY,
+    //   { expiresIn: "10d" }
+    // );
     const token = jwt.sign(
-      { _id: user._id, role: user.role },
+      { _id: user._id, 
+        empNo: user.empNo, 
+        name: user.name, 
+        email: user.email, 
+        mobile: user.mobile,
+        role: user.role, 
+        type: user.type, 
+        status: user.status, 
+        teamLeader: user.teamLeader, 
+        designation: user.designation, 
+        joiningDate: user.joiningDate, 
+        salary: user.salary, 
+        workType: user.workType, 
+        designation: user.designation, 
+      },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "10d" }
     );
@@ -47,7 +66,8 @@ const Login = async (req, res) => {
         _id: user._id,
         name: user.name,
         role: user.role,
-        email: user.email
+        email: user.email,
+        empNo: user.empNo
       },
     });
   } catch (error) {

@@ -1,56 +1,3 @@
-// .container {
-//     max-width: 800px;
-//     margin: 0 auto;
-//     padding: 16px;
-//   }
-
-// .apply-leave-container {
-//     display: flex;
-//     gap: 2rem;
-//     padding: 2rem;
-//     background: #fff;
-//     border-radius: 12px;
-//   }
-  
-//   .form-section {
-//     flex: 1;
-//     display: flex;
-//     flex-direction: column;
-//     gap: 1rem;
-//   }
-  
-//   .calendar-section {
-//     width: 300px;
-//     display: flex;
-//     flex-direction: column;
-//     gap: 1rem;
-//   }
-  
-//   .holidays-section {
-//     background: #f5f5f5;
-//     border-radius: 8px;
-//     padding: 1rem;
-  
-//     h3 {
-//       margin: 0 0 0.5rem 0;
-//     }
-  
-//     mat-list-item {
-//       font-weight: 500;
-//     }
-//   }
-  
-//   .file-upload {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 0.5rem;
-//   }
-  
-//   .action-buttons {
-//     display: flex;
-//     justify-content: flex-end;
-//     gap: 1rem;
-//   }
   
 .container {
     h2[mat-dialog-title] {
@@ -73,12 +20,12 @@
     text-align: center; /* Centers the label */
   }
   
-  mat-form-field, 
-mat-button-toggle-group {
-  width: 100%; /* Ensure both take full width */
-  margin-bottom: 12px;
-  box-sizing: border-box;
-}
+//   mat-form-field, 
+// mat-button-toggle-group {
+//   width: 100%; /* Ensure both take full width */
+//   margin-bottom: 12px;
+//   box-sizing: border-box;
+// }
 
 .mat-button-toggle-overrides .mat-button-toggle-checked {
   background-color: #1976d2 !important; /* Blue background */
@@ -90,14 +37,9 @@ mat-button-toggle-group {
   
   .apply-leave-container {
     display: flex;
-    gap: 20px;
+    // gap: 20px;
     height: 100%; // Ensure the container fills the dialog
   
-    .form-section, .calendar-section {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
   
     .form-section {
       max-width: 400px;
@@ -113,22 +55,10 @@ mat-button-toggle-group {
         margin-top: auto; // Push buttons to the bottom
         display: flex;
         justify-content: space-between;
+        gap: 16px;
       }
     }
   
-    .calendar-section {
-      padding: 16px;
-      mat-calendar {
-        flex-grow: 1; // Stretch calendar to fill available space
-      }
-  
-      .holidays-section {
-        margin-top: 12px;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 8px;
-      }
-    }
   }
   
   mat-dialog-content {
@@ -144,100 +74,9 @@ mat-button-toggle-group {
     overflow: hidden;
   }
   
-  // .calendar-section {
-  //   width: 300px;
-  //   margin: 20px auto;
-  //   font-family: Arial, sans-serif;
-  // }
-  
-  // .holidays-section {
-  //   border: 1px solid #ccc;
-  //   padding: 10px;
-  //   height: 200px;
-  //   overflow: hidden;
-  //   position: relative;
-  // }
-  
-  // .scroll-wrapper {
-  //   height: 200px;
-  //   overflow: hidden;
-  //   position: relative;
-  //   display: flex;
-  //   flex-direction: column;
-  //   animation-fill-mode: forwards;
-  // }
-  
-  // .scroll-list {
-  //   display: flex;
-  //   flex-direction: column;
-  // }
-  
-  // .scroll-item {
-  //   padding: 10px 5px;
-  //   border-bottom: 1px solid #eee;
-  //   font-size: 14px;
-  //   background: white;
-  // }
 
-  .calendar-section {
-    width: 300px;
-    margin: 20px auto;
-    font-family: Arial, sans-serif;
-  }
-  
-  .holiday-list {
-    // border: 1px solid #ccc;
-    padding: 10px;
-    // height: 200px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .scroll-wrapper {
-    height: 200px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .scroll-list {
-    display: flex;
-    flex-direction: column;
-    /* Set the total height of the list */
-    /* Important: Adjust height based on items */
-    /* For example, if each item is 40px and you have 4 items, height ~160px */
-    height: 160px;
-  }
-  .scroll-item {
-    padding: 10px 5px;
-    // border-bottom: 1px solid #eee;
-    font-size: 14px;
-    // background: white;
-  }
-  
-  
-  // .calendar-section {
-  //   width: 300px;
-  //   margin: 20px auto;
-  //   font-family: Arial, sans-serif;
-  // }
-  
-  // .holiday-list {
-  //   padding: 10px;
-  //   overflow: hidden;
-  //   position: relative;
-  //   height: 160px; /* adjust to your needs */
-  //   display: flex;
-  //   flex-direction: column;
-  // }
-  
-  // .scroll-item {
-  //   padding: 10px 5px;
-  //   font-size: 14px;
-  // }
-  
-  .holiday-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;  /* space between name and date */
-  }
-  
+.date-fields {
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+}

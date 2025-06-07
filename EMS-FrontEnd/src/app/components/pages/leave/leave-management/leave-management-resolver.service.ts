@@ -20,13 +20,11 @@ export class LeaveManagementResolverService {
     
     leaveType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveType" });
     leaveReasonType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveReasonType" });
-    getUpcomingHoliday = this.apiService.getApiCall(API_ENDPOINTS.SERVICE_GET_UPCOMING_HOLIDAYS);
 
 
    return forkJoin({
     leaveType,
     leaveReasonType,
-    getUpcomingHoliday
     });
   }
 }

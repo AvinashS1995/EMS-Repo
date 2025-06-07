@@ -76,6 +76,7 @@ export class ApplyLeaveComponent {
 
     prepareCreateLeaveForm() {
       this.leaveForm = this.fb.group({
+        employeeNoWithName: [" ", Validators.required],
         leaveType: [" ", Validators.required],
         shift: [" ", Validators.required],
         startDate: [" ", Validators.required],
@@ -83,6 +84,14 @@ export class ApplyLeaveComponent {
         leaveReasonType: [" ", Validators.required],
         leaveReasonComment: [" ", Validators.required],
       })
+
+      const EmployeeNoWithName = `${this.commonService.userDetails.name} [${this.commonService.userDetails.empNo}]`;
+
+      this.leaveForm.patchValue({
+        employeeNoWithName: EmployeeNoWithName || ''
+      })
+
+      this.leaveForm.controls['employeeNoWithName'].disable();
     }
 
     ApplyLeave() {

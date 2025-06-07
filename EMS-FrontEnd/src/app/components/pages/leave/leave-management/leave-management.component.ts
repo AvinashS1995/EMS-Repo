@@ -18,7 +18,6 @@ import { ApplyLeaveComponent } from '../apply-leave/apply-leave.component';
 export class LeaveManagementComponent {
   leaveType: Array<any> = [];
   leaveReasonType: Array<any> = [];
-  upcomingHolidays: Array<any> = [];
 
   constructor(
     private router: Router,
@@ -31,6 +30,8 @@ export class LeaveManagementComponent {
 
   ngOnInit(): void {
     this.getparams();
+    console.log(this.commonService.userDetails.empNo);
+    
   }
 
   getparams() {
@@ -59,9 +60,6 @@ export class LeaveManagementComponent {
 
         console.log('Leave Reason Type--->', this.leaveReasonType);
 
-        this.upcomingHolidays =
-          params['data'].getUpcomingHoliday?.data?.upComingHolidays || [];
-
       }
     });
   }
@@ -69,14 +67,12 @@ export class LeaveManagementComponent {
   applyLeave() {
 
     const dialogRef = this.dialog.open(ApplyLeaveComponent, {
-          width: '900px',
-          maxWidth: '90vw',
-          minHeight: '75vh',
+          width: '500px',
+          // minHeight: '75vh',
           disableClose: true,
           data: {
             leaveType: this.leaveType,
             leaveReasonType: this.leaveReasonType,
-            upcomingHolidays: this.upcomingHolidays
 
           },
         });

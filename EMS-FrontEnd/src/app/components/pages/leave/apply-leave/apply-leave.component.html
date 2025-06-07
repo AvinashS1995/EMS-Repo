@@ -5,6 +5,12 @@
         <div class="apply-leave-container">
             <div class="form-section">
                 <form [formGroup]="leaveForm">
+
+                    <mat-form-field appearance="outline" >
+                    <mat-label>Employeee</mat-label>
+                    <input matInput placeholder="Search by Name" formControlName="employeeNoWithName">
+                </mat-form-field>
+
                     <mat-form-field appearance="outline">
                         <mat-label>Leave Type</mat-label>
                         <mat-select formControlName="leaveType">
@@ -18,7 +24,7 @@
                         <mat-button-toggle value="full">Full Day</mat-button-toggle>
                         <mat-button-toggle value="half">Half Day</mat-button-toggle>
                     </mat-button-toggle-group>
-
+<div class="date-fields">
                     <mat-form-field appearance="outline">
                         <mat-label>From Date</mat-label>
                         <input matInput [matDatepicker]="fromPicker" placeholder="DD/MM/YYYY"
@@ -33,6 +39,7 @@
                         <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
                         <mat-datepicker #toPicker></mat-datepicker>
                     </mat-form-field>
+                    </div>
 
                     <mat-form-field appearance="outline">
                         <mat-label>Reason Type</mat-label>
@@ -49,56 +56,17 @@
                     </mat-form-field>
                 </form>
 
-
-                <div class="action-buttons">
-                    <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()" >Submit</button>
-                    <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
-                </div>
-
-
-            </div>
-
-            <!-- <div class="holiday-container" [@listStagger]>
-                <mat-card *ngFor="let holiday of upcomingHolidayList" class="holiday-card">
-                  <div class="holiday-name"><strong>{{ holiday.name }}</strong></div>
-                  <div class="holiday-date"><small>{{ holiday.dateObj | date: 'fullDate' }}</small></div>
-                </mat-card>
-              </div> -->
-              
-
-              <!-- <div class="calendar-section">
-                <div class="holidays-section">
-                  <h3>Upcoming Holidays</h3>
-                  <div class="holiday-list">
-                    <div
-                      [@scrollUp]="animationState"
-                      (@scrollUp.done)="onAnimationDone($event)"
-                      class="scroll-list"
-                    >
-                      <div class="scroll-item" *ngFor="let holiday of upcomingHolidayList">
-                        <div class="holiday-info">
-                            <strong>{{ holiday.name }}</strong>
-                            <small>{{ holiday.date | date: 'fullDate' }}</small>
-                        </div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-               -->
-              
-              
-              
-              
+            </div>      
               
         </div>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="start">
-        <!-- <div class="action-buttons">
-            <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
-            <button mat-flat-button color="primary">Submit</button>
-        </div> -->
+    <mat-dialog-actions align="end">
+        <div class="action-buttons">
+                    <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()" >Submit</button>
+                    <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+                </div>
     </mat-dialog-actions>
+
+  
 </div>

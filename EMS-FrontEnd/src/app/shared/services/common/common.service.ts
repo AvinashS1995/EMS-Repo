@@ -8,6 +8,9 @@ import { MatDialog } from '@angular/material/dialog';
 import * as CryptoJS from 'crypto-js';
 import { AlertDialogComponent } from '../../widget/dialog/alert-dialog/alert-dialog.component';
 import { AlertDialogData } from '../../interfaces/dialog';
+import * as jwtDecodeNamespace from 'jwt-decode';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +22,26 @@ export class CommonService {
   IV_LENGTH = 16; // bytes
   secretKey: string = ''; // Add this property
 
+  userDetails = {
+    _id: '',
+    empNo: '',
+    name: '',
+    email: '',
+    mobile: '',
+    role: '',
+    type: '',
+    status: '',
+    teamLeader: '',
+    designation: '',
+    joiningDate: '',
+    salary: 0,
+    workType: ''
+  };
 
-  constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {}
+
+  constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {
+    this.setUserDetailsFromToken();
+  }
 
   // Decrypt encrypted secretKey from backend
   decryptSecretKey(encrypted: string): string {
@@ -99,16 +120,40 @@ export class CommonService {
   
     return dialogRef.afterClosed();
   }
-
-  openComponentDialog<T>(component: T, data?: any,) {
-    return this.dialog.open(component as any, {
-      data: data || {}
-    }).afterClosed();
-  }
   
 
   getToken(): string | null {
     return sessionStorage.getItem('token') || localStorage.getItem('token');
+  }
+
+  setUserDetailsFromToken() {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded: any = jwtDecodeNamespace.jwtDecode(token);
+        this.userDetails = {
+          _id: decoded._id || '',
+          empNo: decoded.empNo || '',
+          name: decoded.name || '',
+          email: decoded.email || '',
+          mobile: decoded.mobile || '',
+          role: decoded.role || '',
+          type: decoded.type || '',
+          status: decoded.status || '',
+          teamLeader: decoded.teamLeader || '',
+          designation: decoded.designation || '',
+          joiningDate: decoded.joiningDate || '',
+          salary: decoded.salary || 0,
+          workType: decoded.workType || ''
+        };
+      } catch (e) {
+        console.error('Token decoding failed', e);
+      }
+    }
+  } else {
+    console.error('Session Storage Not Available');
+  }
   }
 
   
