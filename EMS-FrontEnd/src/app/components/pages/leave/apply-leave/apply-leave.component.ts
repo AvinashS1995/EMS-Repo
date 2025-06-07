@@ -8,6 +8,7 @@ import { CommonService } from '../../../../shared/services/common/common.service
 import { ApiService } from '../../../../shared/services/api/api.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { animate, keyframes, query, stagger, style, transition, trigger, AnimationEvent } from '@angular/animations';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -35,6 +36,7 @@ export const MY_DATE_FORMATS = {
       },
       { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     ],
+    
 })
 export class ApplyLeaveComponent {
 
@@ -44,9 +46,6 @@ export class ApplyLeaveComponent {
 
   leaveTypeList: Array<any> = [];
   leaveReasonTypeList: Array<any> = [];
-  upcomingHolidayList: Array<any> = [];
-
-   today = new Date();
 
 
   constructor(
@@ -67,18 +66,11 @@ export class ApplyLeaveComponent {
       this.prepareCreateLeaveForm();
       this.leaveTypeList = this.data.leaveType || [];
 
-      console.log(this.leaveTypeList);
+      // console.log(this.leaveTypeList);
 
       this.leaveReasonTypeList = this.data.leaveReasonType || [];
 
-      console.log(this.leaveReasonTypeList);
-
-      this.upcomingHolidayList = this.data.upcomingHolidays || [];
-      this.upcomingHolidayList.filter(h => new Date(h.date) >= this.today)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .slice(0, 5); // Show top 5 upcoming holidays
-
-      console.log(this.upcomingHolidayList);
+      // console.log(this.leaveReasonTypeList);
       
     }
 

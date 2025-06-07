@@ -3,15 +3,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../../shared/services/api/api.service';
 import { CommonService } from '../../../../shared/services/common/common.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { API_ENDPOINTS, CheckInsStep } from '../../../../shared/constant';
 import { SharedModule } from '../../../../shared/shared.module';
-import { CommonModule } from '@angular/common';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-check-ins',
   standalone: true,
-  imports: [SharedModule, CommonModule],
+  imports: [SharedModule,],
   templateUrl: './check-ins.component.html',
   styleUrl: './check-ins.component.scss'
 })
@@ -43,7 +42,7 @@ export class CheckInsComponent {
     this.prepareCheckInsForm();
     this.loadUserEmail();
     this.mode = this.data.mode;
-    console.log('Dialog mode:', this.mode);
+    // console.log('Dialog mode:', this.mode);
 
   }
 

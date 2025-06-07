@@ -3,9 +3,11 @@ import { SnackBarComponent } from '../../widget/snack-bar/snack-bar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialogData } from '../../interfaces/widget';
 import { Observable } from 'rxjs';
-import { ConfirmationDialogComponent } from '../../widget/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../widget/dialog/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as CryptoJS from 'crypto-js';
+import { AlertDialogComponent } from '../../widget/dialog/alert-dialog/alert-dialog.component';
+import { AlertDialogData } from '../../interfaces/dialog';
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +86,26 @@ export class CommonService {
 
     return dialogRef.afterClosed();
   }
+
+  showAlertDialog(data: AlertDialogData): Observable<void> {
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      width: '650px',
+      data: {
+        title: data.title,
+        message: data.message,
+        okText: data.okText || 'OK',
+      },
+    });
+  
+    return dialogRef.afterClosed();
+  }
+
+  openComponentDialog<T>(component: T, data?: any,) {
+    return this.dialog.open(component as any, {
+      data: data || {}
+    }).afterClosed();
+  }
+  
 
   getToken(): string | null {
     return sessionStorage.getItem('token') || localStorage.getItem('token');

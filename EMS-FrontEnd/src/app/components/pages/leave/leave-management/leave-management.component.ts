@@ -13,62 +13,58 @@ import { ApplyLeaveComponent } from '../apply-leave/apply-leave.component';
   standalone: true,
   imports: [SharedModule, CommonModule],
   templateUrl: './leave-management.component.html',
-  styleUrl: './leave-management.component.scss'
+  styleUrl: './leave-management.component.scss',
 })
 export class LeaveManagementComponent {
   leaveType: Array<any> = [];
   leaveReasonType: Array<any> = [];
-  upcomingHolidays: Array<any> = [];;
+  upcomingHolidays: Array<any> = [];
 
-   constructor(
-      private router: Router,
-      private fb: FormBuilder,
-      private dialog: MatDialog,
-      private activateRoute: ActivatedRoute,
-      private apiService: ApiService,
-      private commonService: CommonService
-    ) {}
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private activateRoute: ActivatedRoute,
+    private apiService: ApiService,
+    private commonService: CommonService
+  ) {}
 
+  ngOnInit(): void {
+    this.getparams();
+  }
 
-    ngOnInit(): void {
-      this.getparams();
-    }
+  getparams() {
+    this.activateRoute.data.subscribe((params) => {
+      // console.log('Params Leave Management ---->', params);
 
+      if (params['data']) {
+        this.leaveType = params['data'].leaveType?.data?.types || [];
+        this.leaveType = this.leaveType.map((item) => {
+          return {
+            value: item.typeValue,
+            label: item.typeLabel,
+          };
+        });
 
-    getparams() {
+        console.log('Leave Type--->', this.leaveType);
 
-      this.activateRoute.data.subscribe(params => {
-        console.log("Params Leave Management ---->", params)
+        this.leaveReasonType =
+          params['data'].leaveReasonType?.data?.types || [];
+        this.leaveReasonType = this.leaveReasonType.map((item) => {
+          return {
+            value: item.typeValue,
+            label: item.typeLabel,
+          };
+        });
 
-        if (params['data']) {
-          this.leaveType = params['data'].leaveType?.data?.types || [];
-          this.leaveType = this.leaveType.map((item) => {
-            return {
-              value: item.typeValue,
-              label: item.typeLabel,
-            };
-          });
-  
-          console.log('Leave Type--->', this.leaveType);
+        console.log('Leave Reason Type--->', this.leaveReasonType);
 
-          this.leaveReasonType = params['data'].leaveReasonType?.data?.types || [];
-          this.leaveReasonType = this.leaveReasonType.map((item) => {
-            return {
-              value: item.typeValue,
-              label: item.typeLabel,
-            };
-          });
-  
-          console.log('Leave Reason Type--->', this.leaveReasonType);
+        this.upcomingHolidays =
+          params['data'].getUpcomingHoliday?.data?.upComingHolidays || [];
 
-          this.upcomingHolidays = params['data'].getUpcomingHoliday?.data?.upComingHolidays || [];
-  
-          console.log('Upcoming Holidays--->', this.upcomingHolidays);
-  
-        }
-      })
-    }
-  
+      }
+    });
+  }
 
   applyLeave() {
 
@@ -84,11 +80,13 @@ export class LeaveManagementComponent {
 
           },
         });
-    
+
         dialogRef.afterClosed().subscribe((result) => {
           if (result === 'saved' || result === 'updated') {
-            
+
           }
         });
   }
+
+  
 }

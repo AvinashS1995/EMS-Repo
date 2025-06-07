@@ -4,6 +4,7 @@ import { EmployeeManagementResolverService } from './components/pages/employee/e
 import { ConfigurationResolverService } from './components/pages/configuration/configuration/configuration-resolver.service';
 import { AttendenceManagementResolverService } from './components/pages/attendence/attendence-management/attendence-management-resolver.service';
 import { LeaveManagementResolverService } from './components/pages/leave/leave-management/leave-management-resolver.service';
+import { DashboardResolverService } from './components/pages/dashboard/dashboard-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -30,8 +31,11 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('../app/components/pages/dashboard/dashboard.component').then(
-            (c) => c.DashboardComponent
-          ),
+            (c) => c.DashboardComponent),
+            data: {
+              title: "Dashboard"
+            },
+            resolve: { data: DashboardResolverService }
       },
       {
         path: 'employee-management',

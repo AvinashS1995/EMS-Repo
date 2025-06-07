@@ -144,3 +144,100 @@ mat-button-toggle-group {
     overflow: hidden;
   }
   
+  // .calendar-section {
+  //   width: 300px;
+  //   margin: 20px auto;
+  //   font-family: Arial, sans-serif;
+  // }
+  
+  // .holidays-section {
+  //   border: 1px solid #ccc;
+  //   padding: 10px;
+  //   height: 200px;
+  //   overflow: hidden;
+  //   position: relative;
+  // }
+  
+  // .scroll-wrapper {
+  //   height: 200px;
+  //   overflow: hidden;
+  //   position: relative;
+  //   display: flex;
+  //   flex-direction: column;
+  //   animation-fill-mode: forwards;
+  // }
+  
+  // .scroll-list {
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+  
+  // .scroll-item {
+  //   padding: 10px 5px;
+  //   border-bottom: 1px solid #eee;
+  //   font-size: 14px;
+  //   background: white;
+  // }
+
+  .calendar-section {
+    width: 300px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .holiday-list {
+    // border: 1px solid #ccc;
+    padding: 10px;
+    // height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .scroll-wrapper {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .scroll-list {
+    display: flex;
+    flex-direction: column;
+    /* Set the total height of the list */
+    /* Important: Adjust height based on items */
+    /* For example, if each item is 40px and you have 4 items, height ~160px */
+    height: 160px;
+  }
+  .scroll-item {
+    padding: 10px 5px;
+    // border-bottom: 1px solid #eee;
+    font-size: 14px;
+    // background: white;
+  }
+  
+  
+  // .calendar-section {
+  //   width: 300px;
+  //   margin: 20px auto;
+  //   font-family: Arial, sans-serif;
+  // }
+  
+  // .holiday-list {
+  //   padding: 10px;
+  //   overflow: hidden;
+  //   position: relative;
+  //   height: 160px; /* adjust to your needs */
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+  
+  // .scroll-item {
+  //   padding: 10px 5px;
+  //   font-size: 14px;
+  // }
+  
+  .holiday-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;  /* space between name and date */
+  }
+  

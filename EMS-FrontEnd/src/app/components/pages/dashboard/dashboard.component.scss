@@ -1,0 +1,81 @@
+.attendance-container {
+    padding: 20px;
+  }
+  
+  .summary-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  
+  .summary-card {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .summary-card h3 {
+    margin: 5px 0;
+    font-size: 18px;
+  }
+  
+  .summary-card p {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .calendar-section {
+    width: 300px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .holiday-list {
+    // border: 1px solid #ccc;
+    padding: 10px;
+    // height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .scroll-wrapper {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .scroll-list {
+    display: flex;
+    flex-direction: column;
+    /* Set the total height of the list */
+    /* Important: Adjust height based on items */
+    /* For example, if each item is 40px and you have 4 items, height ~160px */
+    height: 160px;
+  }
+  .scroll-item {
+    padding: 10px 5px;
+    // border-bottom: 1px solid #eee;
+    font-size: 14px;
+    // background: white;
+  }
+  
+  .holiday-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;  /* space between name and date */
+  }
+
+  .upcoming-holiday-card {
+    max-width: 30vw;
+    display: flex;
+    
+  }
+
+  .dashboard-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
