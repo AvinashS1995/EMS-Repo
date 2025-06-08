@@ -24,6 +24,8 @@ const router = express.Router();
  *                 type: string
  *               email:
  *                 type: string
+ *               mobile:
+ *                 type: string
  *               role:
  *                 type: string
  *               status:

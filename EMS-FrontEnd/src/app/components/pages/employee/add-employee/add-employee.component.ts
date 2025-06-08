@@ -99,6 +99,8 @@ export class AddEmployeeComponent {
       status: ['', Validators.required],
       type: [''],
       teamLeader: [''],
+      manager: [''],
+      hr: [''],
       role: [''],
       designation: [''],
       joiningDate: [''],
@@ -116,6 +118,8 @@ export class AddEmployeeComponent {
         status: this.data.editData.status,
         type: this.data.editData.type,
         teamLeader: this.data.editData.teamLeader,
+        manager: this.data.editData.manager,
+        hr: this.data.editData.hr,
         role: this.data.editData.role,
         designation: this.data.editData.designation,
         joiningDate: this.data.editData.joiningDate,
@@ -149,13 +153,15 @@ export class AddEmployeeComponent {
         status: newEmployee.status ? newEmployee.status : '',
         type: newEmployee.type ? newEmployee.type : '',
         teamLeader: newEmployee.teamLeader ? newEmployee.teamLeader : '',
+        manager: newEmployee.manager ? newEmployee.manager : '',
+        hr: newEmployee.hr ? newEmployee.hr : '',
         designation: newEmployee.designation ? newEmployee.designation : '',
         joiningDate: newEmployee.joiningDate ? newEmployee.joiningDate : '',
         salary: newEmployee.salary ? newEmployee.salary : 0,
         workType: newEmployee.workType ? newEmployee.workType : '',
         profileImage: newEmployee.profileImage ? newEmployee.profileImage : '',
       };
-      
+      debugger
       console.log('New employee data:', paylaod);
 
       const ENDPOINT = this.data.editData

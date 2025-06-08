@@ -65,7 +65,7 @@ export class AddNewRoleTypeComponent {
     const { role, roleType, description } = this.roleTypeForm.getRawValue();
 
     if (this.roleTypeForm.valid) {
-      debugger
+      // debugger
       const paylaod = {
         id: this.isEditMode ? this.data.editData?._id : 0,
         entityValue: role ? role : '',

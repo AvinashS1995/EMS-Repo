@@ -16,15 +16,21 @@ export class LeaveManagementResolverService {
 
     let leaveType = of({});
     let leaveReasonType = of({});
-    let getUpcomingHoliday = of({});
+    let status = of({});
+    let employeeLeaveList = of({});
     
     leaveType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveType" });
     leaveReasonType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveReasonType" });
+    status = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Status" });
+    employeeLeaveList = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GET_EMPLOYEE_LEAVE, {});
+
 
 
    return forkJoin({
     leaveType,
     leaveReasonType,
+    status,
+    employeeLeaveList
     });
   }
 }

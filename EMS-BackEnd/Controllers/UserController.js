@@ -13,6 +13,8 @@ const CreateUser = async (req, res) => {
       status,
       type,
       teamLeader,
+      manager,
+      hr,
       designation,
       joiningDate,
       salary,
@@ -87,6 +89,8 @@ const CreateUser = async (req, res) => {
       status,
       type,
       teamLeader,
+      manager,
+      hr,
       designation,
       joiningDate,
       salary,
@@ -170,10 +174,13 @@ const UpdateEmployeeList = async (req, res) => {
       id,
       name,
       email,
+      mobile,
       role,
       status,
       type,
       teamLeader,
+      manager,
+      hr,
       designation,
       joiningDate,
       salary,
@@ -194,9 +201,12 @@ const UpdateEmployeeList = async (req, res) => {
 
     existingType.name = name;
     existingType.email = email;
+    existingType.mobile = mobile;
     existingType.role = role;
     existingType.status = status;
     existingType.teamLeader = teamLeader;
+    existingType.manager = manager;
+    existingType.hr = hr;
     existingType.designation = designation;
     existingType.joiningDate = joiningDate;
     existingType.salary = salary;

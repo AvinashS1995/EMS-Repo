@@ -6,10 +6,10 @@
             <div class="form-section">
                 <form [formGroup]="leaveForm">
 
-                    <mat-form-field appearance="outline" >
-                    <mat-label>Employeee</mat-label>
-                    <input matInput placeholder="Search by Name" formControlName="employeeNoWithName">
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Employeee</mat-label>
+                        <input matInput placeholder="Search by Name" formControlName="employeeNoWithName">
+                    </mat-form-field>
 
                     <mat-form-field appearance="outline">
                         <mat-label>Leave Type</mat-label>
@@ -19,26 +19,29 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <mat-button-toggle-group class="mat-button-toggle-overrides" name="shift" aria-label="Select Shift"
-                        formControlName="shift">
-                        <mat-button-toggle value="full">Full Day</mat-button-toggle>
-                        <mat-button-toggle value="half">Half Day</mat-button-toggle>
-                    </mat-button-toggle-group>
-<div class="date-fields">
-                    <mat-form-field appearance="outline">
-                        <mat-label>From Date</mat-label>
-                        <input matInput [matDatepicker]="fromPicker" placeholder="DD/MM/YYYY"
-                            formControlName="startDate">
-                        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #fromPicker></mat-datepicker>
-                    </mat-form-field>
 
-                    <mat-form-field appearance="outline">
-                        <mat-label>To Date</mat-label>
-                        <input matInput [matDatepicker]="toPicker" placeholder="DD/MM/YYYY" formControlName="endDate">
-                        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #toPicker></mat-datepicker>
-                    </mat-form-field>
+                    <mat-button-toggle-group class="mat-button-toggle-overrides" name="shift" aria-label="Select Shift"
+                        formControlName="leaveDuration">
+                        <mat-button-toggle value="Full Day">Full Day</mat-button-toggle>
+                        <mat-button-toggle value="Half Day">Half Day</mat-button-toggle>
+                    </mat-button-toggle-group>
+
+                    <div class="date-fields">
+                        <mat-form-field appearance="outline">
+                            <mat-label>From Date</mat-label>
+                            <input matInput [matDatepicker]="fromPicker" placeholder="DD/MM/YYYY"
+                                formControlName="startDate">
+                            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #fromPicker></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>To Date</mat-label>
+                            <input matInput [matDatepicker]="toPicker" placeholder="DD/MM/YYYY"
+                               [min]="leaveForm.get('startDate')?.value" formControlName="endDate">
+                            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #toPicker></mat-datepicker>
+                        </mat-form-field>
                     </div>
 
                     <mat-form-field appearance="outline">
@@ -56,17 +59,17 @@
                     </mat-form-field>
                 </form>
 
-            </div>      
-              
+            </div>
+
         </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
         <div class="action-buttons">
-                    <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()" >Submit</button>
-                    <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
-                </div>
+            <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()">Submit</button>
+            <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+        </div>
     </mat-dialog-actions>
 
-  
+
 </div>

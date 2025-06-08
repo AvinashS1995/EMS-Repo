@@ -151,8 +151,6 @@ export class CommonService {
         console.error('Token decoding failed', e);
       }
     }
-  } else {
-    console.error('Session Storage Not Available');
   }
   }
 

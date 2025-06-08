@@ -38,6 +38,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Team Leader is requied field']
     },
+    manager: {
+        type: String,
+        required: [true, 'Manager is requied field']
+    },
+    hr: {
+        type: String,
+        required: [true, 'HR is requied field']
+    },
     designation: {
         type: String,
         required: [true, 'Designation is requied field']

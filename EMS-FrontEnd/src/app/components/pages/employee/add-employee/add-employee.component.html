@@ -58,6 +58,16 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Manager</mat-label>
+                <input matInput formControlName="manager">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>HR</mat-label>
+                <input matInput formControlName="hr">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Type</mat-label>
                 <mat-select formControlName="type">
                     <mat-option *ngFor="let type of experienceTypeList" [value]="type.label">{{ type.label

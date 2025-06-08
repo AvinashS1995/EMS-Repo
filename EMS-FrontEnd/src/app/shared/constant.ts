@@ -23,6 +23,11 @@ const API_ENDPOINTS = {
   SERVICE_GET_USER_ATTENDENCE: 'attendence/get-attendence-list',
   SERVICE_GET_USER_ATTENDENCE_TODAY_SUMMARY: 'attendence/get-attendence-summary',
   SERVICE_GET_UPCOMING_HOLIDAYS: 'leave/get-upcoming-holidays',
+  SERVICE_SAVE_EMPLOYEE_LEAVE: 'leave/save-employee-leave',
+  SERVICE_GET_EMPLOYEE_LEAVE: 'leave/get-employee-all-leave',
+  SERVICE_GET_EMPLOYEE_LEAVE_REQUEST_LIST: 'leave/get-empployee-leave-request-list',
+  SERVICE_SAVE_EMPLOYEE_LEAVE_APPLICATION_APPROVE_REJECT: 'leave/employee-leave-application-approve-reject',
+  SERVICE_APPLICATION_APPROVAL_FLOW: 'leave/application-approval-flow',
 };
 
 // Use regex for JavaScript ('\' is a escape charector hence use it twice)
