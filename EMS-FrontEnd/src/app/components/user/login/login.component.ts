@@ -81,6 +81,10 @@ export class LoginComponent {
               'email',
               this.commonService.encryptWithKey(resp.user.email, decryptedSecret)
             );
+            storage.setItem(
+              'empNo',
+              this.commonService.encryptWithKey(resp.user.empNo, decryptedSecret)
+            );
 
 
             this.commonService.openSnackbar(resp.message, 'success');

@@ -183,39 +183,53 @@ const approvalFlow = async (req, res) => {
 
 
 const LeaveRequestList = async (req, res) => {
-
   try {
+    const { empNo, role } = req.body;
 
-    const leaveRequests = await Leave.find().sort({ createAt: -1 });
+    if (!empNo || !role) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'empNo and role are required'
+      });
+    }
 
-    const { empNo, leaveType, leaveStatus, fromDate, toDate,
-              appliedBy, createAt} = leaveRequests;
+   // Map actual role to expected status
+    const roleStatusMap = {
+      'Team Leader': 'Pending for TL',
+      'Manager': 'Pending for Manager',
+      'HR': 'Pending for HR',
+    };
 
-    const user = await User.findOne({ empNo: empNo})
+    const expectedStatus = roleStatusMap[role];
+
+    if (!expectedStatus) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid role provided'
+      });
+    }
+
+    const leaveRequests = await Leave.find({
+      status: expectedStatus
+    }).sort({ createAt: -1 });
 
     res.status(200).json({
       status: "success",
-      message: "Record(s) Successfully Fetched!",
+      message: "Leave requests fetched successfully!",
       data: {
-        empNo: empNo,
-        name: user?.name,
-          leaveType: leaveType,
-          leaveStatus: leaveStatus,
-          fromDate: fromDate,
-          toDate: toDate,
-          appliedBy: appliedBy,
-          createAt: createAt,
+        records: leaveRequests.length,
+        leaveRequests
       },
     });
-    
+
   } catch (error) {
-    
     res.status(500).json({
       status: 'fail',
       message: error.message,
     });
   }
-}
+};
+
 
 const approveRejectLeave = async (req, res) => {
   try {
@@ -230,13 +244,21 @@ const approveRejectLeave = async (req, res) => {
       });
     }
 
-    const expectedStatus = {
-      TL: 'Pending for TL',
-      Manager: 'Pending for Manager',
-      HR: 'Pending for HR',
+    // const expectedStatus = {
+    //   TL: 'Pending for TL',
+    //   Manager: 'Pending for Manager',
+    //   HR: 'Pending for HR',
+    // };
+
+    const roleStatusMap = {
+      'Team Leader': 'Pending for TL',
+      'Manager': 'Pending for Manager',
+      'HR': 'Pending for HR',
     };
 
-    if (leave.status !== expectedStatus[role]) {
+    const expectedStatus = roleStatusMap[role];
+
+    if (leave.status !== expectedStatus) {
       return res.status(400).json({
         status: 'fail',
         message: `Leave not pending with ${role}`,
@@ -244,13 +266,13 @@ const approveRejectLeave = async (req, res) => {
     }
 
     let newStatus = '';
-    if (action === 'approve') {
+    if (action === 'Approved') {
       newStatus =
         role === 'TL' ? 'Pending for Manager' :
         role === 'Manager' ? 'Pending for HR' :
         'Final Approved';
 
-    } else if (action === 'reject') {
+    } else if (action === 'Rejected') {
       newStatus = `Rejected by ${role}`;
 
     } else {

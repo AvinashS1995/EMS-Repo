@@ -7,6 +7,7 @@ import { CommonService } from '../../../shared/services/common/common.service';
 import { CheckInsComponent } from '../attendence/check-ins/check-ins.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { animate, keyframes, style, transition, trigger, AnimationEvent } from '@angular/animations';
+import { API_ENDPOINTS } from '../../../shared/constant';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +36,10 @@ export class DashboardComponent {
   animationState = false;
   pauseAnimation = false;
   upcomingHolidays: Array<any> = [];
+  pendingLeaveCount: number = 0;
+  EmployeeNo: any;
+  RoleName: any;
+  UserEmail: any;
   
  constructor(
      private router: Router,
@@ -46,6 +51,8 @@ export class DashboardComponent {
    ) {}
 
   ngOnInit(): void {
+    this.loadUserDetails();
+    this.getEmployeeLeaveRequestList();
     this.openCheckIns();
     this.getparams();
   }
@@ -92,6 +99,8 @@ export class DashboardComponent {
             this.upcomingHolidays = this.getCurrentAndNextMonthHolidays(this.upcomingHolidays);
   
           // console.log('Upcoming Holidays--->', this.upcomingHolidays);
+
+          // this.pendingLeaveCount = params['data'].getEmployeeRequestList?.data?.records || 0;
         }
       });
     }
@@ -125,5 +134,78 @@ export class DashboardComponent {
       // Remove text in parentheses, e.g., "Janmashtami (Smarta)" → "Janmashtami"
       return name.replace(/\s*\(.*?\)/g, '').trim();
     }
+
+    getEmployeeLeaveRequestList() {
+
+      const paylaod = {
+        empNo: this.EmployeeNo ? this.EmployeeNo : '',
+      role: this.RoleName ? this.RoleName : '',
+      }
+console.log("SERVICE_GET_USER_ATTENDENCE paylaod", paylaod)
+
+    this.apiService
+      .postApiCall(API_ENDPOINTS.SERVICE_GET_EMPLOYEE_LEAVE_REQUEST_LIST, paylaod)
+      .subscribe({
+        next: (res: any) => {
+          console.log(
+            `${API_ENDPOINTS.SERVICE_GET_EMPLOYEE_LEAVE_REQUEST_LIST} Response : `,
+            res
+          );
+
+          this.pendingLeaveCount = res?.data?.records || '';
+
+          this.commonService.openSnackbar(res.message, 'success');
+        },
+        error: (error) => {
+          this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+    }
+
+
+    loadUserDetails() {
+    if (typeof window !== 'undefined') {
+      const encryptedEmployeeNo =
+        localStorage.getItem('empNo') || sessionStorage.getItem('empNo');
+      const encryptedRole =
+        localStorage.getItem('roleName') || sessionStorage.getItem('roleName');
+
+      const encryptedEmail = localStorage.getItem('email') || sessionStorage.getItem('email');
+
+
+      const encryptedSecretKey =
+        localStorage.getItem('key') || sessionStorage.getItem('key');
+
+      if (encryptedSecretKey) {
+        // First decrypt the encrypted secretKey
+        const decryptedMainKey =
+          this.commonService.decryptSecretKey(encryptedSecretKey);
+        this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
+        console.log(
+          'this.commonService.secretKey---->',
+          this.commonService.secretKey
+        );
+      }
+      if (encryptedEmployeeNo && encryptedRole &&  encryptedEmail && this.commonService.secretKey) {
+        this.EmployeeNo = this.commonService.decryptWithKey(
+          encryptedEmployeeNo,
+          this.commonService.secretKey
+        );
+        this.RoleName = this.commonService.decryptWithKey(
+          encryptedRole,
+          this.commonService.secretKey
+        );
+
+        this.UserEmail = this.commonService.decryptWithKey(encryptedEmail, this.commonService.secretKey);
+
+
+        console.log(`User Name ${this.EmployeeNo}  Role Name ${this.RoleName}`);
+      }
+    }
+  }
+
+    navigateToRequestList() {
+  this.router.navigate(['/employee-leave-approval-request-list']);
+}
 
 }

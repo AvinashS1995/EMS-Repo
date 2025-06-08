@@ -1,6 +1,6 @@
 <div class="container">
 
-    <h2 mat-dialog-title>Apply Leave</h2>
+    <h2 mat-dialog-title>{{ dialogTitle }}</h2>
     <mat-dialog-content>
         <div class="apply-leave-container">
             <div class="form-section">
@@ -66,8 +66,19 @@
 
     <mat-dialog-actions align="end">
         <div class="action-buttons">
+            <ng-container *ngIf="!isViewMode">
             <button mat-flat-button color="primary" type="submit" (click)="ApplyLeave()">Submit</button>
             <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+            </ng-container>
+
+            <ng-container *ngIf="isViewMode">
+      <button mat-flat-button color="primary"
+              (click)="approveReject('Approved')">Approve</button>
+      <button mat-flat-button color="warn"
+              (click)="approveReject('Rejected')">Reject</button>
+    </ng-container>
+
+
         </div>
     </mat-dialog-actions>
 

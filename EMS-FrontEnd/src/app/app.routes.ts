@@ -5,6 +5,7 @@ import { ConfigurationResolverService } from './components/pages/configuration/c
 import { AttendenceManagementResolverService } from './components/pages/attendence/attendence-management/attendence-management-resolver.service';
 import { LeaveManagementResolverService } from './components/pages/leave/leave-management/leave-management-resolver.service';
 import { DashboardResolverService } from './components/pages/dashboard/dashboard-resolver.service';
+import { LeaveApprovalRequestListResolverService } from './components/pages/leave/leave-approval-request-list/leave-approval-request-list-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -76,6 +77,17 @@ export const routes: Routes = [
             title: "Leave Management"
           },
           resolve: { data: LeaveManagementResolverService }
+      },
+      {
+        path: 'employee-leave-approval-request-list',
+        loadComponent: () =>
+          import(
+            './components/pages/leave/leave-approval-request-list/leave-approval-request-list.component'
+          ).then((c) => c.LeaveApprovalRequestListComponent),
+          data: {
+            title: "Employee Leave Approval Request List"
+          },
+          resolve: { data: LeaveApprovalRequestListResolverService }
       },
       {
         path: 'sales-management',

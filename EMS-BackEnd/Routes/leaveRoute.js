@@ -67,19 +67,30 @@ router.post('/get-employee-all-leave', authenticateToken, getAllLeaves)
 /**
  * @swagger
  * /api/leave/get-empployee-leave-request-list:
- *   get:
- *     summary: Get All Employee Leave Request List
+ *   post:
+ *     summary: Get Employee Leave Request List
  *     tags:
  *       - Leave
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               empNo:
+ *                 type: string
+ *               role:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Record(s) Fetched successfully
+ *         description: Employee Leave Application Approve Reject successfully !
  *       400:
  *         description: Bad request or missing required fields
  *       500:
  *         description: Server error
  */
-router.get('/get-empployee-leave-request-list', LeaveRequestList)
+router.post('/get-empployee-leave-request-list', LeaveRequestList)
 /**
  * @swagger
  * /api/leave/employee-leave-application-approve-reject:

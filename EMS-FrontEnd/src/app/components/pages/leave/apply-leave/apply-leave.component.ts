@@ -16,17 +16,8 @@ import { CommonService } from '../../../../shared/services/common/common.service
 import { ApiService } from '../../../../shared/services/api/api.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  animate,
-  keyframes,
-  query,
-  stagger,
-  style,
-  transition,
-  trigger,
-  AnimationEvent,
-} from '@angular/animations';
 import { API_ENDPOINTS } from '../../../../shared/constant';
+import { RejectCommentDialogComponent } from '../../../../shared/widget/dialog/reject-comment-dialog/reject-comment-dialog.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -63,6 +54,12 @@ export class ApplyLeaveComponent {
   leaveTypeList: Array<any> = [];
   leaveReasonTypeList: Array<any> = [];
 
+  dialogTitle = 'Apply Leave';
+  isViewMode = false;
+  EmployeeName: any;
+  RoleName: any;
+  EmployeeNo: any;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -75,6 +72,7 @@ export class ApplyLeaveComponent {
 
   ngOnInit(): void {
     console.log(this.data);
+    this.loadUserDetails();
     this.prepareCreateLeaveForm();
     this.leaveTypeList = this.data.leaveType || [];
 
@@ -95,14 +93,46 @@ export class ApplyLeaveComponent {
       leaveReasonType: [' ', Validators.required],
       leaveReasonComment: [' ', Validators.required],
     });
-debugger
-    const EmployeeNoWithName = `${this.commonService.userDetails.name} [${this.commonService.userDetails.empNo}]`;
 
-    this.leaveForm.patchValue({
-      employeeNoWithName: EmployeeNoWithName || '',
-    });
+    if (this.data?.mode === 'view' && this.data?.leaveRequest) {
+      this.isViewMode = true;
+      this.dialogTitle = 'View Leave Details';
 
-    this.leaveForm.controls['employeeNoWithName'].disable();
+      // Patch incoming data
+      const {
+        empNo,
+        name,
+        leaveType,
+        leaveDuration,
+        fromDate,
+        toDate,
+        reasonType,
+        reasonComment,
+      } = this.data.leaveRequest;
+
+      this.leaveForm.patchValue({
+        employeeNoWithName: `${name} [${empNo}]`,
+        leaveType: leaveType,
+        leaveDuration: leaveDuration,
+        startDate: fromDate,
+        endDate: toDate,
+        leaveReasonType: reasonType,
+        leaveReasonComment: reasonComment,
+      });
+
+      // Disable all fields – we are just viewing
+      this.leaveForm.disable();
+    }
+
+    if (!this.data?.mode) {
+      const EmployeeNoWithName = `${this.commonService.userDetails.name} [${this.commonService.userDetails.empNo}]`;
+
+      this.leaveForm.patchValue({
+        employeeNoWithName: EmployeeNoWithName || '',
+      });
+
+      this.leaveForm.controls['employeeNoWithName'].disable();
+    }
   }
 
   ApplyLeave() {
@@ -143,6 +173,103 @@ debugger
         },
         error: (error) => {
           this.commonService.openSnackbar(error.error.message, 'error');
+        },
+      });
+  }
+
+  loadUserDetails() {
+    if (typeof window !== 'undefined') {
+      const encryptedEmployeeNo =
+        localStorage.getItem('empNo') || sessionStorage.getItem('empNo');
+      const encryptedRole =
+        localStorage.getItem('roleName') || sessionStorage.getItem('roleName');
+
+      const encryptedEmployeeName =
+        localStorage.getItem('userName') || sessionStorage.getItem('userName');
+
+      const encryptedSecretKey =
+        localStorage.getItem('key') || sessionStorage.getItem('key');
+
+      if (encryptedSecretKey) {
+        // First decrypt the encrypted secretKey
+        const decryptedMainKey =
+          this.commonService.decryptSecretKey(encryptedSecretKey);
+        this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
+        console.log(
+          'this.commonService.secretKey---->',
+          this.commonService.secretKey
+        );
+      }
+      if (
+        encryptedEmployeeNo &&
+        encryptedRole &&
+        encryptedEmployeeName &&
+        this.commonService.secretKey
+      ) {
+        this.EmployeeNo = this.commonService.decryptWithKey(
+          encryptedEmployeeNo,
+          this.commonService.secretKey
+        );
+        this.RoleName = this.commonService.decryptWithKey(
+          encryptedRole,
+          this.commonService.secretKey
+        );
+
+        this.EmployeeName = this.commonService.decryptWithKey(
+          encryptedEmployeeName,
+          this.commonService.secretKey
+        );
+
+        console.log(`User Name ${this.EmployeeNo}  Role Name ${this.RoleName}`);
+      }
+    }
+  }
+
+  approveReject(decision: 'Approved' | 'Rejected') {
+    const { _id, name, empNo } = this.data.leaveRequest;
+    if (decision === 'Approved') {
+      // Directly call the approve API here
+      const payload = {
+        leaveId: _id || '',
+        action: decision || '',
+        role: this.RoleName || '',
+        approverComment: 'Leave Approved',
+        updatedBy: `${this.EmployeeName} [${this.EmployeeNo}]` || '',
+      };
+      this.sendDecision(payload);
+    }
+
+    if (decision === 'Rejected') {
+      const dialogRef = this.dialog.open(RejectCommentDialogComponent, {
+        width: '400px',
+      });
+
+      dialogRef.afterClosed().subscribe((comment) => {
+        if (comment) {
+          const payload = {
+            leaveId: _id || '',
+            action: decision || '',
+            role: this.RoleName || '',
+            approverComment: comment,
+            updatedBy: `${this.EmployeeName} [${this.EmployeeNo}]` ||'',
+          };
+          this.sendDecision(payload);
+        }
+      });
+    }
+  }
+
+  sendDecision(payload: any) {
+    console.log(payload);
+    this.apiService
+      .postApiCall(API_ENDPOINTS.SERVICE_SAVE_EMPLOYEE_LEAVE_APPLICATION_APPROVE_REJECT, payload)
+      .subscribe({
+        next: (res: any) => {
+          this.commonService.openSnackbar(res.message, 'success');
+          this.dialogRef.close('decision');
+        },
+        error: (err) => {
+          this.commonService.openSnackbar(err.error.message, 'error');
         },
       });
   }
