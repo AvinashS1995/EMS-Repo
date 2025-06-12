@@ -29,7 +29,7 @@ const router = express.Router();
  *                 type: string
  *               icon:
  *                 type: string
- *               parentMenu:
+ *               parentId:
  *                 type: string
  *     responses:
  *       201:

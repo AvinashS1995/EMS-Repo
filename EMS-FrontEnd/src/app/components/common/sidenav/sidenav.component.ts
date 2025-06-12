@@ -7,6 +7,7 @@ import { ApiService } from '../../../shared/services/api/api.service';
 import { API_ENDPOINTS } from '../../../shared/constant';
 import { AuthService } from '../../../shared/services/api/auth.service';
 import { Router } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-sidenav',
@@ -14,11 +15,23 @@ import { Router } from '@angular/router';
   imports: [SharedModule, NgClass],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
+  animations: [
+    trigger('expandCollapseAnimation', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0 }),
+        animate('200ms ease-out', style({ height: '*', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ height: 0, opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SidenavComponent implements OnInit {
   @Output() navigateEvent = new EventEmitter<string>();
 
   menuItems = signal<Sidenav[]>([]);
+  expandedMenus = new Set<string>();
 
   UserName: string = '';
   RoleName: string = '';
@@ -56,21 +69,71 @@ export class SidenavComponent implements OnInit {
         if (res?.status === 'success') {
           const menus = res.roleMenus.menus
             .filter((item: any) => item.access === 'fullAccess')
-            .map((item: any) => ({
-              title: item.menuId.title,
-              icon: item.menuId.icon,
-              route: item.menuId.path,
-              sequence: item.menuId.sequence,
-              role: res.roleMenus.role.toLowerCase(),
-            }));
+            .map((item: any) => item.menuId);
+            //   ({
+            //   title: item.menuId.title,
+            //   icon: item.menuId.icon,
+            //   route: item.menuId.path,
+            //   sequence: item.menuId.sequence,
+            //   parentId: item.menuId.parentMenu ?? null,
+            //   role: res.roleMenus.role.toLowerCase(),
+            // }));
 
-          // Sort by sequence
-          this.menuItems.set(
-            menus.sort((a: Sidenav, b: Sidenav) => a.sequence - b.sequence)
-          );
+          // // Sort by sequence
+          // this.menuItems.set(
+          //   menus.sort((a: Sidenav, b: Sidenav) => a.sequence - b.sequence)
+          // );
+          // const nestedMenus = this.buildMenuTree(menus);
+          // this.menuItems.set(nestedMenus);
+
+          const nestedMenus = menus.map((menu: any) => this.transformMenu(menu));
+        this.menuItems.set(nestedMenus.sort((a: { sequence: number; }, b: { sequence: number; }) => a.sequence - b.sequence));
         }
       });
   }
+
+  transformMenu(menu: any): Sidenav {
+  const transformed: Sidenav = {
+    id: menu._id,
+    title: menu.title,
+    icon: menu.icon,
+    route: menu.path,
+    sequence: menu.sequence,
+    children: menu.childMenu?.map((child: any) => this.transformMenu(child)) || []
+  };
+  return transformed;
+}
+
+  buildMenuTree(flat: any[]) {
+    const map = new Map<string, any>();
+    const roots: any[] = [];
+    flat.forEach(item => { item.children = []; map.set(item.id, item); });
+    flat.forEach(item => {
+      if (item.parentId && map.has(item.parentId)) {
+        map.get(item.parentId).children.push(item);
+      } else {
+        roots.push(item);
+      }
+    });
+    return roots.sort((a, b) => a.sequence - b.sequence);
+  }
+
+  toggleSubMenu(menuId: string): void {
+    if (this.expandedMenus.has(menuId)) {
+      this.expandedMenus.delete(menuId);
+    } else {
+      this.expandedMenus.add(menuId);
+    }
+  }
+
+  isExpanded(menuId: string): boolean {
+    return this.expandedMenus.has(menuId);
+  } 
+
+  trackById(index: number, item: any): string {
+  return item.id;
+}
+
 
   navigateTO(url: string) {
     // debugger

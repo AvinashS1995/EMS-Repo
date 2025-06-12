@@ -1,5 +1,24 @@
 import mongoose from "mongoose";
 
+const ChildMenuSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  path: {
+    type: String,
+    required: true,
+  },
+  componentName: {
+    type: String,
+    required: true,
+  },
+  description: String,
+  icon: String,
+  sequence: Number,
+  childMenu: [], // Recursive embed
+});
+
 const MenuSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -19,16 +38,19 @@ const MenuSchema = new mongoose.Schema({
   icon: {
     type: String,
   },
-  parentMenu: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Menu",
-    default: null,
-  },
+  // parentMenu: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Menu",
+  //   default: null,
+  // },
+  childMenu: [ChildMenuSchema],
   sequence: {
     type: Number,
     unique: true,
   }, // Auto-generated sequence number
 });
+
+
 
 const Menu = mongoose.model("Menu", MenuSchema);
 

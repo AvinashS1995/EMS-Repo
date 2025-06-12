@@ -104,7 +104,7 @@ export const routes: Routes = [
           ).then((c) => c.PayrollManagementComponent),
       },
       {
-        path: 'configuration',
+        path: 'option-type-configuration',
         loadComponent: () =>
           import('./components/pages/configuration/configuration/configuration.component').then(
             (c) => c.ConfigurationComponent
@@ -119,6 +119,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/pages/configuration/add-new-role-type/add-new-role-type.component').then(
             (c) => c.AddNewRoleTypeComponent
+          ),
+      },
+      {
+        path: 'menu-configuration',
+        loadComponent: () =>
+          import('./components/pages/configuration/menu/menu-configuration/menu-configuration.component').then(
+            (c) => c.MenuConfigurationComponent
           ),
       },
     ],

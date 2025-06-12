@@ -31,7 +31,7 @@ export class LeaveApprovalRequestListComponent {
     'name',
     'fromDate',
     'toDate',
-    'status',
+    'view',
   ];
 
   constructor(

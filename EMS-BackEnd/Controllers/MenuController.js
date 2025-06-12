@@ -1,52 +1,145 @@
 import { Menu, RoleMenu } from "../Models/menuModel.js";
 
 
+// const CreateMenu = async (req, res) => {
+//   try {
+//     // const menu = new Menu(req.body); // Ensure this is the correct model
+
+//     // Find the last menu in the sequence
+//     const lastMenu = await Menu.findOne().sort({ sequence: -1 });
+
+//     // Generate the next sequence number
+//     const newSequence = lastMenu ? lastMenu.sequence + 1 : 1;
+
+//     const menu = new Menu({
+//       ...req.body,
+//       sequence: newSequence // Assigning the auto-incremented sequence
+//     });
+
+//     await menu.save();
+
+//     return res.status(201).json({
+//       status: "success", // Fixed spelling
+//       message: "Menu created successfully",
+//       CreatedMenu: menu, // No need to wrap it in an extra object
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: "fail", // Fixed spelling
+//       message: error.message,
+//     });
+//   }
+// };
+
 const CreateMenu = async (req, res) => {
   try {
-    // const menu = new Menu(req.body); // Ensure this is the correct model
+    const { parentId, ...menuData } = req.body;
 
-    // Find the last menu in the sequence
-    const lastMenu = await Menu.findOne().sort({ sequence: -1 });
+    if (!parentId) {
+      // 🌐 Parent Menu → Global Sequence
+      const lastMenu = await Menu.findOne().sort({ sequence: -1 });
+      const newSequence = lastMenu ? lastMenu.sequence + 1 : 1;
 
-    // Generate the next sequence number
-    const newSequence = lastMenu ? lastMenu.sequence + 1 : 1;
+      const newMenu = new Menu({
+        ...menuData,
+        parentMenu: null,
+        sequence: newSequence,
+        childMenu: []
+      });
 
-    const menu = new Menu({
-      ...req.body,
-      sequence: newSequence // Assigning the auto-incremented sequence
-    });
+      await newMenu.save();
 
-    await menu.save();
+      return res.status(201).json({
+        status: "success",
+        message: "Parent menu created successfully",
+        CreatedMenu: newMenu,
+      });
 
-    return res.status(201).json({
-      status: "success", // Fixed spelling
-      message: "Menu created successfully",
-      CreatedMenu: menu, // No need to wrap it in an extra object
-    });
+    } else {
+      // 📦 Child Menu → Local sequence inside parent
+      const parentMenu = await Menu.findById(parentId);
+      if (!parentMenu) {
+        return res.status(404).json({ status: "fail", message: "Parent menu not found" });
+      }
+
+      // Get max sequence among existing child menus
+      const lastChild = parentMenu.childMenu.reduce((prev, curr) =>
+        curr.sequence > prev.sequence ? curr : prev,
+        { sequence: 0 }
+      );
+      const childSequence = lastChild.sequence + 1;
+
+      parentMenu.childMenu.push({
+        ...menuData,
+        sequence: childSequence,
+        childMenu: []
+      });
+
+      await parentMenu.save();
+
+      return res.status(201).json({
+        status: "success",
+        message: "Child menu created successfully",
+        CreatedMenu: parentMenu,
+      });
+    }
+
   } catch (error) {
     res.status(500).json({
-      status: "fail", // Fixed spelling
+      status: "fail",
       message: error.message,
     });
   }
 };
 
+
+
+
+// const GetMenu = async (req, res) => {
+//   try {
+//     const menus = await Menu.find(); // Ensure this is the correct model
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Record(s) Fetched Successfully..!",
+//       data: menus, // Simplified response structure
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: "fail",
+//       message: error.message, // Unified key name
+//     });
+//   }
+// };
+
 const GetMenu = async (req, res) => {
   try {
-    const menus = await Menu.find(); // Ensure this is the correct model
+    // Get all parent menus
+    const parentMenus = await Menu.find({ parentMenu: null }).lean();
 
-    res.status(200).json({
+    // Sort parent and child menus by their sequence
+    parentMenus.sort((a, b) => a.sequence - b.sequence);
+
+    parentMenus.forEach(parent => {
+      if (Array.isArray(parent.childMenu)) {
+        parent.childMenu.sort((a, b) => a.sequence - b.sequence);
+      }
+    });
+
+    return res.status(200).json({
       status: "success",
-      message: "Record(s) Fetched Successfully..!",
-      data: menus, // Simplified response structure
+      message: "Menus fetched successfully",
+      data: parentMenus,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "fail",
-      message: error.message, // Unified key name
+      message: error.message,
     });
   }
 };
+
+
 
 // Assign menus to a role
 const AssignRoleMenus = async (req, res) => {

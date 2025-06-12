@@ -51,7 +51,7 @@ const saveEmployeeLeave = async (req, res) => {
               toDate,
               reasonType,
               reasonComment,
-              status: 'Pending for TL',
+              status: 'Pending for Team Leader',
             });
 
             const savedLeave = await newLeave.save();
@@ -195,7 +195,7 @@ const LeaveRequestList = async (req, res) => {
 
    // Map actual role to expected status
     const roleStatusMap = {
-      'Team Leader': 'Pending for TL',
+      'Team Leader': 'Pending for Team Leader',
       'Manager': 'Pending for Manager',
       'HR': 'Pending for HR',
     };
@@ -251,7 +251,7 @@ const approveRejectLeave = async (req, res) => {
     // };
 
     const roleStatusMap = {
-      'Team Leader': 'Pending for TL',
+      'Team Leader': 'Pending for Team Leader',
       'Manager': 'Pending for Manager',
       'HR': 'Pending for HR',
     };
@@ -268,7 +268,7 @@ const approveRejectLeave = async (req, res) => {
     let newStatus = '';
     if (action === 'Approved') {
       newStatus =
-        role === 'TL' ? 'Pending for Manager' :
+        role === 'Team Leader' ? 'Pending for Manager' :
         role === 'Manager' ? 'Pending for HR' :
         'Final Approved';
 

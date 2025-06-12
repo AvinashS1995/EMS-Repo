@@ -29,38 +29,57 @@ export class ApprovalFlowDialogComponent {
     this.apiService.postApiCall(API_ENDPOINTS.SERVICE_APPLICATION_APPROVAL_FLOW, payload).subscribe({
       next: (res: any) => {
         const leave = res.data;
-        this.approvalSteps = [
-          {
-          label: 'Submitted by Employee',
-          status: 'Submitted',
-          comment: leave.reasonComment,
-          createdBy: `${leave.empNo} - ${leave.name}`,
-          date: leave.createAt
-        },
-          {
-            label: 'Team Lead',
-            status: `${leave.leaveStatus === 'Pending for TL' || leave.leaveStatus.includes('TL') ? leave.leaveStatus : 'Approved'} (${leave.tlApprover})`,
-            comment: leave.approverComment,
-            updatedBy: leave.updatedBy,
-            date: leave.updateAt
-          },
-          {
-            label: 'Manager',
-            status: `${leave.leaveStatus === 'Pending for Manager' || leave.leaveStatus.includes('Manager') ? leave.leaveStatus : ''} (${leave.managerApprover})` ,
-            comment: leave.approverComment,
-            updatedBy: leave.updatedBy,
-            date: leave.updateAt
-          },
-          {
-            label: 'HR',
-            status: `${leave.leaveStatus === 'Pending for HR' || leave.leaveStatus.includes('HR') || leave.leaveStatus === 'Final Approved' ? leave.leaveStatus : ''} (${leave.hrApprover})`,
-            comment: leave.approverComment,
-            updatedBy: leave.updatedBy,
-            date: leave.updateAt
-          },
-        ];
-        this.isLoading = false;
-      },
+         this.approvalSteps = [];
+
+      // Always show Employee step
+      this.approvalSteps.push({
+        label: 'Employee',
+        status: 'Submitted',
+        comment: leave.reasonComment,
+        createdBy: `${leave.empNo} - ${leave.name}`,
+        date: leave.createAt
+      });
+
+      // TEAM LEADER step
+      if (leave.leaveStatus.includes('Team Leader') || leave.leaveStatus.includes('Manager') || leave.leaveStatus.includes('HR') || leave.leaveStatus === 'Final Approved' || leave.leaveStatus.includes('Rejected')) {
+        this.approvalSteps.push({
+          label: 'Team Lead',
+          status: leave.leaveStatus.includes('Team Leader') ? leave.leaveStatus : 'Approved',
+          comment: leave.approverComment || '',
+          updatedBy: leave.tlApprover,
+          date: leave.updateAt
+        });
+
+        if (leave.leaveStatus.includes('Rejected')) return;
+      }
+
+      // MANAGER step
+      if (leave.leaveStatus.includes('Manager') || leave.leaveStatus.includes('HR') || leave.leaveStatus === 'Final Approved') {
+        this.approvalSteps.push({
+          label: 'Manager',
+          status: leave.leaveStatus.includes('Manager') ? leave.leaveStatus : 'Approved',
+          comment: leave.approverComment || '',
+          updatedBy: leave.managerApprover,
+          date: leave.updateAt
+        });
+
+        if (leave.leaveStatus.includes('Rejected')) return;
+      }
+
+      // HR step
+      if (leave.leaveStatus.includes('HR') || leave.leaveStatus === 'Final Approved') {
+        this.approvalSteps.push({
+          label: 'HR',
+          status: leave.leaveStatus === 'Final Approved' ? 'Approved' : leave.leaveStatus,
+          comment: leave.approverComment || '',
+          updatedBy: leave.hrApprover,
+          date: leave.updateAt
+        });
+      }
+console.log("Approval Flow Response ---->",this.approvalSteps)
+      this.isLoading = false;
+    },
+
       error: () => {
         this.isLoading = false;
       },

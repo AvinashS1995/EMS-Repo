@@ -68,7 +68,7 @@ const CreateUser = async (req, res) => {
      .sort({ empNo: -1 })
      .collation({ locale: "en_US", numericOrdering: true });
 
-   let empNo = 'EMP001'; // default for first record
+   let empNo = 'EMP001'; 
 
    if (lastEmp && lastEmp.empNo) {
      const lastNumber = parseInt(lastEmp.empNo.replace('EMP', ''));
