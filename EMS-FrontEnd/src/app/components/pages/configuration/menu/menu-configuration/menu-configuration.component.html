@@ -1,1 +1,51 @@
-<p>menu-configuration works!</p>
+<div class="menu-configuration-container">
+  <div class="header">
+        <div class="title">
+            <h2>Menu configuration</h2>
+        </div>
+        <button mat-flat-button class="example-full-width" type="button" (click)="createMenu()">+ Create Menu</button>
+    </div>
+  <mat-divider></mat-divider>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Filter Menu
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <form [formGroup]="menuFilterForm">
+          <div class="filters">
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Search</mat-label>
+              <input matInput placeholder="Search by Menu" formControlName="menuName">
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="menuStatus">
+                  <mat-option *ngFor="let status of menuStatusList" [value]="status.label">{{ status.label }}</mat-option>
+              </mat-select>
+          </mat-form-field>
+        
+          </div>
+        </form>
+        
+        <div class="filter-actions">
+          <button mat-flat-button class="example-full-width" (click)="applyFilters()">Apply</button>
+          <button mat-flat-button class="example-full-width" (click)="clearFilters()">Clear</button>
+      </div>
+
+
+    </mat-expansion-panel>
+
+<mat-divider></mat-divider>
+
+
+
+
+
+
+
+
+</div>

@@ -14,6 +14,7 @@ const API_ENDPOINTS = {
   SERVICE_GETROLETYPE: 'auth/get-type-list',
   SERVICE_UPDATEROLETYPE: 'auth/update-type-list',
   SERVICE_DELETEROLETYPE: 'auth/delete-type-list',
+  SERVICE_GETMENUS: 'menu/getmenu',
   SERVICE_ROLEWISEMENUS: 'menu/getrole-wise-menu',
   SERVICE_GETALLSTATUS: 'auth/getall-status',
   SERVICE_SEND_CHECK_INS_OTP: 'attendence/send-check-ins-otp',

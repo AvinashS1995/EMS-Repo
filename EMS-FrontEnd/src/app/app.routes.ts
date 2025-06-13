@@ -6,6 +6,7 @@ import { AttendenceManagementResolverService } from './components/pages/attenden
 import { LeaveManagementResolverService } from './components/pages/leave/leave-management/leave-management-resolver.service';
 import { DashboardResolverService } from './components/pages/dashboard/dashboard-resolver.service';
 import { LeaveApprovalRequestListResolverService } from './components/pages/leave/leave-approval-request-list/leave-approval-request-list-resolver.service';
+import { CreateMenuConfigurationResolverService } from './components/pages/configuration/menu/create-menu-configuration/create-menu-configuration-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -127,6 +128,21 @@ export const routes: Routes = [
           import('./components/pages/configuration/menu/menu-configuration/menu-configuration.component').then(
             (c) => c.MenuConfigurationComponent
           ),
+          data: {
+            title: "Menu Configuration List",
+          },
+          resolve: { data: CreateMenuConfigurationResolverService }
+      },
+      {
+        path: 'create-menu',
+        loadComponent: () =>
+          import('./components/pages/configuration/menu/create-menu-configuration/create-menu-configuration.component').then(
+            (c) => c.CreateMenuConfigurationComponent
+          ),
+          data: {
+            title: "Create Menu Configuration",
+          },
+          resolve: { data: CreateMenuConfigurationResolverService }
       },
     ],
   },
