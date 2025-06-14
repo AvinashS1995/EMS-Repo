@@ -7,6 +7,7 @@ import { LeaveManagementResolverService } from './components/pages/leave/leave-m
 import { DashboardResolverService } from './components/pages/dashboard/dashboard-resolver.service';
 import { LeaveApprovalRequestListResolverService } from './components/pages/leave/leave-approval-request-list/leave-approval-request-list-resolver.service';
 import { CreateMenuConfigurationResolverService } from './components/pages/configuration/menu/create-menu-configuration/create-menu-configuration-resolver.service';
+import { RoleWiseMenuConfigurationResolverService } from './components/pages/configuration/menu/role-wise-menu-configuration/role-wise-menu-configuration-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -143,6 +144,17 @@ export const routes: Routes = [
             title: "Create Menu Configuration",
           },
           resolve: { data: CreateMenuConfigurationResolverService }
+      },
+      {
+        path: 'role-wise-menu-configuration',
+        loadComponent: () =>
+          import('./components/pages/configuration/menu/role-wise-menu-configuration/role-wise-menu-configuration.component').then(
+            (c) => c.RoleWiseMenuConfigurationComponent
+          ),
+          data: {
+            title: "Role Wise Menu Configuration",
+          },
+          resolve: { data: RoleWiseMenuConfigurationResolverService }
       },
     ],
   },

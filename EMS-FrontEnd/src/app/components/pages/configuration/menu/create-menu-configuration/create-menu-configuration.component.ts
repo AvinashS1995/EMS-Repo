@@ -50,7 +50,7 @@ export class CreateMenuConfigurationComponent {
 
       if (params['data']) {
         const menuData = params['data']?.menus?.data || []
-        debugger
+        
         this.menuList  = this.buildMenuList(menuData)
 
         console.log(this.menuList)
