@@ -77,6 +77,10 @@ export class CreateMenuConfigurationComponent {
   return result;
 }
 
+onSubmitMenuForm() {
+  
+}
+
 
   cancelForm() {
     this.router.navigateByUrl('/menu-configuration')

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../../../../../shared/services/common/common.service';
 import { ApiService } from '../../../../../shared/services/api/api.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-menu-configuration',
@@ -20,7 +21,12 @@ export class MenuConfigurationComponent {
 
   menuList: Array<any> = [];
 
- childDisplayedColumns: string[] = ['sequence', 'title', 'path', 'component', 'action'];
+  totalRecords = 0;
+  pageSize = 5;
+  currentPage: number = 1;
+
+ displayedColumns: string[] = ['srNo', 'title', 'path', 'componentName', 'action'];
+
 
 
   constructor(
@@ -49,7 +55,9 @@ export class MenuConfigurationComponent {
     this.activateRoute.data.subscribe(params => {
 
       if (params['data']) {
-        this.menuList = params['data'].menus.data || []
+        const rawMenus = params['data'].menus.data || []
+
+        this.menuList = this.flattenMenus(rawMenus);
 
         console.log(this.menuList)
       }
@@ -65,6 +73,36 @@ export class MenuConfigurationComponent {
     this.router.navigateByUrl('/create-menu')
   }
 
+  flattenMenus(menus: any[], level: number = 0, parentId: string | null = null): any[] {
+  return menus.reduce((acc: any[], menu) => {
+    const { childMenu, path, componentName, ...rest } = menu;
+    const current = {
+      ...rest,
+      level,
+      parentId,
+      path: path || '',
+      componentName: componentName || '',
+      visibility: true
+    };
+    acc.push(current);
+
+    if (childMenu && childMenu.length) {
+      acc.push(...this.flattenMenus(childMenu, level + 1, menu._id));
+    }
+
+    return acc;
+  }, []);
+}
+
+toggleVisibility(menu: any) {
+  menu.visibility = !menu.visibility;
+}
+
+
+onEditMedu(element: any) {
+  
+}
+
   applyFilters() {
 
   }
@@ -72,4 +110,10 @@ export class MenuConfigurationComponent {
   clearFilters() {
 
   }
+
+   onPageChange(event: PageEvent): void {
+      this.currentPage = event.pageIndex + 1;
+      this.pageSize = event.pageSize;
+      // this.getEmployeesLeave();
+    }
 }
