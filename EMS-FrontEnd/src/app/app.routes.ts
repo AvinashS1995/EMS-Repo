@@ -8,6 +8,7 @@ import { DashboardResolverService } from './components/pages/dashboard/dashboard
 import { LeaveApprovalRequestListResolverService } from './components/pages/leave/leave-approval-request-list/leave-approval-request-list-resolver.service';
 import { CreateMenuConfigurationResolverService } from './components/pages/configuration/menu/create-menu-configuration/create-menu-configuration-resolver.service';
 import { RoleWiseMenuConfigurationResolverService } from './components/pages/configuration/menu/role-wise-menu-configuration/role-wise-menu-configuration-resolver.service';
+import { EmployeeProfileResolverService } from './components/pages/employee-profile/employee-profile-resolver.service';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -39,6 +40,16 @@ export const routes: Routes = [
               title: "Dashboard"
             },
             resolve: { data: DashboardResolverService }
+      },
+      {
+        path: 'employee-profile',
+        loadComponent: () =>
+          import('../app/components/pages/employee-profile/employee-profile.component').then(
+            (c) => c.EmployeeProfileComponent),
+            data: {
+              title: "Employee Profile"
+            },
+            resolve: { data: EmployeeProfileResolverService }
       },
       {
         path: 'employee-management',

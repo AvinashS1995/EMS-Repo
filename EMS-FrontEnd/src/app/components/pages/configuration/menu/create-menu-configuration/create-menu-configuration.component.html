@@ -27,6 +27,11 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="parent-menu-field">
+                    <mat-label>Menu Icon</mat-label>
+                    <input matInput formControlName="menuIcon">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="parent-menu-field">
                     <mat-label>Parent Menu</mat-label>
                     <mat-select formControlName="parentMenu">
                         <mat-option *ngFor="let menu of menuList" [value]="menu.label">{{ menu.label }}</mat-option>
@@ -35,7 +40,9 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Description</mat-label>
-                    <textarea matInput formControlName="menuDescription" rows="3"></textarea>
+                    <textarea matInput formControlName="menuDescription" rows="3" maxlength="200"
+                    (input)="updateDescriptionLength()"></textarea>
+                    <mat-hint align="end">{{ descriptionLength }}/200</mat-hint>
                 </mat-form-field>
 
             </div>

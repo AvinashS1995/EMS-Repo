@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonService } from '../../../../../shared/services/common/common.service';
 import { ApiService } from '../../../../../shared/services/api/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { API_ENDPOINTS } from '../../../../../shared/constant';
 
 @Component({
   selector: 'app-create-menu-configuration',
@@ -18,6 +19,7 @@ export class CreateMenuConfigurationComponent {
 
   menuList: Array<any> = [];
   isEditMode: Boolean = false;
+  descriptionLength = 0;
 
 
   constructor(
@@ -40,9 +42,14 @@ export class CreateMenuConfigurationComponent {
       menuTitle: [''],
       menuRoute: [''],
       menuComponentName: [''],
+      menuIcon: [''],
       parentMenu: [''],
       menuDescription: [''],
     })
+
+  this.createMenuForm.controls['menuDescription'].valueChanges.subscribe(menuDescriptionValue => {
+    this.descriptionLength = menuDescriptionValue?.length || 0;
+  })
   }
 
   getparams() {
@@ -67,6 +74,7 @@ export class CreateMenuConfigurationComponent {
             menuTitle: title || '',
             menuRoute: path || '',
             menuComponentName: componentName || '',
+            menuIcon: icon || '',
             parentMenu: parentMenu?.label || '',
             menuDescription: description || '',
           });
@@ -95,8 +103,43 @@ export class CreateMenuConfigurationComponent {
   return result;
 }
 
+updateDescriptionLength() {
+  const value = this.createMenuForm.get('menuDescription')?.value;
+  this.descriptionLength = value?.length || 0;
+}
+
 onSubmitMenuForm() {
-  
+
+    const  { menuTitle, menuRoute, menuComponentName, menuIcon,
+      parentMenu, menuDescription } = this.createMenuForm.getRawValue();
+debugger
+      const parentId = this.menuList.find(item => item.label === parentMenu)
+
+      console.log(parentId)
+
+    const payload = {
+      title: menuTitle || '',
+      path: menuRoute || '',
+      componentName: menuComponentName || '',
+      description: menuDescription || '',
+      icon: menuIcon || '',
+      parentId: parentId?.value || ''
+    };
+
+    console.log(payload)
+    
+
+    this.apiService.postApiCall(API_ENDPOINTS.SERVICE_SAVE_MENU, payload).subscribe({
+      next: (res: any) => {
+        console.log(`${API_ENDPOINTS.SERVICE_SAVE_ROLE_WISE_MENUS} Response : `, res);
+
+        this.commonService.openSnackbar(res.message, 'success');
+        this.router.navigateByUrl('/menu-configuration')
+      },
+      error: (error) => {
+        this.commonService.openSnackbar(error.error.message, 'error');
+      },
+    });
 }
 
 

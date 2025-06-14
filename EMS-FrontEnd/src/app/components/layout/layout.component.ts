@@ -16,7 +16,7 @@ export class LayoutComponent {
   constructor(private router: Router, private commonService: CommonService) {}
 
   ngOnInit() {
-    debugger
+    
     this.commonService.userDetails$.subscribe(user => {
   console.log("commonService",user); // always latest
 });

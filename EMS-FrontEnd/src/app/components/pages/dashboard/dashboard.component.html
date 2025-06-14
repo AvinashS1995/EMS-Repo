@@ -20,20 +20,14 @@
       <p>3</p>
       <!-- <span class="negative">10% vs last month</span> -->
     </mat-card>
-
-     <mat-card class="summary-card notification-card">
-   <div 
-    class="notification-icon"
-    [matBadge]="pendingLeaveCount" 
-    matBadgeColor="warn"
-    matBadgePosition="above after"
-    matBadgeOverlap="false"
-    (click)="navigateToRequestList()"
-  >
-    <img src="assets/mail.png" alt="Mail" class="mail-image" />
-  </div>
-  <div class="notification-label">Notification</div>
-</mat-card>
+{{pendingLeaveCount}}
+    <mat-card class="summary-card notification-card">
+      <div class="notification-icon" [matBadge]="pendingLeaveCount" matBadgeColor="warn" matBadgePosition="above after"
+        matBadgeOverlap="false" (click)="navigateToRequestList()">
+        <img src="assets/mail.png" alt="Mail" class="mail-image" />
+      </div>
+      <div class="notification-label">Notification</div>
+    </mat-card>
 
 
   </div>

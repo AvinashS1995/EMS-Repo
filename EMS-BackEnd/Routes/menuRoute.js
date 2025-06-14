@@ -43,7 +43,7 @@ router.post('/create-menu', authenticateToken, CreateMenu)
 /**
  * @swagger
  * /api/menu/getmenu:
- *   get:
+ *   post:
  *     summary: Create New Menu
  *     tags:
  *       - Menu
@@ -55,7 +55,7 @@ router.post('/create-menu', authenticateToken, CreateMenu)
  *       500:
  *         description: Server error
  */
-router.get('/getmenu', authenticateToken, GetMenu)
+router.post('/getmenu', authenticateToken, GetMenu)
 /**
  * @swagger
  * /api/menu/create-role-wise-menu:

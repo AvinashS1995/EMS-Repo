@@ -36,7 +36,7 @@ export class DashboardComponent {
   animationState = false;
   pauseAnimation = false;
   upcomingHolidays: Array<any> = [];
-  pendingLeaveCount: number = 0;
+  pendingLeaveCount: any;
   EmployeeNo: any;
   RoleName: any;
   UserEmail: any;
@@ -52,9 +52,11 @@ export class DashboardComponent {
 
   ngOnInit(): void {
     this.loadUserDetails();
-    this.getEmployeeLeaveRequestList();
     this.openCheckIns();
     this.getparams();
+    if (this.RoleName !== 'Employee') {
+    this.getEmployeeLeaveRequestList();
+    }
   }
 
   openCheckIns() {

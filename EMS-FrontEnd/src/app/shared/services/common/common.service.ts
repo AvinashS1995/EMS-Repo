@@ -28,6 +28,8 @@ export class CommonService {
     type: '',
     status: '',
     teamLeader: '',
+    manager: '',
+    hr: '',
     designation: '',
     joiningDate: '',
     salary: 0,
@@ -175,13 +177,15 @@ export class CommonService {
           type: decoded.type || '',
           status: decoded.status || '',
           teamLeader: decoded.teamLeader || '',
+          manager: decoded.manager || '',
+          hr: decoded.hr || '',
           designation: decoded.designation || '',
           joiningDate: decoded.joiningDate || '',
           salary: decoded.salary || 0,
           workType: decoded.workType || '',
           loginUserSecretkey: decoded.loginUserSecretKey || ''
         };
-debugger
+ 
         this.userDetails = updatedUser; // update the object
           this.userDetailsSubject.next(updatedUser); // push new value
       } catch (e) {

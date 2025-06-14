@@ -86,7 +86,7 @@ export class LoginComponent {
               this.commonService.encryptWithKey(resp.user.empNo, decryptedSecret)
             );
 
-
+            this.commonService.setUserDetailsFromToken();
             this.commonService.openSnackbar(resp.message, 'success');
             // this.commonService.setUserDetails(resp.user.name, resp.user.role);
             this.router.navigateByUrl('/dashboard');

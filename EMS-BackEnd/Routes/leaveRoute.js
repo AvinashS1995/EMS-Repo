@@ -55,6 +55,11 @@ router.post('/save-employee-leave', authenticateToken, saveEmployeeLeave)
  *       required: true
  *       content:
  *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Record Successfully Fetched

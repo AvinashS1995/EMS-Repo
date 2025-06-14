@@ -47,6 +47,8 @@ export class SidenavComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadUserDetails();
+
     if (typeof window !== 'undefined') {
       this.token = this.commonService.getToken();
       // console.log(token);
@@ -56,20 +58,22 @@ export class SidenavComponent implements OnInit {
       this.loadRoleBasedMenus();
     }
 
-    this.loadUserDetails();
   }
 
   loadRoleBasedMenus() {
+    
     const payload = {
-      role: 'Admin',
+      role: this.RoleName || '',
     };
     this.apiService
       .menuApiCall(API_ENDPOINTS.SERVICE_ROLEWISEMENUS, payload)
       .subscribe((res: any) => {
         if (res?.status === 'success') {
-          const menus = res.roleMenus.menus
-            .filter((item: any) => item.access === 'fullAccess')
-            .map((item: any) => item.menuId);
+          
+          const menus = res.data.filteredMenus
+            // .filter((item: any) => item.access === 'fullAccess')
+            // .map((item: any) => item.menuId);
+            console.log(menus) 
             //   ({
             //   title: item.menuId.title,
             //   icon: item.menuId.icon,
@@ -87,6 +91,7 @@ export class SidenavComponent implements OnInit {
           // this.menuItems.set(nestedMenus);
 
           const nestedMenus = menus.map((menu: any) => this.transformMenu(menu));
+          console.log(nestedMenus)
         this.menuItems.set(nestedMenus.sort((a: { sequence: number; }, b: { sequence: number; }) => a.sequence - b.sequence));
         }
       });
@@ -101,7 +106,7 @@ export class SidenavComponent implements OnInit {
     sequence: menu.sequence,
     children: menu.childMenu?.map((child: any) => this.transformMenu(child)) || []
   };
-  return transformed;
+  return transformed; 
 }
 
   buildMenuTree(flat: any[]) {

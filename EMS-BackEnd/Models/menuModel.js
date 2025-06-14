@@ -47,7 +47,15 @@ const MenuSchema = new mongoose.Schema({
   sequence: {
     type: Number,
     unique: true,
-  }, // Auto-generated sequence number
+  },
+  updateAt: {
+    type: Date,
+    default: Date.now,
+  },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 
@@ -64,6 +72,7 @@ const RoleMenuSchema = new mongoose.Schema({
       menuId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Menu",
+        required: true,
       },
       access: {
         type: String,
@@ -72,6 +81,14 @@ const RoleMenuSchema = new mongoose.Schema({
       },
     },
   ],
+  updateAt: {
+    type: Date,
+    default: Date.now,
+  },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const RoleMenu = mongoose.model("RoleMenu", RoleMenuSchema);

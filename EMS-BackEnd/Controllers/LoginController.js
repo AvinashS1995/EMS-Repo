@@ -47,6 +47,8 @@ const Login = async (req, res) => {
         type: user.type, 
         status: user.status, 
         teamLeader: user.teamLeader, 
+        manager: user.manager, 
+        hr: user.hr, 
         designation: user.designation, 
         joiningDate: user.joiningDate, 
         salary: user.salary, 

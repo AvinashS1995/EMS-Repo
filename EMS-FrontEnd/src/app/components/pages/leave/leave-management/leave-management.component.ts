@@ -90,6 +90,7 @@ export class LeaveManagementComponent {
         console.log('Leave Application Status Type--->', this.leaveStatusList);
 
         this.dataSource = params['data'].employeeLeaveList?.data?.leaves || [];
+        this.totalRecords = params['data'].employeeLeaveList?.data?.totalRecords || 0
 
         console.log('Leave Application List--->', this.dataSource);
       }

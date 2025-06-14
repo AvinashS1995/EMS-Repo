@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { API_ENDPOINTS } from '../../../../shared/constant';
 import { ApiService } from '../../../../shared/services/api/api.service';
+import { CommonService } from '../../../../shared/services/common/common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeaveManagementResolverService {
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private commonService: CommonService) {}
 
   
 
@@ -22,7 +23,10 @@ export class LeaveManagementResolverService {
     leaveType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveType" });
     leaveReasonType = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "leaveReasonType" });
     status = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "Status" });
-    employeeLeaveList = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GET_EMPLOYEE_LEAVE, {});
+    const payload = {
+      empNo: this.commonService.userDetails.empNo || ''
+    }
+    employeeLeaveList = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GET_EMPLOYEE_LEAVE, payload);
 
 
 
