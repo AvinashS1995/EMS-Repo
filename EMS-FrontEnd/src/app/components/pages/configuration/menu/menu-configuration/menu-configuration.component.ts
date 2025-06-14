@@ -65,7 +65,7 @@ export class MenuConfigurationComponent {
   }
 
   toggle(menu: any) {
-    debugger
+    
     menu.expanded = !menu.expanded;
   }
 
@@ -100,7 +100,23 @@ toggleVisibility(menu: any) {
 
 
 onEditMedu(element: any) {
-  
+  const payload = {
+    id: element._id,
+    title: element.title,
+    componentName: element.componentName,
+    description: element.description,
+    icon: element.icon,
+    parentId: element.parentId,
+    parentMenu: element.parentMenu,
+    path: element.path,
+    sequence: element.sequence,
+    mode: 'edit'
+  }
+  this.router.navigate(['/create-menu'], {
+    queryParams: {
+      data: this.commonService.encryptByAEStoString(payload)
+    }
+  })
 }
 
   applyFilters() {

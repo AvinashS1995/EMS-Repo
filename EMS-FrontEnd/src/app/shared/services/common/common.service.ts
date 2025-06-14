@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { SnackBarComponent } from '../../widget/snack-bar/snack-bar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmationDialogData } from '../../interfaces/widget';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from '../../widget/dialog/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as CryptoJS from 'crypto-js';
@@ -18,10 +18,6 @@ import * as jwtDecodeNamespace from 'jwt-decode';
 export class CommonService {
   expandSidenav = signal<boolean>(true);
 
-  ENCRYPTION_KEY = CryptoJS.enc.Hex.parse('232a3885f7ef6f1bf0136b055956a5f9a44e6633b8ef14f1016e014816f59d64');
-  IV_LENGTH = 16; // bytes
-  secretKey: string = ''; // Add this property
-
   userDetails = {
     _id: '',
     empNo: '',
@@ -35,8 +31,20 @@ export class CommonService {
     designation: '',
     joiningDate: '',
     salary: 0,
-    workType: ''
+    workType: '',
+    loginUserSecretkey: ''
   };
+
+  private userDetailsSubject = new BehaviorSubject<any>(this.userDetails);
+
+  userDetails$ = this.userDetailsSubject.asObservable();
+
+  ENCRYPTION_KEY = CryptoJS.enc.Hex.parse('232a3885f7ef6f1bf0136b055956a5f9a44e6633b8ef14f1016e014816f59d64');
+  IV_LENGTH = 16; // bytes
+  secretKey: string = ''; // Add this property
+  userSecretKey = "1407492449d59d3e0393cb657c71f02a99b5c9c6b247945204c81ad19188f30f"
+
+  
 
 
   constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {
@@ -81,6 +89,16 @@ export class CommonService {
     });
   
     return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+  }
+
+  encryptByAEStoString(value: any): string {
+    const text = JSON.stringify(value); // make sure value is serializable
+  return CryptoJS.AES.encrypt(text, this.userSecretKey).toString();
+  }
+
+  decryptByAEStoString(encrypted: string): string {
+    const decryptedText = CryptoJS.AES.decrypt(encrypted, this.userSecretKey).toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decryptedText); // Already parsed
   }
 
   
@@ -129,10 +147,25 @@ export class CommonService {
   setUserDetailsFromToken() {
     if (typeof window !== 'undefined' && window.sessionStorage) {
     const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      this.openSnackbar('Session and Token Is Expired','error');
+      return;
+    }
+
     if (token) {
       try {
         const decoded: any = jwtDecodeNamespace.jwtDecode(token);
-        this.userDetails = {
+
+        if (!decoded || !decoded._id || !decoded.name) {
+          this.openSnackbar(
+            'Decoded token is missing essential fields.',
+            'error'
+          );
+          return;
+        }
+
+        const updatedUser = {
           _id: decoded._id || '',
           empNo: decoded.empNo || '',
           name: decoded.name || '',
@@ -145,13 +178,21 @@ export class CommonService {
           designation: decoded.designation || '',
           joiningDate: decoded.joiningDate || '',
           salary: decoded.salary || 0,
-          workType: decoded.workType || ''
+          workType: decoded.workType || '',
+          loginUserSecretkey: decoded.loginUserSecretKey || ''
         };
+debugger
+        this.userDetails = updatedUser; // update the object
+          this.userDetailsSubject.next(updatedUser); // push new value
       } catch (e) {
         console.error('Token decoding failed', e);
       }
     }
   }
+  }
+
+  getCurrentUserDetails() {
+    return this.userDetailsSubject.value;
   }
 
   

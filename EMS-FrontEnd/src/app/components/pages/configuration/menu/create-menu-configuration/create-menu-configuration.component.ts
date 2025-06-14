@@ -17,6 +17,7 @@ export class CreateMenuConfigurationComponent {
   createMenuForm!: FormGroup;
 
   menuList: Array<any> = [];
+  isEditMode: Boolean = false;
 
 
   constructor(
@@ -54,6 +55,23 @@ export class CreateMenuConfigurationComponent {
         this.menuList  = this.buildMenuList(menuData)
 
         console.log(this.menuList)
+
+        const { title, componentName, path, icon, description, parentId, mode } = params['data'].menuDetails || {}
+        
+        const parentMenu = this.menuList.find(item => item.value === parentId)
+        console.log(parentMenu)
+
+        if(mode === 'edit') {
+          this.isEditMode = true;
+          this.createMenuForm.patchValue({
+            menuTitle: title || '',
+            menuRoute: path || '',
+            menuComponentName: componentName || '',
+            parentMenu: parentMenu?.label || '',
+            menuDescription: description || '',
+          });
+
+        }
       }
     })
   }

@@ -51,7 +51,8 @@ const Login = async (req, res) => {
         joiningDate: user.joiningDate, 
         salary: user.salary, 
         workType: user.workType, 
-        designation: user.designation, 
+        designation: user.designation,
+        loginUserSecretKey: secretKey 
       },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "10d" }

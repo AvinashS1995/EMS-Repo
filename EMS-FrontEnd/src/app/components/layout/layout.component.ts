@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HeaderComponent } from '../common/header/header.component';
 import { SidenavComponent } from '../common/sidenav/sidenav.component';
 import { Router, RouterOutlet } from '@angular/router';
+import { CommonService } from '../../shared/services/common/common.service';
 
 @Component({
   selector: 'app-layout',
@@ -12,7 +13,15 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class LayoutComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private commonService: CommonService) {}
+
+  ngOnInit() {
+    debugger
+    this.commonService.userDetails$.subscribe(user => {
+  console.log("commonService",user); // always latest
+});
+
+  }
 
   navigateToUrl(event:string) {
     this.router.navigateByUrl(event);
