@@ -3,11 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config({path:'./.env'});
 
 
-const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_SECRET_KEY, 'hex');// 256-bit encryption key (for backend use only)
-const IV_LENGTH = 16; // AES block size
+const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_SECRET_KEY, 'hex');
+const IV_LENGTH = 16; 
 
 export function generateRandomKey() {
-  return crypto.randomBytes(32).toString('hex'); // This is the actual secretKey
+  return crypto.randomBytes(32).toString('hex'); 
 }
 
 export function encrypt(text) {

@@ -30,11 +30,11 @@ designation: {
     required: true,
   },
   checkOutTime: {
-    type: Date, // Can be updated later (e.g., automatic checkout)
+    type: Date, 
     default: null,
   },
   totalWorkedHours: {
-    type: String, // Can be updated later (e.g., automatic checkout)
+    type: String, 
     default: null,
   },
   sessions: [

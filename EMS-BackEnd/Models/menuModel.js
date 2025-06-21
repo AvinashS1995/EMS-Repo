@@ -16,7 +16,7 @@ const ChildMenuSchema = new mongoose.Schema({
   description: String,
   icon: String,
   sequence: Number,
-  childMenu: [], // Recursive embed
+  childMenu: [], 
 });
 
 const MenuSchema = new mongoose.Schema({

@@ -15,7 +15,7 @@ const leaveSchema = new mongoose.Schema({
   },
   leaveDuration: {
     type: String,
-    required: [true, "Leave Duration is required"], // Full Day / Half Day
+    required: [true, "Leave Duration is required"],
   },
   fromDate: {
     type: Date,
@@ -43,7 +43,7 @@ const leaveSchema = new mongoose.Schema({
     type: String,
   },
   updatedBy: {
-    type: String, // e.g. EMP002 - Priya Manager
+    type: String,
   },
   updateAt: {
     type: Date,
@@ -66,15 +66,15 @@ const employeeApproverMappingSchema = new mongoose.Schema({
   tlApprover: { 
     type: String, 
     required: true 
-  },       // e.g., "TL002 - Priya Sharma"
+  },       
   managerApprover: { 
     type: String, 
     required: true 
-  },  // e.g., "MGR001 - Ankit Mehta"
+  },  
   hrApprover: { 
     type: String, 
     required: true 
-  }        // e.g., "HR001 - Meena Iyer"
+  }        
 });
 
 const EmployeeApprover = mongoose.model('EmployeeApprover', employeeApproverMappingSchema);
