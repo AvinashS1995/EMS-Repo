@@ -8,7 +8,8 @@ import { finalize, map, Observable } from 'rxjs';
 })
 export class HttpService {
 
-  private baseUrl = 'http://localhost:3000/api/';
+  // private baseUrl = 'http://localhost:3000/api/' ;
+  private baseUrl = 'https://ems-backend-api.onrender.com/api/';
 
   constructor(
     private http: HttpClient,
