@@ -33,7 +33,6 @@ const API_ENDPOINTS = {
   SERVICE_APPLICATION_APPROVAL_FLOW: 'leave/application-approval-flow',
 };
 
-// Use regex for JavaScript ('\' is a escape charector hence use it twice)
 const REGEX = {
 
   MOBILE_NUMBER_REGEX: /^\d{10}$/,

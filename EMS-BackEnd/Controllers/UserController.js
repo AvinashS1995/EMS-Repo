@@ -47,22 +47,6 @@ const CreateUser = async (req, res) => {
       });
     }
 
-    // if (!req.file) {
-    //   return res.status(400).json({
-    //     status: "fail",
-    //     message: "Profile image is required"
-    //   });
-    // }
-
-    // // ✅ Auto-generate employee number
-    // const lastEmployee = await User.findOne().sort({ _id: -1 }); // get latest
-    // let employeeNo = "EMP001";
-    // if (lastEmployee && lastEmployee.employeeNo) {
-    //   const lastNo = parseInt(lastEmployee.employeeNo.replace("EMP", ""), 10);
-    //   const nextNo = lastNo + 1;
-    //   employeeNo = "EMP" + nextNo.toString().padStart(3, "0");
-    // }
-
      // Find the last inserted employee sorted by empNo
      const lastEmp = await User.findOne()
      .sort({ empNo: -1 })
@@ -281,13 +265,13 @@ const CreateTypeList = async (req, res) => {
     const type = new Type({
       entityValue,
       typeLabel,
-      typeValue: newTypeValue, // Store as number
+      typeValue: newTypeValue,
       description,
     });
 
     await type.save();
 
-    // Send only the required response fields
+   
     res.status(201).json({
       status: "success",
       message: "Successfully Created!",

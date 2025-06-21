@@ -50,7 +50,7 @@ export class AddEmployeeComponent {
   isEditMode: Boolean = false;
 
   previewUrl: string | ArrayBuffer | null = null;
-  selectedFile: File | null = null; // Store the image URL or base64 data
+  selectedFile: File | null = null; 
 
   constructor(
     private fb: FormBuilder,
@@ -180,7 +180,6 @@ export class AddEmployeeComponent {
         },
       });
 
-      // this.router.navigate(['/employees-management']); // Redirect back to Manage Employees
     } else {
       this.employeeForm.markAllAsTouched();
     }
@@ -191,12 +190,11 @@ export class AddEmployeeComponent {
     const input = event.currentTarget as HTMLInputElement;
     const file = input.files?.[0];
     if (file && ['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-      // this.fileName = file.name;
+    
       const formData = new FormData()
       
       formData.append('file', file);
 
-      
   }
 }
 

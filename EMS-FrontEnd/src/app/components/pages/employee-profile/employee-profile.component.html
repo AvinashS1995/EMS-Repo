@@ -10,12 +10,11 @@
         <form [formGroup]="updateEmployeeProfileForm">
             <div class="create-menu-form-container">
 
-                <!-- Card 1: Personal Details -->
+                <!-- Personal Details -->
                 <mat-card class="profile-card">
                     <h3 class="card-title">Employee Personal Details</h3>
                     <div class="form-section">
 
-                        <!-- Column 1 & 2: Form Fields -->
                         <div class="form-fields">
                             <mat-form-field appearance="outline">
                                 <mat-label>Name</mat-label>
@@ -98,18 +97,19 @@
                                     <img [src]="uploadedPhotoUrl ? uploadedPhotoUrl : 'https://www.w3schools.com/howto/img_avatar.png'"
                                         class="profile-image" alt="Profile Photo" />
                                 </label>
-                                <input type="file" id="profilePhoto" (change)="onFileSelected($event)" accept="image/*" hidden />
-                                <!-- <span class="upload-text">Click image to upload</span> -->
+                                <input type="file" id="profilePhoto" (change)="onFileSelected($event)" accept="image/*"
+                                    hidden />
+                                
                             </div>
                         </div>
-                        
+
 
 
                     </div>
                 </mat-card>
 
 
-                <!-- Card 2: Reporting -->
+                <!-- Reporting -->
                 <mat-card class="profile-card">
                     <h3 class="card-title">Employee Reporting</h3>
                     <div class="reporting-form-section">
@@ -132,7 +132,7 @@
 
             </div>
 
-            <div class="form-buttons    ">
+            <div class="form-buttons">
                 <button mat-flat-button color="primary" type="submit" [disabled]="updateEmployeeProfileForm.invalid"
                     (click)="onSubmitEmployeeProfileForm()"> Update
                 </button>

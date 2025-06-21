@@ -121,14 +121,13 @@ const sendOtp = async (req, res) => {
     // Generate OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Hash OTP before storing
     const salt = await bcrypt.genSalt(10);
     const hashedOtp = await bcrypt.hash(otpCode, salt);
 
     // Set OTP expiry (5 minutes from now)
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    // Store OTP in DB
+    
     await OTP.create({ email, otp: hashedOtp, expiresAt });
 
     // Send Email
@@ -183,7 +182,6 @@ const resendOtp = async (req, res) => {
     // Generate a new OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Hash OTP before storing
     const salt = await bcrypt.genSalt(10);
 
     const hashedOtp = await bcrypt.hash(otpCode, salt);

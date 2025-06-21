@@ -12,24 +12,18 @@
 
   mat-button-toggle-group {
     display: flex;
-    width: 100%; /* Ensures group fills available width */
+    width: 100%; 
   }
   
   mat-button-toggle {
-    flex: 1; /* Ensures each toggle takes up equal width */
-    text-align: center; /* Centers the label */
+    flex: 1; 
+    text-align: center;
   }
-  
-//   mat-form-field, 
-// mat-button-toggle-group {
-//   width: 100%; /* Ensure both take full width */
-//   margin-bottom: 12px;
-//   box-sizing: border-box;
-// }
+
 
 .mat-button-toggle-overrides .mat-button-toggle-checked {
-  background-color: #1976d2 !important; /* Blue background */
-  color: white !important; /* White text */
+  background-color: #1976d2 !important; 
+  color: white !important; 
 }
 
 
@@ -38,7 +32,7 @@
   .apply-leave-container {
     display: flex;
     // gap: 20px;
-    height: 100%; // Ensure the container fills the dialog
+    height: 100%;
   
   
     .form-section {
@@ -52,7 +46,7 @@
       }
   
       .action-buttons {
-        margin-top: auto; // Push buttons to the bottom
+        margin-top: auto;
         display: flex;
         justify-content: space-between;
         gap: 16px;
@@ -62,14 +56,14 @@
   }
   
   mat-dialog-content {
-    padding: 0; // Remove default padding
+    padding: 0;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
   
   .mat-dialog-container {
-    padding: 0 !important; // Remove default container padding
+    padding: 0 !important;
     max-height: 90vh;
     overflow: hidden;
   }
@@ -80,3 +74,25 @@
   gap: 16px;
   flex-direction: row;
 }
+
+::ng-deep .mat-calendar-body-cell.holiday-date {
+  background-color: #f44336 !important;
+  color: #b71c1c !important; 
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+::ng-deep .mat-calendar-body-cell.sunday-date {
+  background-color: #2196f3 !important;
+  color: #0d47a1 !important; 
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+::ng-deep .mat-calendar-body-cell.saturday-date {
+  background-color: #ff9800 !important;
+  color: #e65100 !important;
+  font-weight: bold;
+  border-radius: 50%;
+}
+

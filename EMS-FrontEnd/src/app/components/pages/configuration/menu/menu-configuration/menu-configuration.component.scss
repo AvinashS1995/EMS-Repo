@@ -46,8 +46,8 @@ mat-expansion-panel {
 
 .filter-actions {
   display: flex;
-  gap: 12px; /* Add gap between Apply and Clear button */
-  margin-top: 16px; /* Optional: Space from fields */
+  gap: 12px; 
+  margin-top: 16px; 
 }
 
 .menu-table {
@@ -78,7 +78,7 @@ mat-expansion-panel {
 }
 
   .custom-primary {
-    color: #1976d2 !important; /* Custom primary blue */
+    color: #1976d2 !important; 
   }
 
   .visibility-icon {

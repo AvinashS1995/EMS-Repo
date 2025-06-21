@@ -71,24 +71,8 @@ export class SidenavComponent implements OnInit {
         if (res?.status === 'success') {
           
           const menus = res.data.filteredMenus
-            // .filter((item: any) => item.access === 'fullAccess')
-            // .map((item: any) => item.menuId);
-            console.log(menus) 
-            //   ({
-            //   title: item.menuId.title,
-            //   icon: item.menuId.icon,
-            //   route: item.menuId.path,
-            //   sequence: item.menuId.sequence,
-            //   parentId: item.menuId.parentMenu ?? null,
-            //   role: res.roleMenus.role.toLowerCase(),
-            // }));
 
-          // // Sort by sequence
-          // this.menuItems.set(
-          //   menus.sort((a: Sidenav, b: Sidenav) => a.sequence - b.sequence)
-          // );
-          // const nestedMenus = this.buildMenuTree(menus);
-          // this.menuItems.set(nestedMenus);
+            console.log(menus) 
 
           const nestedMenus = menus.map((menu: any) => this.transformMenu(menu));
           console.log(nestedMenus)
@@ -159,10 +143,10 @@ export class SidenavComponent implements OnInit {
         localStorage.getItem('key') || sessionStorage.getItem('key');
 
       if (encryptedSecretKey) {
-        // First decrypt the encrypted secretKey
+        
         const decryptedMainKey =
           this.commonService.decryptSecretKey(encryptedSecretKey);
-        this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
+        this.commonService.secretKey = decryptedMainKey; 
         console.log(
           'this.commonService.secretKey---->',
           this.commonService.secretKey

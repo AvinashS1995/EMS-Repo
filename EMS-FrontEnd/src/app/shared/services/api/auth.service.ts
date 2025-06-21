@@ -13,7 +13,7 @@ export class AuthService {
     private http: HttpService,
   ) { }
 
-  // Post request for Login and Signup
+  
   authApiCall(endPoint: string, request: any){
     return this.http.post(`${endPoint}`, request);
     

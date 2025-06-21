@@ -22,7 +22,7 @@ export class RejectCommentDialogComponent {
   ) {}
 
   ngOnInit(): void {
-    this.dialogTitle = this.data?.title || this.dialogTitle; // Allow dynamic override
+    this.dialogTitle = this.data?.title || this.dialogTitle; 
     this.rejectForm = this.fb.group({
       comment: ['', Validators.required]
     });

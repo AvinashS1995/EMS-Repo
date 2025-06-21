@@ -31,7 +31,7 @@ export class ApprovalFlowDialogComponent {
         const leave = res.data;
          this.approvalSteps = [];
 
-      // Always show Employee step
+      // Employee step
       this.approvalSteps.push({
         label: 'Employee',
         status: 'Submitted',

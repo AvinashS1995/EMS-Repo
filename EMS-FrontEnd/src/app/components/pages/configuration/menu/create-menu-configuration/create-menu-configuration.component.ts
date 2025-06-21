@@ -112,7 +112,7 @@ onSubmitMenuForm() {
 
     const  { menuTitle, menuRoute, menuComponentName, menuIcon,
       parentMenu, menuDescription } = this.createMenuForm.getRawValue();
-debugger
+
       const parentId = this.menuList.find(item => item.label === parentMenu)
 
       console.log(parentId)

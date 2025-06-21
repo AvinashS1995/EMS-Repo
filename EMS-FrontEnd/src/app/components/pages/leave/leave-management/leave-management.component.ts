@@ -37,9 +37,9 @@ export class LeaveManagementComponent {
     'status',
   ];
   dataSource: Array<any> = [];
+  upcomingHolidays: Array<any> = [];
 
   constructor(
-    private router: Router,
     private fb: FormBuilder,
     private dialog: MatDialog,
     private activateRoute: ActivatedRoute,
@@ -93,6 +93,9 @@ export class LeaveManagementComponent {
         this.totalRecords = params['data'].employeeLeaveList?.data?.totalRecords || 0
 
         console.log('Leave Application List--->', this.dataSource);
+
+        this.upcomingHolidays =
+            params['data'].getUpcomingHoliday?.data?.upComingHolidays || [];
       }
     });
   }
@@ -113,6 +116,7 @@ export class LeaveManagementComponent {
       data: {
         leaveType: this.leaveType,
         leaveReasonType: this.leaveReasonType,
+        upcomingHolidays: this.upcomingHolidays
       },
     });
 

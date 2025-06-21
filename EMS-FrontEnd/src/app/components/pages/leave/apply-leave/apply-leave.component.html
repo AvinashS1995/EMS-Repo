@@ -29,18 +29,18 @@
                     <div class="date-fields">
                         <mat-form-field appearance="outline">
                             <mat-label>From Date</mat-label>
-                            <input matInput [matDatepicker]="fromPicker" placeholder="DD/MM/YYYY"
-                                formControlName="startDate">
+                            <input matInput [matDatepicker]="fromPicker" [matDatepickerFilter]="dateFilter" placeholder="DD/MM/YYYY"
+                               formControlName="startDate">
                             <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #fromPicker></mat-datepicker>
+                            <mat-datepicker #fromPicker [dateClass]="dateClass"></mat-datepicker>
                         </mat-form-field>
 
                         <mat-form-field appearance="outline">
                             <mat-label>To Date</mat-label>
-                            <input matInput [matDatepicker]="toPicker" placeholder="DD/MM/YYYY"
+                            <input matInput [matDatepicker]="toPicker" [matDatepickerFilter]="dateFilter" placeholder="DD/MM/YYYY"
                                [min]="leaveForm.get('startDate')?.value" formControlName="endDate">
                             <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #toPicker></mat-datepicker>
+                            <mat-datepicker #toPicker [dateClass]="dateClass" ></mat-datepicker>
                         </mat-form-field>
                     </div>
 

@@ -7,12 +7,12 @@
                 <label class="hoverable" for="fileInput">
                     <span matTooltip="Tap here to select your picture" matTooltipPosition="above"></span>
                     <img [src]="previewUrl ? previewUrl : 'https://www.w3schools.com/howto/img_avatar.png'" />
-                    <!-- <div class="hover-text">Choose file</div> -->
+                   
                     <div class="background"></div>
                 </label>
                 <br />
                 <input id="fileInput" type="file" (change)="onSelectFile($event)" class="select-profile-picture" />
-                <!-- <span class="message">Tap here to select your picture</span> -->
+               
             </div>
 
             <mat-form-field appearance="outline" class="full-width">
@@ -101,11 +101,6 @@
                         }}</mat-option>
                 </mat-select>
             </mat-form-field>
-
-            <!-- <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Role</mat-label>
-                <input matInput formControlName="role">
-            </mat-form-field> -->
 
         </form>
 

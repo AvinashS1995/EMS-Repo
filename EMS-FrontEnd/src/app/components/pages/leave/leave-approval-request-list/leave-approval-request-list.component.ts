@@ -35,7 +35,6 @@ export class LeaveApprovalRequestListComponent {
   ];
 
   constructor(
-    private router: Router,
     private apiService: ApiService,
     private commonService: CommonService,
     private dialog: MatDialog,
@@ -92,10 +91,10 @@ export class LeaveApprovalRequestListComponent {
         localStorage.getItem('key') || sessionStorage.getItem('key');
 
       if (encryptedSecretKey) {
-        // First decrypt the encrypted secretKey
+       
         const decryptedMainKey =
           this.commonService.decryptSecretKey(encryptedSecretKey);
-        this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
+        this.commonService.secretKey = decryptedMainKey; 
         console.log(
           'this.commonService.secretKey---->',
           this.commonService.secretKey

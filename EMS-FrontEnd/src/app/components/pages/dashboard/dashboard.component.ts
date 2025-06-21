@@ -84,7 +84,7 @@ export class DashboardComponent {
     }
 
     onAnimationDone(event: AnimationEvent) {
-      // Flip the state to restart the animation
+      
       this.animationState = !this.animationState;
     }
 
@@ -100,9 +100,6 @@ export class DashboardComponent {
   
             this.upcomingHolidays = this.getCurrentAndNextMonthHolidays(this.upcomingHolidays);
   
-          // console.log('Upcoming Holidays--->', this.upcomingHolidays);
-
-          // this.pendingLeaveCount = params['data'].getEmployeeRequestList?.data?.records || 0;
         }
       });
     }
@@ -133,7 +130,7 @@ export class DashboardComponent {
     
   
     private cleanName(name: string): string {
-      // Remove text in parentheses, e.g., "Janmashtami (Smarta)" → "Janmashtami"
+      
       return name.replace(/\s*\(.*?\)/g, '').trim();
     }
 
@@ -179,10 +176,10 @@ console.log("SERVICE_GET_USER_ATTENDENCE paylaod", paylaod)
         localStorage.getItem('key') || sessionStorage.getItem('key');
 
       if (encryptedSecretKey) {
-        // First decrypt the encrypted secretKey
+        
         const decryptedMainKey =
           this.commonService.decryptSecretKey(encryptedSecretKey);
-        this.commonService.secretKey = decryptedMainKey; // Set it again after refresh
+        this.commonService.secretKey = decryptedMainKey; 
         console.log(
           'this.commonService.secretKey---->',
           this.commonService.secretKey

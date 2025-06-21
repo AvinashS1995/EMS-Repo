@@ -47,9 +47,6 @@
   .scroll-list {
     display: flex;
     flex-direction: column;
-    /* Set the total height of the list */
-    /* Important: Adjust height based on items */
-    /* For example, if each item is 40px and you have 4 items, height ~160px */
     height: 160px;
   }
   .scroll-item {
@@ -62,7 +59,7 @@
   .holiday-info {
     display: flex;
     align-items: center;
-    gap: 15px;  /* space between name and date */
+    gap: 15px;  
   }
 
   .upcoming-holiday-card {

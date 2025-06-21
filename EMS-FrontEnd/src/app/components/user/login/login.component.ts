@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/api/auth.service';
 import { Router } from '@angular/router';
 import { CommonService } from '../../../shared/services/common/common.service';
-import { error } from 'console';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +29,7 @@ export class LoginComponent {
   }
 
   buildForm() {
-    // Login form
+    
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       // password: ['', [Validators.required, Validators.pattern(REGEX.PASSWORD_REGEX)]]
@@ -54,17 +53,6 @@ export class LoginComponent {
               resp.secretKey
             );
 
-            // if (rememberMe) {
-            //   localStorage.setItem('token', resp.token);
-            //   localStorage.setItem('userName', resp.user.name);
-            //   localStorage.setItem('roleName', resp.user.role);
-            // } else {
-            //   sessionStorage.setItem('token', resp.token);
-            //   sessionStorage.setItem('userName', resp.user.name);
-            //   sessionStorage.setItem('roleName', resp.user.role);
-            // }
-
-            // You can now use the decrypted key to encrypt other data if needed
             const storage = rememberMe ? localStorage : sessionStorage;
 
             storage.setItem('token', resp.token);

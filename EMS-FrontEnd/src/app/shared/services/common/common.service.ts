@@ -42,8 +42,8 @@ export class CommonService {
   userDetails$ = this.userDetailsSubject.asObservable();
 
   ENCRYPTION_KEY = CryptoJS.enc.Hex.parse('232a3885f7ef6f1bf0136b055956a5f9a44e6633b8ef14f1016e014816f59d64');
-  IV_LENGTH = 16; // bytes
-  secretKey: string = ''; // Add this property
+  IV_LENGTH = 16; 
+  secretKey: string = ''; 
   userSecretKey = "1407492449d59d3e0393cb657c71f02a99b5c9c6b247945204c81ad19188f30f"
 
   
@@ -53,7 +53,7 @@ export class CommonService {
     this.setUserDetailsFromToken();
   }
 
-  // Decrypt encrypted secretKey from backend
+  
   decryptSecretKey(encrypted: string): string {
     const [ivHex, encryptedData] = encrypted.split(':');
   
@@ -69,14 +69,14 @@ export class CommonService {
 
   encryptWithKey(data: any, key: string): string {
     const keyWordArray = CryptoJS.enc.Hex.parse(key);
-    const iv = CryptoJS.lib.WordArray.random(16); // Secure random IV
+    const iv = CryptoJS.lib.WordArray.random(16); 
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), keyWordArray, {
       iv: iv,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7,
     });
   
-    return iv.toString() + ':' + encrypted.toString(); // Store both IV and data
+    return iv.toString() + ':' + encrypted.toString(); 
   }
   
   decryptWithKey(data: string, key: string): any {
@@ -94,22 +94,22 @@ export class CommonService {
   }
 
   encryptByAEStoString(value: any): string {
-    const text = JSON.stringify(value); // make sure value is serializable
+    const text = JSON.stringify(value); 
   return CryptoJS.AES.encrypt(text, this.userSecretKey).toString();
   }
 
   decryptByAEStoString(encrypted: string): string {
     const decryptedText = CryptoJS.AES.decrypt(encrypted, this.userSecretKey).toString(CryptoJS.enc.Utf8);
-  return JSON.parse(decryptedText); // Already parsed
+  return JSON.parse(decryptedText); 
   }
 
   
   openSnackbar(message: string, type: 'success' | 'error') {
     this.snackBar.openFromComponent(SnackBarComponent, {
       data: { message, type },
-      duration: 3000, // Auto close after 3 seconds
-      horizontalPosition: 'end', // Right side
-      verticalPosition: 'bottom', // Bottom
+      duration: 3000, 
+      horizontalPosition: 'end', 
+      verticalPosition: 'bottom', 
       panelClass: type === 'success' ? 'success-snackbar' : 'error-snackbar',
     });
   }
@@ -151,21 +151,12 @@ export class CommonService {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
-      this.openSnackbar('Session and Token Is Expired','error');
-      return;
+      console.warn('Session and Token Is Expired');
     }
 
     if (token) {
       try {
         const decoded: any = jwtDecodeNamespace.jwtDecode(token);
-
-        if (!decoded || !decoded._id || !decoded.name) {
-          this.openSnackbar(
-            'Decoded token is missing essential fields.',
-            'error'
-          );
-          return;
-        }
 
         const updatedUser = {
           _id: decoded._id || '',
@@ -186,8 +177,8 @@ export class CommonService {
           loginUserSecretkey: decoded.loginUserSecretKey || ''
         };
  
-        this.userDetails = updatedUser; // update the object
-          this.userDetailsSubject.next(updatedUser); // push new value
+        this.userDetails = updatedUser;
+          this.userDetailsSubject.next(updatedUser);
       } catch (e) {
         console.error('Token decoding failed', e);
       }

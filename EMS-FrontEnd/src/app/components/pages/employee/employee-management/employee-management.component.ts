@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { PageEvent } from '@angular/material/paginator';
 import { SharedModule } from '../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,10 +13,8 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 const moment = _moment;
 import { MatDialog } from '@angular/material/dialog';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
-import { takeUntil } from 'rxjs';
 import { ApiService } from '../../../../shared/services/api/api.service';
 import { API_ENDPOINTS } from '../../../../shared/constant';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonService } from '../../../../shared/services/common/common.service';
 

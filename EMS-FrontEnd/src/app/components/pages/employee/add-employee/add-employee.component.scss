@@ -50,7 +50,7 @@
     min-width: 200px;
   }
 
-  /* Image container styles */
+  
 .image-container {
   display: flex;
   flex-direction: column;
@@ -66,7 +66,7 @@ img {
   border-radius: 50%;
 }
 
-/* Style for the file input (invisible) */
+
 .select-profile-picture {
   position: absolute;
   top: 0;
@@ -78,12 +78,11 @@ img {
   cursor: pointer;
 }
 
-/* Button styles */
+
 button {
   margin-top: 10px;
 }
 
-/* Cropper preview style */
 .mat-dialog-content img {
   width: 100%;
   height: auto;

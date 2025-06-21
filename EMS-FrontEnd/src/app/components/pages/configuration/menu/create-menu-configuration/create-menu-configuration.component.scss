@@ -11,10 +11,6 @@ mat-card {
   border-radius: 5px;
 }
 
-// .create-menu-form-container {
-//   margin: 20px;
-// }
-
 .create-menu-form-container {
   margin: 20px;
   display: grid;
@@ -31,12 +27,12 @@ mat-card {
 
 
 
-  /* Tablet (600px - 899px): 2 columns */
+  
   @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Desktop (900px and above): 3 columns */
+  
   @media (min-width: 900px) {
     grid-template-columns: repeat(3, 1fr);
 
@@ -55,10 +51,10 @@ mat-card {
   justify-content: center;
 
   button {
-    min-width: 160px; // same width for both
+    min-width: 160px; 
     font-weight: 600;
     padding: 12px 24px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); // slight shadow
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
     border-radius: 6px;
   }
 

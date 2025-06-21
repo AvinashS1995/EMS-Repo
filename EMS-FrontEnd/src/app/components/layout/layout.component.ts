@@ -18,7 +18,7 @@ export class LayoutComponent {
   ngOnInit() {
     
     this.commonService.userDetails$.subscribe(user => {
-  console.log("commonService",user); // always latest
+  console.log("commonService",user);
 });
 
   }
