@@ -104,3 +104,25 @@
   text-align: center;
 }
 
+.filter-container {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, 1fr);
+
+   
+  }
+}

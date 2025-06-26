@@ -6,21 +6,21 @@
     <mat-card class="summary-card">
       <h3>Total Employee</h3>
       <p>11</p>
-      
+
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Present Employee</h3>
       <p>4</p>
-      
+
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Absent Employee</h3>
       <p>3</p>
-      
+
     </mat-card>
-{{pendingLeaveCount}}
+    {{pendingLeaveCount}}
     <mat-card class="summary-card notification-card">
       <div class="notification-icon" [matBadge]="pendingLeaveCount" matBadgeColor="warn" matBadgePosition="above after"
         matBadgeOverlap="false" (click)="navigateToRequestList()">

@@ -53,19 +53,6 @@
   mat-chip {
     font-size: 12px;
   }
-
-  .example-full-width {
-    margin-top: 10px;
-    border-radius: 5px;
-
-  }
-  
-  .filter-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    // padding: 16px 0;
-  }
   
   .filter-field {
     flex: 1 1 200px;
@@ -147,4 +134,62 @@
   }
   
   
+  .filter-container {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, 1fr);
+
+   
+  }
+}
+
+.form-buttons {
+  display: flex;
+  gap: 16px;
+
+  button {
+    min-width: 160px; 
+    font-weight: 600;
+    padding: 12px 24px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    border-radius: 6px;
+  }
+}
+
+button {
+    border-radius: 6px;
+  
+}
+
+.text-btn {
+  display: none;
+}
+
+.icon-btn {
+  display: inline-flex;
+}
+
+@media (min-width: 600px) {
+  .text-btn {
+    display: inline-flex;
+  }
+
+  .icon-btn {
+    display: none;
+  }
+}
   

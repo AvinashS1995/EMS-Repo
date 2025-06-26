@@ -60,6 +60,15 @@ export class MenuConfigurationComponent {
         this.menuList = this.flattenMenus(rawMenus);
 
         console.log(this.menuList)
+
+        this.menuStatusList = params['data'].menuStatus.data.types || [];
+
+        this.menuStatusList = this.menuStatusList.map(item => {
+          return {
+            value: item.typeValue,
+            label: item.typeLabel,
+          };
+        })
       }
     })
   }

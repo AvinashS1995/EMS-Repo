@@ -16,6 +16,8 @@ export class CreateMenuConfigurationResolverService {
 
     let menus = of({});
     let menuDetails = of({});
+    let menuStatus = of({})
+
 
     if(route.queryParams['data']) {
       const decrypted = this.commonService.decryptByAEStoString(route.queryParams['data']);
@@ -25,11 +27,16 @@ export class CreateMenuConfigurationResolverService {
       role: this.commonService.userDetails.role || ''
     }
     menus = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETMENUS, paylaod);
+    
+    menuStatus = this.apiService.postApiCall(API_ENDPOINTS.SERVICE_GETROLETYPE, { entityValue: "EmployeeStatus" });
+
 
 
    return forkJoin({
     menus,
-    menuDetails
+    menuDetails,
+    menuStatus
+
     });
   }
 }

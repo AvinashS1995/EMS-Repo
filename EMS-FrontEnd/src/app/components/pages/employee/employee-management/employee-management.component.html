@@ -3,8 +3,19 @@
         <div class="title">
             <h1>Manage Employees</h1>
         </div>
-        <button mat-flat-button class="example-full-width" type="button" (click)="addEmployee()">+ Add new
-            employee</button>
+        <!-- <button mat-flat-button class="example-full-width" type="button" (click)="addEmployee()">+ Add new
+            employee</button> -->
+
+            <!-- For medium and large screens -->
+<button mat-flat-button class="add-employee-btn text-btn" type="button" (click)="addEmployee()">
+  + Add new employee
+</button>
+
+<!-- For small screens -->
+<button mat-icon-button class="custom-primary icon-btn" type="button" (click)="addEmployee()">
+  <mat-icon>person_add</mat-icon>
+</button>
+
     </div>
     <mat-divider></mat-divider>
 
@@ -18,19 +29,19 @@
         <form [formGroup]="employeeFilterForm">
             <div class="filter-container">
 
-                <mat-form-field appearance="outline" class="filter-field">
+                <mat-form-field appearance="outline" >
                     <mat-label>Search</mat-label>
                     <input matInput placeholder="Search by Name" formControlName="name">
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="filter-field">
+                <mat-form-field appearance="outline">
                     <mat-label>Role</mat-label>
                     <mat-select formControlName="role">
                         <mat-option *ngFor="let role of roles" [value]="role.label">{{ role.label }}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="filter-field">
+                <mat-form-field appearance="outline">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="status">
                         <mat-option *ngFor="let status of statuses" [value]="status.label">{{ status.label
@@ -40,7 +51,7 @@
 
 
 
-                <mat-form-field appearance="outline" class="filter-field">
+                <mat-form-field appearance="outline">
                     <mat-label>Type</mat-label>
                     <mat-select formControlName="type">
                         <mat-option *ngFor="let type of experienceTypeList" [value]="type.label">{{ type.label
@@ -50,14 +61,16 @@
 
             </div>
 
+             <div class="form-buttons">
+            <button mat-flat-button class="example-full-width" (click)="applyFilters()">Apply</button>
+            <button mat-flat-button class="example-full-width" (click)="clearFilters()">Clear</button>
+        </div>
+
         </form>
 
 
 
-        <div class="filter-actions">
-            <button mat-flat-button class="example-full-width" (click)="applyFilters()">Apply</button>
-            <button mat-flat-button class="example-full-width" (click)="clearFilters()">Clear</button>
-        </div>
+       
 
     </mat-expansion-panel>
 
